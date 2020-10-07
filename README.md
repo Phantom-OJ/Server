@@ -43,7 +43,7 @@ SA和老师出题&判题过程：
 
 ## 3.项目系统架构&技术栈
 
-![系统架构0.5](/Server/pictures/系统架构0.5.jpg)
+![系统架构0.5](https://github.com/Phantom-OJ/Server/blob/master/pictures/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%840.5.jpg)
 
 设计模式：
 
