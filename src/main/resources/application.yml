@@ -1,9 +1,10 @@
 server:
   port: 9999
+
 spring:
   datasource:
     druid:
-      url: jdbc:postgresql://localhost:5432/postgres
+      url: jdbc:postgresql://localhost:5432/testsec
       username: checker
       password: lsl213
       driver-class-name: org.postgresql.Driver
@@ -22,3 +23,9 @@ spring:
       filters: stat
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       use-global-data-source-stat: true
+
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: sustech.edu.phantom.dboj.entity.*
+  configuration:
+    map-underscore-to-camel-case: true
