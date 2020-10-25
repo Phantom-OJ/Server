@@ -3,7 +3,7 @@ import java.sql.Timestamp;
 import lombok.Data;
 @Data
 public class Announcement {
-    private int ancmtId;
+    private Integer ancmtId;
     private String text;
     private String description;
     private Timestamp createDate;
