@@ -3,31 +3,40 @@ package sustech.edu.phantom.dboj.controller;
 import com.google.gson.Gson;
 
 import sustech.edu.phantom.dboj.entity.*;
-import sustech.edu.phantom.dboj.service.UsersService;
+import sustech.edu.phantom.dboj.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.util.*;
 
 @RestController
 public class UserController {
     @Autowired
-    UsersService usersService;
+    UserService userService;
 
-    @ResponseBody
     @RequestMapping(value = "/api/user/signup", method = RequestMethod.POST)
-    public Users signup(@RequestBody Users user) {
-        System.out.println(user);
-        return user;
+    public User signup(@RequestBody RegisterForm registerForm) {
+        return userService.register(registerForm);
     }
 
+    @RequestMapping(value = "/api/user/login", method = RequestMethod.POST)
+    public User login(@RequestBody LoginForm loginForm) {
+        return userService.login(loginForm);
+    }
 
+    @RequestMapping(value = "api/user/announcement", method = RequestMethod.POST)
+    public List<Announcement> getAnnouncement(@RequestBody AnnouncementQuery announcementQuery) {
+//        List<Announcement> a = userService.announcementList(announcementQuery);
+        return userService.announcementList(announcementQuery);
+    }
+
+    @RequestMapping(value = "api/user/announcementlist", method = RequestMethod.POST)
+    public int insertAnnouncementList(@RequestBody List<Announcement> announcementList) {
+        return userService.insertAnnouncementList(announcementList);
+    }
+
+    @RequestMapping(value = "api/user/code", method = RequestMethod.POST)
+    public int insertCode(@RequestBody CodeForm codeForm) {
+        return 1;
+    }
 }

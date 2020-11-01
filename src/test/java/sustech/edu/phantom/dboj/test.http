@@ -1,0 +1,10 @@
+POST http://localhost:9999/api/user/signup
+Content-Type: application/json
+
+{
+  "username": "11811410@mail.sustech.edu.cn",
+  "password": "lsl213",
+  "nickname": "god"
+}
+
+###

@@ -1,21 +1,33 @@
 package sustech.edu.phantom.dboj.entity;
+
 import java.sql.Timestamp;
+
 import lombok.Data;
+
 @Data
 public class Announcement {
     private Integer ancmtId;
-    private String text;
+    private String title;
     private String description;
     private Timestamp createDate;
     private Timestamp lastModified;
     private boolean valid;
 
-    public String getText() {
-        return text;
+
+    public Integer getAncmtId() {
+        return ancmtId;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setAncmtId(Integer ancmtId) {
+        this.ancmtId = ancmtId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -26,16 +38,16 @@ public class Announcement {
         this.description = description;
     }
 
-    public Timestamp getCreateDate() {
-        return createDate;
+    public long getCreateDate() {
+        return createDate.getTime();
     }
 
     public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
-    public Timestamp getLastModified() {
-        return lastModified;
+    public long getLastModified() {
+        return lastModified.getTime();
     }
 
     public void setLastModified(Timestamp lastModified) {

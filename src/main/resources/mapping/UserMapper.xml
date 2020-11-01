@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sustech.edu.phantom.dboj.mapper.UserMapper">
+    <select id="loginUser" parameterType="sustech.edu.phantom.dboj.entity.User" resultType="sustech.edu.phantom.dboj.entity.User">
+        select uid,gid,username,nickname,role,avatar,state_save,state,lang,valid from "user" where valid is true and
+        username = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR};
+    </select>
+
+    <insert id="registerUser" parameterType="sustech.edu.phantom.dboj.entity.User" useGeneratedKeys="true">
+        insert into "user" (username,password,nickname) values
+        (#{username,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{nickname,jdbcType=VARCHAR})
+    </insert>
+    <select id="findByUsername" resultType="java.lang.Integer">
+        select count(*) from "user" where username = #{param1};
+    </select>
+</mapper>

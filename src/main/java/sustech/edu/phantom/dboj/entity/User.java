@@ -1,5 +1,7 @@
 package sustech.edu.phantom.dboj.entity;
+
 import lombok.Data;
+
 @Data
 public class User {
     private Integer uid;
@@ -13,6 +15,21 @@ public class User {
     private String state;
     private String lang;
     private boolean valid;
+
+    public User() {
+
+    }
+
+    public User(RegisterForm registerForm) {
+        this.username = registerForm.getUsername();
+        this.password = registerForm.getPassword();
+        this.nickname = registerForm.getNickname();
+    }
+
+    public User(LoginForm loginForm) {
+        this.username = loginForm.getUsername();
+        this.password = loginForm.getPassword();
+    }
 
     public Integer getUid() {
         return uid;
@@ -100,5 +117,22 @@ public class User {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid=" + uid +
+                ", gid=" + gid +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", role=" + role +
+                ", avatar='" + avatar + '\'' +
+                ", stateSave=" + stateSave +
+                ", state='" + state + '\'' +
+                ", lang='" + lang + '\'' +
+                ", valid=" + valid +
+                '}';
     }
 }
