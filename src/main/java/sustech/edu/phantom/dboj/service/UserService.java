@@ -1,9 +1,14 @@
 package sustech.edu.phantom.dboj.service;
 
-import sustech.edu.phantom.dboj.entity.*;
-import sustech.edu.phantom.dboj.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sustech.edu.phantom.dboj.entity.Announcement;
+import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.form.LoginForm;
+import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.RegisterForm;
+import sustech.edu.phantom.dboj.mapper.AnnouncementMapper;
+import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 import java.util.List;
 
@@ -14,9 +19,18 @@ public class UserService {
     @Autowired
     AnnouncementMapper announcementMapper;
 
-
+    /**
+     * 这里还差一个加密
+     *
+     * @param registerForm
+     * @return
+     */
     public User register(RegisterForm registerForm) {
-        User user = new User(registerForm);
+        User user = User.builder().
+                username(registerForm.getUsername()).
+                nickname(registerForm.getNickname()).
+                password(registerForm.getPassword()).build();
+//        User user = new User(registerForm);
         int flag = userMapper.findByUsername(user.getUsername());
         if (flag > 0) {
             return null;
@@ -31,15 +45,17 @@ public class UserService {
     }
 
     public User login(LoginForm loginForm) {
-        User user = new User(loginForm);
+        User user = User.builder().username(loginForm.getUsername()).password(loginForm.getPassword()).build();
+//        User user = new User(loginForm);
         return userMapper.loginUser(user);
     }
 
-    public List<Announcement> announcementList(AnnouncementQuery announcementQuery) {
-        announcementQuery.setParameters();
-        return announcementMapper.queryAnnouncement(announcementQuery);
+    public List<Announcement> announcementList(Pagination pagination) {
+        pagination.setParameters();
+        return announcementMapper.queryAnnouncement(pagination);
     }
-    public int insertAnnouncementList(List<Announcement> announcementList){
+
+    public int insertAnnouncementList(List<Announcement> announcementList) {
         return announcementMapper.insertAnnouncement(announcementList);
     }
 }

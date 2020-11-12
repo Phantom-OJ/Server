@@ -1,10 +1,11 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.form;
 
-public class AnnouncementQuery {
+public class Pagination {
     private int start;
     private int end;
     private transient int limit;
     private transient int offset;
+    private String filter;
 
     public int getStart() {
         return start;
@@ -33,5 +34,13 @@ public class AnnouncementQuery {
 
     public int getOffset() {
         return offset;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 }

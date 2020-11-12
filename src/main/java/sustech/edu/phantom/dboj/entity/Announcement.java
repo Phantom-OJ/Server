@@ -1,17 +1,22 @@
 package sustech.edu.phantom.dboj.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 
-import lombok.Data;
-
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Announcement {
     private Integer ancmtId;
     private String title;
     private String description;
     private Timestamp createDate;
     private Timestamp lastModified;
-    private boolean valid;
 
 
     public Integer getAncmtId() {
@@ -54,11 +59,4 @@ public class Announcement {
         this.lastModified = lastModified;
     }
 
-    public boolean isValid() {
-        return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
 }

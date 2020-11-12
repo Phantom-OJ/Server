@@ -1,15 +1,20 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.form;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import lombok.Data;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CodeForm {
     private Integer cid;
     private String code;
     private Timestamp submitTime;
-    private boolean valid;
-
     public Integer getCid() {
         return cid;
     }
@@ -33,13 +38,4 @@ public class CodeForm {
     public void setSubmitTime(Timestamp submitTime) {
         this.submitTime = submitTime;
     }
-
-    public boolean isValid() {
-        return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
-
 }

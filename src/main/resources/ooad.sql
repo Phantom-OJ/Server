@@ -26,7 +26,8 @@ create table if not exists "record"
     dialect     varchar(45) not null,
     code_length int         not null,
     submit_time timestamp   not null default current_timestamp,
-    valid       bool        not null default true
+    valid       bool        not null default true,
+    score       int         not null default 0
 );
 create table if not exists "problem"
 (
@@ -37,8 +38,6 @@ create table if not exists "problem"
     full_score          int   not null,
     space_limit         float not null,
     time_limit          float not null,
-    sample_output       text  not null,
-    hint                text,
     number_submit       int   not null,
     number_solve        int   not null,
     index_in_assignment int   not null,
@@ -97,9 +96,9 @@ create table if not exists "assignment"
 );
 create table if not exists "code"
 (
-    cid   serial primary key,
-    code  text,
-    valid bool not null default true,
+    cid         serial primary key,
+    code        text,
+    valid       bool      not null default true,
     submit_time timestamp not null default current_timestamp
 );
 create table if not exists "tag"
