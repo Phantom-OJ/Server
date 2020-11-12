@@ -18,45 +18,20 @@ public class Announcement {
     private Timestamp createDate;
     private Timestamp lastModified;
 
-
-    public Integer getAncmtId() {
-        return ancmtId;
-    }
-
-    public void setAncmtId(Integer ancmtId) {
-        this.ancmtId = ancmtId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public long getCreateDate() {
         return createDate.getTime();
     }
 
-    public void setCreateDate(Timestamp createDate) {
-        this.createDate = createDate;
+    public void setCreateDate(long createDate) {
+        this.createDate = new Timestamp(createDate);
     }
 
     public long getLastModified() {
         return lastModified.getTime();
     }
 
-    public void setLastModified(Timestamp lastModified) {
-        this.lastModified = lastModified;
+    public void setLastModified(long lastModified) {
+        this.lastModified = new Timestamp(lastModified);
     }
 
 }

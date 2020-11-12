@@ -17,18 +17,8 @@ public class User {
     private String nickname;
     private char role;
     private String avatar;
-    private boolean stateSave;
+    private Boolean stateSave;
     private String state;
     private String lang;
-
-//    public User(RegisterForm registerForm) {
-//        this.username = registerForm.getUsername();
-//        this.password = registerForm.getPassword();
-//        this.nickname = registerForm.getNickname();
-//    }
-
-//    public User(LoginForm loginForm) {
-//        this.username = loginForm.getUsername();
-//        this.password = loginForm.getPassword();
-//    }
+    private Boolean valid;
 }

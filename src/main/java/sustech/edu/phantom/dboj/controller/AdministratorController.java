@@ -15,9 +15,4 @@ import java.util.List;
 public class AdministratorController {
     @Autowired
     UserService userService;
-
-    @RequestMapping(value = "/announcementlist", method = RequestMethod.POST)
-    public int insertAnnouncementList(@RequestBody List<Announcement> announcementList) {
-        return userService.insertAnnouncementList(announcementList);
-    }
 }
