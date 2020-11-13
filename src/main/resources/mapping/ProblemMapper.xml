@@ -2,26 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.ProblemMapper">
     <select id="queryProblem" resultType="sustech.edu.phantom.dboj.entity.Problem">
-        select pid,
-               title,
-               description,
-               full_score,
-               space_limit,
-               time_limit,
-               sample_output,
-               hint,
-               number_submit,
-               number_solve,
-               index_in_assignment,
-               solution
+        select *
         from "problem"
-
         offset #{offset} limit #{limit}
-    </select>
-    <select id="findProblemTags" resultType="java.lang.String">
-        select distinct keyword
-        from tag t
-                 join problem_tag pt on t.tid = pt.tid
-        where pid = #{pid} limit 4;
     </select>
 </mapper>

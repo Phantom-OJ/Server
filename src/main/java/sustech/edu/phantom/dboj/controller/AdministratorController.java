@@ -11,7 +11,7 @@ import sustech.edu.phantom.dboj.service.UserService;
 import java.util.List;
 
 @RestController
-
+@RequestMapping(value = "/admin")
 public class AdministratorController {
     @Autowired
     UserService userService;

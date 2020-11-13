@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Problem {
-    private Integer pid;
+    private Integer id;
+    private Integer assignmentId;
     private String title;
     private String description;
     private Integer fullScore;
@@ -22,5 +23,6 @@ public class Problem {
     private Integer numberSolve;
     private Integer indexInAssignment;
     private String solution;
-    private List<String> tags;
+    private Boolean valid;
+    private List<Tag> tagList;
 }

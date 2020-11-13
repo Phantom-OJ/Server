@@ -7,23 +7,17 @@ import java.sql.Timestamp;
 @Data
 
 public class Record {
-    private Integer rid;
-    private Integer cid;// code id
-    private Integer uid;
-    private Integer pid;
+    private Integer id;
+    private Integer codeId;
+    private Integer userId;
+    private Integer problemId;
+    private Integer score;
     private String result;
-    private String description; // ?
+    private String description;
     private Double space;
     private Double time;
     private String dialect;
     private Integer codeLength;
-    private Timestamp submitTime;
-
-    public long getSubmitTime() {
-        return submitTime.getTime();
-    }
-
-    public void setSubmitTime(long submitTime) {
-        this.submitTime = new Timestamp(submitTime);
-    }
+    private Long submitTime;
+    private Boolean valid;
 }

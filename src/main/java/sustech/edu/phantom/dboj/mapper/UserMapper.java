@@ -1,10 +1,34 @@
 package sustech.edu.phantom.dboj.mapper;
+
 import sustech.edu.phantom.dboj.entity.User;
 
 public interface UserMapper {
-    User loginUser(User user);
+    /**
+     *
+     * @param user
+     * @return
+     */
+    User login(User user);
 
-    int registerUser(User user);
+    /**
+     *
+     * @param user
+     * @return
+     */
+    int register(User user);
 
-    int findByUsername(String username);
+    /**
+     *
+     * @param username
+     * @return
+     */
+    int findUserByUsername(String username);
+
+    /**
+     *
+     * @param uid
+     * @param role
+     * @return
+     */
+    int privilegeEscalation(int uid, char role);
 }

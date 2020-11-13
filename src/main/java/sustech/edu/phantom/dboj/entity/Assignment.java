@@ -6,34 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Assignment {
-    private Integer aid;
+    private Integer id;
     private String title;
     private String description;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private Long startTime;
+    private Long endTime;
     private String status;
     private Integer fullScore;
     private String sampleDatabasePath;
-
-    public long getStartTime() {
-        return startTime.getTime();
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = new Timestamp(startTime);
-    }
-
-    public long getEndTime() {
-        return endTime.getTime();
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = new Timestamp(endTime);
-    }
+    private Boolean valid;
+    private List<Group> groupList;
+    private List<Problem> problemList;
 }

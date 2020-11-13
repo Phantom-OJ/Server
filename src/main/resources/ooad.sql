@@ -1,8 +1,8 @@
 begin transaction;
 create table if not exists "user"
 (
-    uid        serial primary key,
-    gid        int,
+    id         serial primary key,
+    group_id   int,
     username   varchar(45)  not null unique,
     password   varchar(100) not null,
     nickname   varchar(45),
@@ -15,24 +15,24 @@ create table if not exists "user"
 );
 create table if not exists "record"
 (
-    rid         serial primary key,
-    cid         int         not null,
-    uid         int         not null,
-    pid         int         not null,
+    id          serial primary key,
+    code_id     int         not null,
+    user_id         int         not null,
+    problem_id         int         not null,
+    score       int         not null default 0,
     result      char(3)     not null,
     description text        not null,
     space       float       not null,
     time        float       not null,
     dialect     varchar(45) not null,
     code_length int         not null,
-    submit_time timestamp   not null default current_timestamp,
-    valid       bool        not null default true,
-    score       int         not null default 0
+    submit_time bigint      not null default floor(extract(epoch from now())),
+    valid       bool        not null default true
 );
 create table if not exists "problem"
 (
-    pid                 serial primary key,
-    aid                 int   not null,
+    id                  serial primary key,
+    assignment_id       int   not null,
     title               text  not null,
     description         text  not null,
     full_score          int   not null,
@@ -46,20 +46,20 @@ create table if not exists "problem"
 );
 create table if not exists "judge_database"
 (
-    jdid          serial primary key,
+    id            serial primary key,
     database_path text not null,
     valid         bool not null default true
 );
 create table if not exists "judge_point"
 (
-    point_id   serial primary key,
-    pid        int  not null,
-    before_sql varchar(45),
-    after_sql  varchar(45),
-    script_id  int  not null,
-    answer     text not null,
-    jdid       int  not null,
-    valid      bool not null default true
+    id                serial primary key,
+    problem_id        int  not null,
+    before_sql        text,
+    after_sql         text,
+    judge_script_id         int  not null,
+    answer            text not null,
+    judge_database_id int  not null,
+    valid             bool not null default true
 );
 create table if not exists "permission"
 (
@@ -70,25 +70,25 @@ create table if not exists "permission"
 );
 create table if not exists "grade"
 (
-    uid   int  not null,
-    pid   int  not null,
-    score int  not null,
-    valid bool not null default true,
-    primary key (uid, pid)
+    user_id    int  not null,
+    problem_id int  not null,
+    score      int  not null,
+    valid      bool not null default true,
+    primary key (user_id, problem_id)
 );
 create table if not exists "judge_script"
 (
-    script_id serial primary key,
+    id serial primary key,
     script    text not null,
     valid     bool not null default true
 );
 create table if not exists "assignment"
 (
-    aid                  serial primary key,
+    id                   serial primary key,
     title                text        not null,
     description          text        not null,
-    start_time           timestamp   not null,
-    end_time             timestamp   not null,
+    start_time           bigint      not null,
+    end_time             bigint      not null,
     status               varchar(45) not null,
     full_score           int         not null,
     sample_database_path text        not null,
@@ -96,52 +96,73 @@ create table if not exists "assignment"
 );
 create table if not exists "code"
 (
-    cid         serial primary key,
+    id          serial primary key,
     code        text,
-    valid       bool      not null default true,
-    submit_time timestamp not null default current_timestamp
+    code_length int    not null,
+    submit_time bigint not null default floor(extract(epoch from now())),
+    valid       bool   not null default true
 );
 create table if not exists "tag"
 (
-    tid         serial primary key,
+    id          serial primary key,
     keyword     text not null,
     description text,
     valid       bool not null default true
 );
 create table if not exists "assignment_group"
 (
-    aid   int  not null,
-    gid   int  not null,
-    valid bool not null default true,
-    primary key (aid, gid)
+    assignment_id int  not null,
+    group_id      int  not null,
+    valid         bool not null default true,
+    primary key (assignment_id, group_id)
 );
 create table if not exists "group"
 (
-    gid   serial primary key,
-    name  varchar(45),
+    id    serial primary key,
+    description  varchar(45) not null,
     valid bool not null default true
 );
 create table if not exists "user_group"
 (
-    gid   int  not null,
-    uid   int  not null,
-    valid bool not null default true,
-    primary key (gid, uid)
+    user_id  int  not null,
+    group_id int  not null,
+    valid    bool not null default true,
+    primary key (user_id, group_id)
 );
 create table if not exists "problem_tag"
 (
-    pid   int  not null,
-    tid   int  not null,
-    valid bool not null default true,
-    primary key (pid, tid)
+    problem_id int  not null,
+    tag_id     int  not null,
+    valid      bool not null default true,
+    primary key (problem_id, tag_id)
 );
 create table if not exists "announcement"
 (
-    ancmt_id      serial primary key,
-    title         text      not null,
-    description   text      not null,
-    create_date   timestamp not null default current_timestamp,
-    last_modified timestamp not null default current_timestamp,
-    valid         bool      not null default true
+    id            serial primary key,
+    title         text   not null,
+    description   text   not null,
+    create_date   bigint not null default floor(extract(epoch from now())),
+    last_modified bigint not null default floor(extract(epoch from now())),
+    valid         bool   not null default true
 );
+insert into "user" (username, password, nickname)
+values ('11811407@mail.sustech.edu.cn', 'lsl213', 'god1'),
+       ('11812318@mail.sustech.edu.cn', 'zjxzjx', 'god2'),
+       ('11813207@mail.sustech.edu.cn', 'nqsnqs', 'god3'),
+       ('11811620@mail.sustech.edu.cn', 'mzymzy', 'god4');
+insert into "tag" (keyword, description)
+VALUES ('k1', 'd1'),
+       ('k2', 'd2'),
+       ('k3', 'd3'),
+       ('k4', 'd4');
+insert into "problem_tag" (problem_id, tag_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (1, 4),
+       (1, 5);
+insert into "problem" (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
+                       number_solve,
+                       index_in_assignment, solution)
+VALUES (1, 'test1', 'test1description', 100, 45.55, 66.66, 6, 5, 1, 'no solution');
 commit;

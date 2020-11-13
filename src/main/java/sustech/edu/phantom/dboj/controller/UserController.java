@@ -17,23 +17,24 @@ import sustech.edu.phantom.dboj.service.UserService;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/user")
 public class UserController {
     @Autowired
     UserService userService;
     @Autowired
     ProblemService problemService;
 
-    @RequestMapping(value = "/user/signup", method = RequestMethod.POST)
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public User signup(@RequestBody RegisterForm registerForm) {
         return userService.register(registerForm);
     }
 
-    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public User login(@RequestBody LoginForm loginForm) {
         return userService.login(loginForm);
     }
 
-    @RequestMapping(value = "/user/announcement", method = RequestMethod.POST)
+    @RequestMapping(value = "/announcement", method = RequestMethod.POST)
     public List<Announcement> getAnnouncement(@RequestBody Pagination pagination) {
 //        List<Announcement> a = userService.announcementList(pagination);
         return userService.announcementList(pagination);
@@ -41,8 +42,8 @@ public class UserController {
 
 
 
-    @RequestMapping(value = "/problemlist", method = RequestMethod.POST)
-    public List<Problem> getProblemList(@RequestBody Pagination pagination) {
-        return problemService.getProblemPage(pagination);
-    }
+//    @RequestMapping(value = "/problemlist", method = RequestMethod.POST)
+//    public List<Problem> getProblemList(@RequestBody Pagination pagination) {
+//        return problemService.getProblemPage(pagination);
+//    }
 }

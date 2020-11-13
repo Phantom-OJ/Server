@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Tag {
-    private Integer tid;
+    private Integer id;
     private String keyword;
     private String description;
     private Boolean valid;

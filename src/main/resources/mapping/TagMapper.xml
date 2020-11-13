@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.TagMapper">
-
-    <select id="getTagMap" resultType="java.util.Map">
-        select keyword, tid from "tag" where valid;
+    <select id="getAllTags">
+        select *
+        from "tag"
+        where valid;
     </select>
 </mapper>

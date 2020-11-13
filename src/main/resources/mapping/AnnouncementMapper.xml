@@ -3,8 +3,10 @@
 <mapper namespace="sustech.edu.phantom.dboj.mapper.AnnouncementMapper">
     <select id="queryAnnouncement" parameterType="sustech.edu.phantom.dboj.form.Pagination"
             resultType="sustech.edu.phantom.dboj.entity.Announcement">
-        select * from "announcement" order by last_modified offset #{offset} limit #{limit};
-</select>
+        select * from "announcement"
+        order by last_modified
+        offset #{offset} limit #{limit};
+    </select>
     <insert id="insertAnnouncement" parameterType="sustech.edu.phantom.dboj.entity.Announcement">
         insert into announcement (title, description)
         values
@@ -12,5 +14,9 @@
             (#{announcement.title},#{announcement.description})
         </foreach>
 
+    </insert>
+    <insert id="insertOneAnnouncement">
+        insert into "announcement" (title,description)
+        values (#{title},#{description});
     </insert>
 </mapper>

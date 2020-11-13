@@ -12,13 +12,4 @@ public interface ProblemMapper {
      * @return
      */
     List<Problem> queryProblem(Pagination pagination);
-
-    /**
-     *
-     * @param problem
-     * @return
-     */
-    List<String> findProblemTags(Problem problem);
-
-
 }

@@ -31,15 +31,15 @@ public class UserService {
                 nickname(registerForm.getNickname()).
                 password(registerForm.getPassword()).build();
 //        User user = new User(registerForm);
-        int flag = userMapper.findByUsername(user.getUsername());
+        int flag = userMapper.findUserByUsername(user.getUsername());
         if (flag > 0) {
             return null;
         } else {
-            int flg = userMapper.registerUser(user);
+            int flg = userMapper.register(user);
             if (flg == 0) {
                 return null;
             } else {
-                return userMapper.loginUser(user);
+                return userMapper.login(user);
             }
         }
     }
@@ -47,7 +47,7 @@ public class UserService {
     public User login(LoginForm loginForm) {
         User user = User.builder().username(loginForm.getUsername()).password(loginForm.getPassword()).build();
 //        User user = new User(loginForm);
-        return userMapper.loginUser(user);
+        return userMapper.login(user);
     }
 
     public List<Announcement> announcementList(Pagination pagination) {
