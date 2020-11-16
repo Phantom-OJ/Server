@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface RecordMapper {
     List<Record> queryRecord(Pagination pagination);
+
+    int saveRecord(Record record);
+
+
 }

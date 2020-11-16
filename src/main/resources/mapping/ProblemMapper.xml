@@ -6,4 +6,34 @@
         from "problem"
         offset #{offset} limit #{limit}
     </select>
+    <select id="queryCurrentProblem" resultType="sustech.edu.phantom.dboj.entity.Problem">
+        select *
+        from "problem"
+        where valid
+          and id = #{id};
+    </select>
+    <update id="invalidateProblem">
+        update "problem"
+        set valid = false
+        where id = #{id};
+    </update>
+    <update id="validateProblem">
+        update "problem"
+        set valid = true
+        where id = #{id};
+    </update>
+    <select id="oneAssignmentProblems" resultType="sustech.edu.phantom.dboj.entity.Problem">
+        select *
+        from "problem"
+        where assignment_id = #{id} order by index_in_assignment;
+    </select>
+    <select id="oneTagProblems" resultType="sustech.edu.phantom.dboj.entity.Problem">
+        select *
+        from "problem"
+        where id in (
+            select distinct problem_id
+            from "problem_tag"
+            where valid
+              and tag_id = #{id})
+    </select>
 </mapper>

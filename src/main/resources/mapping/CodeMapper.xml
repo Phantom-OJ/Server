@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.CodeMapper">
+    <insert id="saveCode">
+        insert into "code" (code, code_length, submit_time)
+        values (#{code}, #{codeLength}, #{submitTime});
+    </insert>
+    <select id="queryCode" resultType="sustech.edu.phantom.dboj.entity.Code">
+        select *
+        from "code"
+        where valid
+          and id = #{id};
+    </select>
+    <update id="invalidateCode">
+        update "code"
+        set valid= false
+        where id = #{id};
+    </update>
 </mapper>

@@ -12,4 +12,39 @@ public interface ProblemMapper {
      * @return
      */
     List<Problem> queryProblem(Pagination pagination);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    Problem queryCurrentProblem(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    int invalidateProblem(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    int validateProblem(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    List<Problem> oneAssignmentProblems(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    List<Problem> oneTagProblems(int id);
 }

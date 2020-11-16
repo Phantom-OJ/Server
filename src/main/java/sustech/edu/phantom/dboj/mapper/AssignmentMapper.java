@@ -11,7 +11,7 @@ public interface AssignmentMapper {
      * @param pagination
      * @return
      */
-    List<Assignment> getAssignment(Pagination pagination);
+    List<Assignment> queryAssignments(Pagination pagination);
 
     /**
      *
