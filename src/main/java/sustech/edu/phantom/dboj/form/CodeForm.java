@@ -13,13 +13,5 @@ import java.sql.Timestamp;
 @Builder
 public class CodeForm {
     private String code;
-    private Timestamp submitTime;
-
-    public long getSubmitTime() {
-        return submitTime.getTime();
-    }
-
-    public void setSubmitTime(long submitTime) {
-        this.submitTime = new Timestamp(submitTime);
-    }
+    private Long submitTime;
 }
