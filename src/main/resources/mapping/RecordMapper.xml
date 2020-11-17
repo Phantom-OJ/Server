@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.RecordMapper">
+
     <select id="queryRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
         select *
         from "record"
@@ -12,4 +13,32 @@
         VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{description}, #{space}, #{time}, #{dialect},
                 #{codeLength});
     </insert>
+    <update id="invalidateRecord">
+        update "record"
+        set valid = false
+        where id = #{id};
+    </update>
+    <select id="getAllRecords" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id
+                 join "user" u on r.user_id = u.id
+        where valid
+        order by r.submit_time desc
+        offset #{offset} limit #{limit};
+    </select>
 </mapper>

@@ -47,4 +47,16 @@ public interface ProblemMapper {
      * @return
      */
     List<Problem> oneTagProblems(int id);
+
+    /**
+     * 对提交的问题进行更新，提交次数和通过次数
+     *
+     * @param problem 待更新的实体类
+     * @return 影响的行数
+     */
+    int updateProblemInfo(Problem problem);
+/**
+ * 还没写好
+ */
+//    List<Problem> multipleProblems(List<Integer> tagList);
 }

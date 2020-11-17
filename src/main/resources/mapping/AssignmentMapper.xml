@@ -12,11 +12,16 @@
         select *
         from "assignment"
         where valid;
-</select>
+    </select>
     <select id="getOneAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select *
         from "assignment"
         where valid
           and id = #{id};
     </select>
+    <update id="invalidateAssignment">
+        update "assignment"
+        set valid = false
+        where id = #{aid};
+    </update>
 </mapper>

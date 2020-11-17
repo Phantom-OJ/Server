@@ -16,4 +16,16 @@
         set valid= false
         where id = #{id};
     </update>
+    <select id="queryRecentCode" resultType="sustech.edu.phantom.dboj.entity.Code">
+        select *
+        from code
+        where id = (
+            select code_id
+            from record
+            where submit_time = (
+                select max(submit_time)
+                from record
+                where valid and problem_id = #{problemId}
+                  and user_id = #{userId}));
+    </select>
 </mapper>

@@ -10,5 +10,17 @@ public interface RecordMapper {
 
     int saveRecord(Record record);
 
+    /**
+     * 使记录失效
+     * @param id
+     * @return
+     */
+    int invalidateRecord(int id);
 
+    /**
+     *
+     * @param pagination
+     * @return
+     */
+    List<Record> getAllRecords(Pagination pagination);
 }
