@@ -6,13 +6,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.Announcement;
+import sustech.edu.phantom.dboj.service.ProblemService;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "/admin/api")
+/**
+ * 这里所有的方法都得要权限
+ */
 public class AdministratorController {
+
     @Autowired
     UserService userService;
+
+    @Autowired
+    ProblemService problemService;
 }
