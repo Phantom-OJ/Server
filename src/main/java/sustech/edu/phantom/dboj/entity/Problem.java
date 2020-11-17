@@ -17,12 +17,14 @@ public class Problem {
     private String title;
     private String description;
     private Integer fullScore;
-    private Double spaceLimit;
-    private Double timeLimit;
+    private Long spaceLimit;
+    private Long timeLimit;
     private Integer numberSubmit;
     private Integer numberSolve;
     private Integer indexInAssignment;
     private String solution;
     private Boolean valid;
+    private String code;
     private List<Tag> tagList;
+    private String recentCode;
 }
