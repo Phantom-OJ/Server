@@ -13,5 +13,6 @@ import java.sql.Timestamp;
 @Builder
 public class CodeForm {
     private String code;
+    private String dialect;
     private Long submitTime;
 }
