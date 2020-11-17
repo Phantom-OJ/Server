@@ -18,7 +18,6 @@ public class CodeService {
                 .code(codeForm.getCode())
                 .codeLength(codeForm.getCode().getBytes(StandardCharsets.UTF_8).length)
                 .submitTime(codeForm.getSubmitTime())
-                .valid(true)
                 .build();
         return codeMapper.saveCode(code);
     }
