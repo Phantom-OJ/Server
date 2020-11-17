@@ -7,12 +7,16 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sustech.edu.phantom.dboj.enumeration.JudgeResultCode;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.service.AssignmentService;
+import sustech.edu.phantom.dboj.service.TagService;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,6 +28,9 @@ public class DbojApplicationTests {
 
     @Autowired
     AssignmentService assignmentService;
+
+    @Autowired
+    TagService tagService;
 
     @Test
     public void test1() {
@@ -39,5 +46,20 @@ public class DbojApplicationTests {
         Gson gson = new Gson();
         String json = gson.toJson(assignmentService.getAssignmentList(pagination));
         System.out.println(json);
+    }
+    @Test
+    public void test3(){
+        Map<String, Integer> h = new HashMap<>();
+        h.put("k1", 1);
+        h.put("k2", 2);
+        h.put("k3", 3);
+        h.put("k4", 4);
+        h.put("k5", 5);
+//        assert h.equals(tagService.getTagMapper());
+    }
+    @Test
+    public void test4(){
+        JudgeResultCode a = JudgeResultCode.WA;
+        System.out.println(a);
     }
 }
