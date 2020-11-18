@@ -44,6 +44,12 @@ public class ProblemService {
         return problemMapper.queryCurrentProblem(id);
     }
 
+    /**
+     * 这里相对于上面的方法是多了一个用户的代码
+     * @param id
+     * @param userId
+     * @return
+     */
     public Problem getOneProblemOfOneUser(int id, int userId) {
         Problem problem = getOneProblem(id);
         return null;

@@ -21,12 +21,12 @@ import java.util.List;
 
 @Service
 public class JudgeService {
-    private final static int AC = 0;
-    private final static int SE = 1;
-    private final static int TLE = 2;
-    private final static int WA = 3;
-    private final static int MLE = 4;
-    private final static int RE = 5;
+    private final static int AC = 0;// accept
+    private final static int SE = 1;// system error
+    private final static int TLE = 2;// time limit exceed
+    private final static int WA = 3;// wrong answer
+    private final static int MLE = 4;// memory limit exceed
+    private final static int RE = 5;// runtime error
 
     @Autowired
     ProblemMapper problemMapper;
@@ -95,7 +95,7 @@ public class JudgeService {
 
 }
 
-class SQLCode{
+class SQLCode {
     private static int productNumber = 0;
     private static final int MAX = 20;//队列长度
 
@@ -108,6 +108,7 @@ class SQLCode{
         ++productNumber;
         this.notifyAll();
     }
+
     public synchronized void judgeSQLCode() throws InterruptedException {
         while (productNumber == 0) {
             System.out.println("目前没有代码了");
@@ -117,7 +118,7 @@ class SQLCode{
     }
 }
 
-class Producer implements Runnable{
+class Producer implements Runnable {
     private SQLCode product;
 
     public Producer(SQLCode product) {
@@ -125,7 +126,7 @@ class Producer implements Runnable{
     }
 
     @Override
-    public void run(){
+    public void run() {
         while (true) {
             try {
                 product.addSQLCode();
@@ -135,16 +136,18 @@ class Producer implements Runnable{
         }
     }
 }
-class Consumer implements Runnable{
+
+class Consumer implements Runnable {
     private SQLCode consumer;
 
     public Consumer(SQLCode consumer) {
         this.consumer = consumer;
     }
+
     @SneakyThrows
     @Override
-    public void run(){
-        while (true){
+    public void run() {
+        while (true) {
             consumer.judgeSQLCode();
         }
     }
