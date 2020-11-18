@@ -17,8 +17,8 @@ public class JudgeService {
     }
 
     static Connection connection;
-//    static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-static ExecutorService executorService = Executors.newFixedThreadPool(2);
+    //    static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+    static ExecutorService executorService = Executors.newFixedThreadPool(2);
     final static int AC = 0;
     final static int WRONG_ANSWER = 3;
     final static int TIMEOUT = 2;
@@ -58,8 +58,7 @@ static ExecutorService executorService = Executors.newFixedThreadPool(2);
             future.cancel(true);
             timeOutFlag = 1;
             System.out.println("任务超时。");
-        }
-        finally {
+        } finally {
             executorService.shutdown();
         }
         Long timeEnd = System.currentTimeMillis();

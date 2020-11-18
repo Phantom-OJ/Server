@@ -44,7 +44,21 @@ public class JudgeResult {
         this.code = code;
     }
 
+    public Long getRunTime() {
+        return runTime;
+    }
 
+    public void setRunTime(Long runTime) {
+        this.runTime = runTime;
+    }
+
+    public ArrayList<String> getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(ArrayList<String> userAnswer) {
+        this.userAnswer = userAnswer;
+    }
 
     public void setCodeDescription(String codeDescription) {
         this.codeDescription = codeDescription;

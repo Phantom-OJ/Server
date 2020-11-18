@@ -14,6 +14,8 @@
                index_in_assignment,
                solution
         from "problem"
+        where valid
+          and status = 'public'
         order by id
         offset #{offset} limit #{limit}
     </select>
@@ -31,6 +33,7 @@
                solution
         from "problem"
         where valid
+          and status = 'public'
           and id = #{id};
     </select>
     <update id="invalidateProblem">
@@ -57,6 +60,7 @@
                solution
         from "problem"
         where assignment_id = #{id}
+          and status = 'public'
         order by index_in_assignment;
     </select>
     <select id="oneTagProblems" resultType="sustech.edu.phantom.dboj.entity.Problem">
@@ -77,13 +81,11 @@
             from "problem_tag"
             where valid
               and tag_id = #{id})
+          and status = 'public';
     </select>
     <update id="updateProblemInfo">
         update "problem"
         set number_submit = #{numberSubmit} and number_solve = #{numberSolve}
         where id = #{id};
     </update>
-    <!--    <select id="multipleProblems">-->
-    <!--        select * from "problem" where valid-->
-    <!--    </select>-->
 </mapper>

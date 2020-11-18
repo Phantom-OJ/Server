@@ -5,19 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sustech.edu.phantom.dboj.basicJudge.JudgeInput;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResult;
+import sustech.edu.phantom.dboj.entity.Code;
 import sustech.edu.phantom.dboj.entity.JudgePoint;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.Record;
+import sustech.edu.phantom.dboj.form.CodeForm;
+import sustech.edu.phantom.dboj.mapper.CodeMapper;
 import sustech.edu.phantom.dboj.mapper.JudgeDatabaseMapper;
 import sustech.edu.phantom.dboj.mapper.JudgePointMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.sql.*;
-import java.util.concurrent.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 @Service
 public class JudgeService {
@@ -27,6 +29,8 @@ public class JudgeService {
     private final static int WA = 3;// wrong answer
     private final static int MLE = 4;// memory limit exceed
     private final static int RE = 5;// runtime error
+    private final static String username = "postgres";//
+    private final static String password = "abc123";
 
     @Autowired
     ProblemMapper problemMapper;
@@ -37,12 +41,35 @@ public class JudgeService {
     @Autowired
     JudgeDatabaseMapper judgeDatabaseMapper;
 
+    @Autowired
+    CodeMapper codeMapper;
+
     private List<JudgeResult> judgeResults = new ArrayList<>();
 
     /**
+     * 接受code (还有 problem id 和 user id)
+     * -> 取出判题信息problem表、judge_database表 judge_point表
+     * -> 插入code表
+     * -> 消息队列
+     * -> 传给判题机判题
+     * -> 消息队列
+     * -> 得到判题结果
+     * <p>
+     * -> 更新problem(解题数、提交数)
+     * -> 更新grade表(这题分数，有提交就更新，没有提交就插入，这里记录的是最高分，冗余表)
+     * -> 更新record(提交记录)表
+     *
      * @param id problem id
      */
-    public void judgeCode(int id, String code) {
+    public void judgeCode(int id, CodeForm codeForm, int userId) {
+        Code c = Code.builder()
+                .code(codeForm.getCode())
+                .codeLength(codeForm.getCode().getBytes(StandardCharsets.UTF_8).length)
+                .submitTime(codeForm.getSubmitTime())
+                .build();
+        codeMapper.saveCode(c);
+
+        Record record = new Record();
         Problem problem = problemMapper.queryCurrentProblem(id);
         List<JudgeInput> judgeInputList = new ArrayList<>();
 
@@ -50,11 +77,11 @@ public class JudgeService {
         for (JudgePoint j : judgePointList) {
             ArrayList<String> answer = new ArrayList<>();
             answer.add(j.getAnswer());
-            String dbPath = judgeDatabaseMapper.getJudgeDatabaseById(j.getJudgeDatabaseId()).getDatabasePath();
+            String dbPath = judgeDatabaseMapper.getJudgeDatabaseById(j.getJudgeDatabaseId()).getDatabaseUrl();
             judgeInputList.add(JudgeInput.builder()
                     .JudgeDatabase(dbPath)
                     .beforeInput(j.getBeforeSql())
-                    .userInput(code)
+                    .userInput(codeForm.getCode())
                     .afterInput(j.getAfterSql())
                     .timeLimit(problem.getTimeLimit())
                     .standardAnswer(answer)
@@ -95,9 +122,11 @@ public class JudgeService {
 
 }
 
-class SQLCode {
+class Buffer {
     private static int productNumber = 0;
     private static final int MAX = 20;//队列长度
+    public static Queue<JudgeInput> judgeInputQueue = new ArrayBlockingQueue<>(MAX);
+
 
     public synchronized void addSQLCode() throws InterruptedException {
         while (productNumber == MAX) {
@@ -119,9 +148,9 @@ class SQLCode {
 }
 
 class Producer implements Runnable {
-    private SQLCode product;
+    private Buffer product;
 
-    public Producer(SQLCode product) {
+    public Producer(Buffer product) {
         this.product = product;
     }
 
@@ -138,9 +167,9 @@ class Producer implements Runnable {
 }
 
 class Consumer implements Runnable {
-    private SQLCode consumer;
+    private Buffer consumer;
 
-    public Consumer(SQLCode consumer) {
+    public Consumer(Buffer consumer) {
         this.consumer = consumer;
     }
 

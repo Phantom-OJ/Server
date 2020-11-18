@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.JudgeDatabaseMapper">
     <select id="getJudgeDatabaseById" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
-        select id, database_url, username, password
+        select id, database_url
         from "judge_database"
         where valid
           and id = #{id};
