@@ -54,4 +54,18 @@
         order by r.submit_time desc
         offset #{offset} limit #{limit};
     </select>
+    <select id="getProblemResultSet" resultType="sustech.edu.phantom.dboj.form.stat.ProblemStat">
+        select result as key, count(*) as count
+        from "record"
+        where valid
+          and problem_id = #{id}
+        group by result;
+    </select>
+    <select id="getProblemDialectSet" resultType="sustech.edu.phantom.dboj.form.stat.ProblemStat">
+        select dialect as key, count(*) as count
+        from "record"
+        where valid
+          and problem_id = #{id}
+        group by dialect;
+    </select>
 </mapper>

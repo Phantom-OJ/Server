@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sustech.edu.phantom.dboj.entity.Record;
 import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 
 import java.util.List;
@@ -29,5 +30,18 @@ public class RecordService {
 
     public Record getOneRecord(int id) {
         return null;
+    }
+
+    /**
+     *
+     * @param id problem id
+     * @return
+     */
+    public ProblemStatSet getOneProblemStat(int id) {
+        return ProblemStatSet
+                .builder()
+                .resultSet(recordMapper.getProblemResultSet(id))
+                .dialectSet(recordMapper.getProblemDialectSet(id))
+                .build();
     }
 }

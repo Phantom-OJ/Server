@@ -41,7 +41,9 @@ public class ProblemService {
     }
 
     public Problem getOneProblem(int id) {
-        return problemMapper.queryCurrentProblem(id);
+        Problem problem = problemMapper.queryCurrentProblem(id);
+        problem.setTagList(tagMapper.getProblemTags(id));
+        return problem;
     }
 
     /**

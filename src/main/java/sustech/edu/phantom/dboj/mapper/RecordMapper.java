@@ -1,7 +1,9 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.Record;
 import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.stat.ProblemStat;
 
 import java.util.List;
 
@@ -23,4 +25,8 @@ public interface RecordMapper {
      * @return
      */
     List<Record> getAllRecords(Pagination pagination);
+
+    List<ProblemStat> getProblemResultSet(int id);
+
+    List<ProblemStat> getProblemDialectSet(int id);
 }
