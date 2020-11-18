@@ -1,11 +1,13 @@
 package sustech.edu.phantom.dboj.form;
 
+import java.util.HashMap;
+
 public class Pagination {
     private int start;
     private int end;
     private transient int limit;
     private transient int offset;
-    private String filter;
+    private HashMap<String, String> filter;
 
     public int getStart() {
         return start;
@@ -36,11 +38,11 @@ public class Pagination {
         return offset;
     }
 
-    public String getFilter() {
+    public HashMap<String, String> getFilter() {
         return filter;
     }
 
-    public void setFilter(String filter) {
+    public void setFilter(HashMap<String, String> filter) {
         this.filter = filter;
     }
 }

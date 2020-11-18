@@ -30,9 +30,6 @@ public class AssignmentService {
     public List<Assignment> getAssignmentList(Pagination pagination) {
         pagination.setParameters();
         List<Assignment> assignmentList = assignmentMapper.queryAssignments(pagination);
-//        for (Assignment a : assignmentList) {
-//            a.setProblemList(problemMapper.oneAssignmentProblems(a.getId()));
-//        }
         return assignmentList;
     }
 }

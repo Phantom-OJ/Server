@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.service.UserService;
 
 @RestController
-@RequestMapping("/sa/api")
+@RequestMapping("/api/sa")
 public class SAController {
     @Autowired
     UserService userService;

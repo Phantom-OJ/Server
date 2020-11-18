@@ -12,7 +12,7 @@ import sustech.edu.phantom.dboj.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/admin/api")
+@RequestMapping(value = "/api/admin")
 /**
  * 这里所有的方法都得要权限
  */

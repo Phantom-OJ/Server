@@ -29,4 +29,9 @@ public class CodeService {
     public int invalidateCode(int id) {
         return codeMapper.invalidateCode(id);
     }
+
+    public String queryCurrentCode(int userid, int pid) {
+        Code code = codeMapper.queryRecentCode(userid, pid);
+        return code.getCode();
+    }
 }

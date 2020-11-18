@@ -7,14 +7,11 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sustech.edu.phantom.dboj.enumeration.JudgeResultCode;
-import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.service.AssignmentService;
 import sustech.edu.phantom.dboj.service.TagService;
 import sustech.edu.phantom.dboj.service.UserService;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,10 +53,5 @@ public class DbojApplicationTests {
         h.put("k4", 4);
         h.put("k5", 5);
 //        assert h.equals(tagService.getTagMapper());
-    }
-    @Test
-    public void test4(){
-        JudgeResultCode a = JudgeResultCode.WA;
-        System.out.println(a);
     }
 }
