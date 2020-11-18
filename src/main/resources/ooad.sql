@@ -205,8 +205,14 @@ VALUES ('ROLE_STUDENT', 'modify personal information'),
        ('ROLE_TEACHER', 'provide description'),
        ('ROLE_TEACHER', 'provide space and time limit'),
        ('ROLE_TEACHER', 'provide sample output'),
-       ('ROLE_TEACHER', 'create assignment'),
        ('ROLE_TEACHER', 'modify assignment'),
        ('ROLE_TEACHER', 'grant other users');
-
+insert into "group" (description)
+values
+       ('group1'),
+       ('group2'),
+       ('group3'),
+       ('group4'),
+       ('group5'),
+       ('group6');
 commit;
