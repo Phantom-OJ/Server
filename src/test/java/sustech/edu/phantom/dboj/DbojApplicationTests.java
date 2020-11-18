@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.service.AssignmentService;
+import sustech.edu.phantom.dboj.service.GroupService;
 import sustech.edu.phantom.dboj.service.TagService;
 import sustech.edu.phantom.dboj.service.UserService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +31,10 @@ public class DbojApplicationTests {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    GroupService groupService;
+
 
     @Test
     public void test1() {
@@ -53,5 +60,19 @@ public class DbojApplicationTests {
         h.put("k4", 4);
         h.put("k5", 5);
 //        assert h.equals(tagService.getTagMapper());
+    }
+    @Test
+    public void test4(){
+        ArrayList<Integer> a = new ArrayList<>();
+        a.add(1);
+        a.add(2);
+        a.add(3);
+        a.add(4);
+//        System.out.println(groupService.getGroupList(a));
+        Pagination pagination = new Pagination();
+        pagination.setStart(1);
+        pagination.setEnd(4);
+        pagination.setParameters();
+        System.out.println(assignmentService.getAssignmentList(pagination));
     }
 }
