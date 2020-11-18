@@ -22,8 +22,7 @@ public class User {
     private Boolean stateSave;
     private String state;
     private String lang;
-    private Boolean valid;
+//    private Boolean valid;
     private List<Permission> permissionList;
     private List<Group> groupList;
-
 }

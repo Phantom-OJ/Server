@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class JudgeDatabase {
     private Integer id;
     private String databasePath;
-    private Boolean valid;
+//    private Boolean valid;
 }

@@ -27,7 +27,7 @@ public class Record {
     private String dialect;
     private Integer codeLength;
     private Long submitTime;
-    private Boolean valid;
+//    private Boolean valid;
     private String problemTitle;
     private String avatar;
     private String username;

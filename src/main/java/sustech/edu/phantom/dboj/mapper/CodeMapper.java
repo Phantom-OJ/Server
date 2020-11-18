@@ -19,5 +19,11 @@ public interface CodeMapper {
 
     int invalidateCode(int id);
 
+    /**
+     * 取一个用户最近一次提交的代码
+     * @param userId user id
+     * @param problemId problem id
+     * @return Code 对象
+     */
     Code queryRecentCode(int userId, int problemId);
 }

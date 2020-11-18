@@ -11,5 +11,5 @@ public class JudgePoint {
     private Integer judgeScriptId;
     private String answer;
     private Integer judgeDatabaseId;
-    private Boolean valid;
+//    private Boolean valid;
 }

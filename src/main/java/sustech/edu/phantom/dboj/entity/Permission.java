@@ -6,5 +6,5 @@ import lombok.Data;
 public class Permission {
     private String role;
     private String allowance;
-    private Boolean valid;
+//    private Boolean valid;
 }

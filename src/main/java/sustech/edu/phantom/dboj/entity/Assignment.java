@@ -21,7 +21,7 @@ public class Assignment {
     private String status;
     private Integer fullScore;
     private String sampleDatabasePath;
-    private Boolean valid;
+//    private Boolean valid;
     private List<Group> groupList;
     private List<Problem> problemList;
 }

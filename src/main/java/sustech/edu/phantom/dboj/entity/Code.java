@@ -14,5 +14,5 @@ public class Code {
     private String code;
     private Integer codeLength;
     private Long submitTime;
-    private Boolean valid;
+//    private Boolean valid;
 }

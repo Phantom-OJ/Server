@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.JudgePointMapper">
     <select id="getAllJudgePointsOfProblem" resultType="sustech.edu.phantom.dboj.entity.JudgePoint">
-        select *
+        select id, problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id
         from "judge_point"
         where valid
           and problem_id = #{id}

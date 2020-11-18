@@ -3,7 +3,20 @@
 <mapper namespace="sustech.edu.phantom.dboj.mapper.RecordMapper">
 
     <select id="queryRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
-        select *
+        select id,
+               code_id,
+               id,
+               code_id,
+               user_id,
+               problem_id,
+               score,
+               result,
+               description,
+               space,
+               time,
+               dialect,
+               code_length,
+               submit_time
         from "record"
         where valid
         offset #{offset} limit #{limit};
