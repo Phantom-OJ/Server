@@ -1,4 +1,8 @@
 begin transaction;
+drop table "announcement", assignment, assignment_group,
+    code, grade, "group", judge_database, judge_point,
+    judge_script, "permission", problem, problem_tag,
+    record, tag, "user", user_group;
 create table if not exists "user"
 (
     id         serial primary key,
@@ -47,8 +51,8 @@ create table if not exists "problem"
 create table if not exists "judge_database"
 (
     id           serial primary key,
-    database_url text    not null default 'jdbc:postgresql://localhost:5432/postgres',
-    valid        bool    not null default true
+    database_url text not null default 'jdbc:postgresql://localhost:5432/postgres',
+    valid        bool not null default true
 );
 create table if not exists "judge_point"
 (
@@ -205,7 +209,6 @@ VALUES ('ROLE_STUDENT', 'modify personal information'),
        ('ROLE_TEACHER', 'provide description'),
        ('ROLE_TEACHER', 'provide space and time limit'),
        ('ROLE_TEACHER', 'provide sample output'),
-       ('ROLE_TEACHER', 'create assignment'),
        ('ROLE_TEACHER', 'modify assignment'),
        ('ROLE_TEACHER', 'grant other users');
 

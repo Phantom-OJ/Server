@@ -24,7 +24,6 @@ public class Problem {
     private Integer indexInAssignment;
     private String solution;
 //    private Boolean valid;
-    private String code;
     private List<Tag> tagList;
     private String recentCode;
 }

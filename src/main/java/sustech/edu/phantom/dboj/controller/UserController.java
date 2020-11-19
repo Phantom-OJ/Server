@@ -3,10 +3,12 @@ package sustech.edu.phantom.dboj.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
+import sustech.edu.phantom.dboj.entity.Record;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.LoginForm;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.RegisterForm;
+import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.*;
 
 import java.util.List;
@@ -26,8 +28,6 @@ public class UserController {
     AnnouncementService announcementService;
     @Autowired
     CodeService codeService;
-    @Autowired
-    JudgeService judgeService;
 
     /**
      * 注册api 还没写好
@@ -122,7 +122,7 @@ public class UserController {
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.POST)
     public Record submitCode(@PathVariable int id, @RequestBody CodeForm codeForm) {
         int userId = 1;
-        judgeService.judgeCode(id, codeForm, userId);
+//        judgeService.judgeCode(id, codeForm, userId);
         return null;
     }
 
@@ -148,4 +148,13 @@ public class UserController {
         return recordService.getOneRecord(id);
     }
 
+    /**
+     * 一个Problem的所有数据
+     * @param id Problem id
+     * @return ProblemStatisticsSet对象，包含result结果和语言结果
+     */
+    @RequestMapping(value = "/problem/{id}/statistics/",method = RequestMethod.GET)
+    public ProblemStatSet getOneProblemStatistics(@PathVariable int id){
+        return recordService.getOneProblemStat(id);
+    }
 }

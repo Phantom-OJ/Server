@@ -6,4 +6,12 @@
         from "tag"
         where valid;
     </select>
+    <select id="getProblemTags" resultType="sustech.edu.phantom.dboj.entity.Tag">
+        select id, keyword, description
+        from tag
+        where valid and id in (
+            select distinct tag_id
+            from "problem_tag"
+            where problem_id = #{pid} and valid);
+    </select>
 </mapper>

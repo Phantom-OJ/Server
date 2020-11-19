@@ -7,4 +7,5 @@ import java.util.List;
 public interface TagMapper {
     List<Tag> allTagList();
 
+    List<Tag> getProblemTags(int pid);
 }
