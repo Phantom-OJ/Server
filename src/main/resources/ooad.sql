@@ -46,6 +46,7 @@ create table if not exists "problem"
     number_solve        int  not null,
     index_in_assignment int  not null,
     solution            text not null,
+    status              varchar not null default 'private',
     valid               bool not null default true
 );
 create table if not exists "judge_database"
@@ -211,5 +212,14 @@ VALUES ('ROLE_STUDENT', 'modify personal information'),
        ('ROLE_TEACHER', 'provide sample output'),
        ('ROLE_TEACHER', 'modify assignment'),
        ('ROLE_TEACHER', 'grant other users');
+
+insert into "group" (description)
+values
+('group1'),
+('group2'),
+('group3'),
+('group4'),
+('group5'),
+('group6');
 
 commit;
