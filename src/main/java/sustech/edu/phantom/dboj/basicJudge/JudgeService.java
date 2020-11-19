@@ -17,11 +17,12 @@ public class JudgeService {
     }
 
     static Connection connection;
-//    static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-static ExecutorService executorService = Executors.newFixedThreadPool(2);
+    //    static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+    static ExecutorService executorService = Executors.newFixedThreadPool(2);
     final static int AC = 0;
     final static int WRONG_ANSWER = 3;
     final static int TIMEOUT = 2;
+    static Connection userDefineConnection;
 
     static {
         try {
@@ -35,58 +36,87 @@ static ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     public static JudgeResult judgeSingle(JudgeInput judgeInput) throws SQLException {
 
+        //给后端返回的json报文
+        JudgeResult judgeResult=new JudgeResult();
+
+        //默认是select提交,afterselect不执行,如果是1,则执行
+        int judgeType=0;
+
+        //TODO 用线程池来提交，从而实现超时截断,可能性能会差一点，后面有空再研究优化问题
         Future<ArrayList<String>> future = executorService.submit(new Callable<ArrayList<String>>() {
             @Override
             public ArrayList<String> call() throws Exception {
-                Thread.sleep(5000);
-                return getResult(judgeInput.userInput, connection);
+                //Thread.sleep(5000);
+                return getResult(judgeInput.userInput, userDefineConnection);
             }
         });
+
+        try {
+            userDefineConnection = DriverManager.getConnection(judgeInput.judgeDatabaseUrl, judgeInput.userName, judgeInput.passWord);
+            if(userDefineConnection==null){
+                throw new Exception();
+            }
+            //userDefineConnection.createArrayOf()
+        } catch (Exception e) {
+            System.out.println("与判题数据库建立连接失败，输入报文不正确或数据库不存在");
+            e.printStackTrace();
+            return JudgeResult.CONNECTION_ERROR;
+        }
+
+        if(judgeInput.additionFields!=null){
+            if(judgeInput.additionFields.get("type")!=null){
+                judgeType=(int)judgeInput.additionFields.get("type");
+
+                //trigger的暂时不支持
+                return JudgeResult.UNKNOWN_ERROR;
+            }
+        }
+
+
         int timeOutFlag = 0;
 
-        JudgeResult judgeResult = new JudgeResult();
-        //由老师输入的sql，通常为ddl或插入数据
+        //beforeStatement,由老师输入的sql，通常为ddl或插入数据
         Statement beforeStatement = connection.createStatement();
         if (judgeInput.beforeInput != null) {
-            boolean beforeSuccess = beforeStatement.execute(judgeInput.getBeforeInput());
+            try{
+            beforeStatement.execute(judgeInput.getBeforeInput());}
+            catch (Exception e){
+                judgeResult=JudgeResult.SYNTAX_ERROR;
+                return judgeResult;
+            }
+          //  boolean beforeSuccess = beforeStatement.(judgeInput.getBeforeInput());
         }
         ArrayList<String> userResult = null;
         Long timeStart = System.currentTimeMillis();
         try {
-            userResult = future.get(judgeInput.timeLimit, TimeUnit.SECONDS);
+            userResult = future.get(judgeInput.timeLimit, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             future.cancel(true);
             timeOutFlag = 1;
             System.out.println("任务超时。");
-        }
-        finally {
+        } finally {
             executorService.shutdown();
         }
         Long timeEnd = System.currentTimeMillis();
         Long runtime = timeEnd - timeStart;
-        // ArrayList<String> userResult=getResult(judgeInput.userInput,connection);
-
         if (timeOutFlag == 1) {
-            judgeResult.code = TIMEOUT;
-            judgeResult.codeDescription = "Answer Correct";
-            judgeResult.userAnswer = userResult;
+            judgeResult=JudgeResult.TIME_LIMIT_EXCEED;
+            judgeResult.userAnswer = null;
             judgeResult.runTime = judgeInput.timeLimit;
             return judgeResult;
         }
         int compareResult = compareResult(userResult, judgeInput.standardAnswer);
         if (compareResult == -1) {
-            judgeResult.code = AC;
-            judgeResult.codeDescription = "Answer Correct";
+            judgeResult=JudgeResult.ANSWER_CORRECT;
             judgeResult.userAnswer = userResult;
             judgeResult.runTime = runtime;
         } else {
-            judgeResult.code = WRONG_ANSWER;
-            judgeResult.codeDescription = "Wrong Answer";
+            judgeResult=JudgeResult.WRONG_ANSWER;
             judgeResult.userAnswer = userResult;
             judgeResult.runTime = runtime;
         }
         //在学生的sql之后执行的代码，通常为检验trigger是否成功，貌似这样的话一条sql不太够,先不作为判定依据
-        Statement afterStatement = connection.createStatement();
+        Statement afterStatement = userDefineConnection.createStatement();
         if (judgeInput.afterInput != null) {
             boolean afterSuccess = afterStatement.execute(judgeInput.afterInput);
         }
@@ -123,8 +153,10 @@ static ExecutorService executorService = Executors.newFixedThreadPool(2);
     }
 
     public static ArrayList<String> getResult(String sql, Connection connection) throws SQLException {
+        //TODO 多条sql如何执行？
         ArrayList<String> resultRow = new ArrayList<>();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.addBatch();
         ResultSet resultSet = preparedStatement.executeQuery();
         ResultSetMetaData metadata = resultSet.getMetaData();
         StringBuilder sb = new StringBuilder();
@@ -140,7 +172,7 @@ static ExecutorService executorService = Executors.newFixedThreadPool(2);
             String columnName = metadata.getColumnName(i);
             // System.out.println("获取列名:" + columnName);
             sb.append(columnName);
-            if (i > 1 && i < colNum) {
+            if (i >=1 && i < colNum) {
                 sb.append("|");
             }
         }

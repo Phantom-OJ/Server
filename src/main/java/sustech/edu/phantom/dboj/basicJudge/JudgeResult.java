@@ -4,13 +4,23 @@ package sustech.edu.phantom.dboj.basicJudge;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class JudgeResult {
-    Integer code;//0为成功，1为语法错误，2为超时，3是wrong answer 后续还可以拓展
+    Integer code;//0为成功，1为语法错误，2为超时，3是wrong answer,4是运行时错误,5是数据库连接错误,6是判题机未知错误
     Long runTime;
     String codeDescription;
     ArrayList<String> userAnswer;//执行结果，是一个以“|”分隔列的table，每一行是一个元素
-    String[] additionFields;
+    HashMap<String,Object> additionFields;
+
+
+    public static JudgeResult ANSWER_CORRECT=new JudgeResult(0,"Answer Correct");
+    public static JudgeResult SYNTAX_ERROR=new JudgeResult(1,"Systax Error");
+    public static JudgeResult TIME_LIMIT_EXCEED=new JudgeResult(2,"Time Limit Exceed");
+    public static JudgeResult WRONG_ANSWER=new JudgeResult(3,"Wrong Answer");
+    public static JudgeResult RUN_TIME_ERROR=new JudgeResult(4,"Wrong time error");
+    public static JudgeResult CONNECTION_ERROR=new JudgeResult(5,"Failed to connect to given database");
+    public static JudgeResult UNKNOWN_ERROR=new JudgeResult(6,"未知错误，估计是判题机出bug了ORZ");
 
     @Override
     public String toString() {
@@ -19,8 +29,13 @@ public class JudgeResult {
                 ", runTime=" + runTime +
                 ", codeDescription='" + codeDescription + '\'' +
                 ", userAnswer=" + userAnswer +
-                ", additionFields=" + Arrays.toString(additionFields) +
+                ", additionFields=" + additionFields +
                 '}';
+    }
+
+    public JudgeResult(Integer code, String codeDescription) {
+        this.code = code;
+        this.codeDescription = codeDescription;
     }
 
     public JudgeResult() {
@@ -36,9 +51,6 @@ public class JudgeResult {
     }
 
 
-    public String[] getAdditionFields() {
-        return additionFields;
-    }
 
     public void setCode(Integer code) {
         this.code = code;
@@ -51,7 +63,4 @@ public class JudgeResult {
     }
 
 
-    public void setAdditionFields(String[] additionFields) {
-        this.additionFields = additionFields;
-    }
 }
