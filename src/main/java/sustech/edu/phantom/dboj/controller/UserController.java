@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
 import sustech.edu.phantom.dboj.form.CodeForm;
@@ -10,6 +12,7 @@ import sustech.edu.phantom.dboj.form.RegisterForm;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -37,7 +40,7 @@ public class UserController {
      * @return 刚注册的user对象
      */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public User signup(@RequestBody RegisterForm registerForm) {
+    public User signup(@RequestBody RegisterForm registerForm) throws Exception {
         return userService.register(registerForm);
     }
 
@@ -47,10 +50,10 @@ public class UserController {
      * @param loginForm 登录表单
      * @return 登录的user对象
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public User login(@RequestBody LoginForm loginForm) {
-        return userService.login(loginForm);
-    }
+//    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    public UserDetails login(@RequestBody LoginForm loginForm) {
+//        return userService.loadUserByUsername(loginForm.getUsername());
+//    }
 
     /**
      * 所有的公告，是可以对所有人public的，没有权限限制
@@ -82,13 +85,13 @@ public class UserController {
      * @return 查询的problem的对象
      */
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.GET)
-    public Problem getOneProblem(@PathVariable int id) {
-        Problem problem = problemService.getOneProblem(id);
+    public Problem getOneProblem(@PathVariable int id, @AuthenticationPrincipal User user) {
+        System.out.println(user);
         //if 存在 user 那么执行
         //problem.setCode(codeService.queryCurrentCode(userid,id));
 //        int userId = 1;// 这里还需要改一改
 //        return problemService.(id);
-        return problem;
+        return user != null ? problemService.getOneProblem(id, user.getId()) : problemService.getOneProblem(id);
     }
 
     /**
@@ -120,10 +123,15 @@ public class UserController {
      * @param codeForm 提交code的表单
      * @return 这份代码提交的record, 还未实现
      */
-    @RequestMapping(value = "/problem/{id}", method = RequestMethod.POST)
-    public Record submitCode(@PathVariable int id, @RequestBody CodeForm codeForm) {
-        int userId = 1;
-        judgeService.judgeCode(id, codeForm, userId);
+    @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
+    public Record submitCode(@PathVariable int id, @RequestBody CodeForm codeForm, @AuthenticationPrincipal User user) throws Exception {
+        //这个方法要用到消息队列
+
+        try {
+            judgeService.judgeCode(id, codeForm, user.getId());
+        } catch (NullPointerException e) {
+            throw new Exception("You have not signed in.");
+        }
         return null;
     }
 
@@ -145,17 +153,24 @@ public class UserController {
      * @return 查询的record的类
      */
     @RequestMapping(value = "/record/{id}", method = RequestMethod.GET)
-    public Record getOneRecord(@PathVariable int id) {
-        return recordService.getOneRecord(id);
+    public Record getOneRecord(@PathVariable int id, @AuthenticationPrincipal User user) {
+        Record record = null;
+        try {
+            record = recordService.getOneRecord(id, user.getId());
+        } catch (NullPointerException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+        return record;
     }
 
     /**
      * 一个Problem的所有数据
+     *
      * @param id Problem id
      * @return ProblemStatisticsSet对象，包含result结果和语言结果
      */
-    @RequestMapping(value = "/problem/{id}/statistics/",method = RequestMethod.GET)
-    public ProblemStatSet getOneProblemStatistics(@PathVariable int id){
+    @RequestMapping(value = "/problem/{id}/statistics/", method = RequestMethod.GET)
+    public ProblemStatSet getOneProblemStatistics(@PathVariable int id) {
         return recordService.getOneProblemStat(id);
     }
 }
