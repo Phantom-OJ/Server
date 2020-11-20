@@ -16,6 +16,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * @author Lori
+ */
 public class JsonDeserializer extends com.fasterxml.jackson.databind.JsonDeserializer<RestResponse>{
     private static final Logger logger = LoggerFactory.getLogger(JsonDeserializer.class);
     @Override

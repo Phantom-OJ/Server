@@ -7,6 +7,9 @@ import sustech.edu.phantom.dboj.response.serializer.JsonSerializer;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Lori
+ */
 @JsonDeserialize(using = JsonDeserializer.class)
 @JsonSerialize(using = JsonSerializer.class)
 public interface RestResponse<T> extends IErrorCode {

@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Lori
+ */
 public abstract class GenericResponse implements RestResponse{
     private boolean isFieldsSet = false;
     private boolean isDataSet = false;
@@ -35,10 +38,12 @@ public abstract class GenericResponse implements RestResponse{
         return this;
     }
 
+    @Override
     public Optional<Map<String, Object>> getFields() {
         return this.isFieldsSet ? Optional.of(this.fields) : Optional.empty();
     }
 
+    @Override
     public Optional<Object> getData() {
         return this.isDataSet ? Optional.ofNullable(this.data) : Optional.empty();
     }

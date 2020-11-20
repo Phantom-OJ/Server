@@ -1,5 +1,9 @@
 package sustech.edu.phantom.dboj.response;
 
+/**
+ * @author Lori
+ */
+
 public enum GlobalResponseCode implements IErrorCode {
     SUCCESS(200, "操作成功！"),
 

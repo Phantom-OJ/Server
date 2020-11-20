@@ -9,6 +9,9 @@ import sustech.edu.phantom.dboj.response.RestResponse;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * @author Lori
+ */
 public class JsonSerializer extends com.fasterxml.jackson.databind.JsonSerializer<RestResponse<Object>> {
     private static final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
 

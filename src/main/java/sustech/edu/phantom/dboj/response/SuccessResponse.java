@@ -1,5 +1,8 @@
 package sustech.edu.phantom.dboj.response;
 
+/**
+ * @author Lori
+ */
 public class SuccessResponse extends GenericResponse {
     private static final GlobalResponseCode success = GlobalResponseCode.SUCCESS;
 
