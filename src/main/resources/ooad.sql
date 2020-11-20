@@ -2,7 +2,6 @@ begin transaction;
 create table if not exists "user"
 (
     id         serial primary key,
-    group_id   int,
     username   varchar(45)  not null unique,
     password   varchar(100) not null,
     nickname   varchar(45),
