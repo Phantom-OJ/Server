@@ -31,4 +31,5 @@ public class Record {
     private String problemTitle;
     private String avatar;
     private String username;
+    private String code;
 }
