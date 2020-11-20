@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.mapper.CodeMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
 import sustech.edu.phantom.dboj.mapper.TagMapper;
 
@@ -24,6 +25,9 @@ public class ProblemService {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    CodeMapper codeMapper;
 
     /**
      * 多个tag筛选标签
@@ -52,9 +56,11 @@ public class ProblemService {
      * @param userId
      * @return
      */
-    public Problem getOneProblemOfOneUser(int id, int userId) {
+    public Problem getOneProblem(int id, int userId) {
         Problem problem = getOneProblem(id);
-        return null;
+        problem.setRecentCode(codeMapper.queryRecentCode(userId, id));
+        System.out.println(codeMapper.queryRecentCode(userId, id));
+        return problem;
     }
 
     public List<Problem> getProblemList(Pagination pagination) {

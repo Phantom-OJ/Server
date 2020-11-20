@@ -28,8 +28,8 @@ public class RecordService {
         return recordMapper.getAllRecords(pagination);
     }
 
-    public Record getOneRecord(int id) {
-        return null;
+    public Record getOneRecord(int id, int userId) {
+        return recordMapper.getOneRecord(id, userId);
     }
 
     /**

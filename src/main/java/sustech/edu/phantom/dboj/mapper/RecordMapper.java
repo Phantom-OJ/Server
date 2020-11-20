@@ -44,4 +44,6 @@ public interface RecordMapper {
      * @return problem的数据集
      */
     List<ProblemStat> getProblemDialectSet(int id);
+
+    Record getOneRecord(int id, int userId);
 }

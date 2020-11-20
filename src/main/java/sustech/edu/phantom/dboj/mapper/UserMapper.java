@@ -15,14 +15,14 @@ public interface UserMapper {
      * @param user
      * @return
      */
-    int register(User user);
+    boolean register(User user);
 
     /**
      *
      * @param username
      * @return
      */
-    int findUserByUsername(String username);
+    User findUserByUsername(String username);
 
     /**
      *

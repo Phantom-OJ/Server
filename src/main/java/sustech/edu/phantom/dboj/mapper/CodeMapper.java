@@ -25,5 +25,5 @@ public interface CodeMapper {
      * @param problemId problem id
      * @return Code 对象
      */
-    Code queryRecentCode(int userId, int problemId);
+    String queryRecentCode(int userId, int problemId);
 }
