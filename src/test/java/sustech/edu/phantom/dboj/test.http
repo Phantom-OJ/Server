@@ -8,3 +8,14 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://localhost:8080/api/problem
+Content-Type: application/json
+
+{
+  "start": 1,
+  "end": 10,
+  "filter": {
+
+  }
+}

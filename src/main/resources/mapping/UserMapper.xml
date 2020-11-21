@@ -11,7 +11,8 @@
                avatar,
                state_save,
                state,
-               lang
+               lang,
+               valid
         from "user"
         where valid
           and username = #{username,jdbcType=VARCHAR}
@@ -24,8 +25,8 @@
                 #{password,jdbcType=VARCHAR},
                 #{nickname,jdbcType=VARCHAR})
     </insert>
-    <select id="findUserByUsername" resultType="java.lang.Integer">
-        select count(*)
+    <select id="findUserByUsername" resultType="sustech.edu.phantom.dboj.entity.User">
+        select *
         from "user"
         where username = #{param1};
     </select>

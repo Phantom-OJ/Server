@@ -13,4 +13,6 @@ public interface GroupMapper {
     List<Group> getGroups(@Param("ids") ArrayList<Integer> ids);
 
     List<Group> getAssignmentGroup(int aid);
+
+    List<Group> getStudentGroup(int sid);
 }

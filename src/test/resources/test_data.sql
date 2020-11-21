@@ -65,3 +65,9 @@ values ('group1'),
        ('group4'),
        ('group5'),
        ('group6');
+
+insert into "problem" (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
+                       number_solve,
+                       index_in_assignment, solution, status)
+VALUES (1, 'test1', 'test1description', 100, 45.55, 66.66, 6, 5, 1, 'no solution', 'public'),
+       (1, 'zbdbqblmsxq', '### wcsl', 40, 64, 128, 0, 0, 2, 'DROP DATABASE c;', 'public');

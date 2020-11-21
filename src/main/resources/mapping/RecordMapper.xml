@@ -68,4 +68,12 @@
           and problem_id = #{id}
         group by dialect;
     </select>
+    <select id="getOneRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.*, c.code
+        from record r
+                 join code c on r.code_id = c.id
+        where r.valid
+          and r.user_id = #{userId}
+          and r.id = #{id};
+    </select>
 </mapper>

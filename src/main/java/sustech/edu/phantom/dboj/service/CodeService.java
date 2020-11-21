@@ -30,8 +30,8 @@ public class CodeService {
         return codeMapper.invalidateCode(id);
     }
 
-    public String queryCurrentCode(int userid, int pid) {
-        Code code = codeMapper.queryRecentCode(userid, pid);
-        return code.getCode();
-    }
+//    public String queryCurrentCode(int userid, int pid) {
+//        Code code = codeMapper.queryRecentCode(userid, pid);
+//        return code.getCode();
+//    }
 }
