@@ -16,6 +16,5 @@ Content-Type: application/json
   "start": 1,
   "end": 10,
   "filter": {
-
   }
 }

@@ -4,7 +4,6 @@
     <select id="login" parameterType="sustech.edu.phantom.dboj.entity.User"
             resultType="sustech.edu.phantom.dboj.entity.User">
         select id,
-               group_id,
                username,
                nickname,
                role,

@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class User implements UserDetails {
     private Integer id;
-//    private Integer groupId;
     private String username;
     private String password;
     private String nickname;

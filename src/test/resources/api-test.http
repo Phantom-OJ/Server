@@ -1,0 +1,199 @@
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911113@mail.sustech.edu.cn",
+  "password": "11911113",
+  "nickname": "test3"
+}
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911113@mail.sustech.edu.cn",
+  "password": "11911113",
+  "nickname": "test3"
+}
+
+<> 2020-11-21T001830.200.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911112@mail.sustech.edu.cn",
+  "password": "11911112",
+  "nickname": "test1"
+}
+
+<> 2020-11-21T001605.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111",
+  "nickname": "test1"
+}
+
+<> 2020-11-20T235633.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111",
+  "nickname": "test1"
+}
+
+<> 2020-11-20T235223.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111",
+  "nickname": "test1"
+}
+
+<> 2020-11-20T235139.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111",
+  "password": "119",
+  "nickname": ""
+}
+
+<> 2020-11-20T234754.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "119",
+  "nickname": ""
+}
+
+<> 2020-11-20T234744.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111",
+  "nickname": ""
+}
+
+<> 2020-11-20T234732.500.json
+
+###
+
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111",
+  "nickname": "test1"
+}
+
+###
+
+POST http://localhost:8080/api/login
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111"
+}
+
+###
+
+POST http://localhost:8080/api/register
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111"
+}
+
+<> 2020-11-20T233308.404.json
+
+###
+
+POST http://localhost:8080/api/register
+content-type: application/json
+
+{
+  "username": "11911111@mail.sustech.edu.cn",
+  "password": "11911111"
+}
+
+###
+
+POST http://localhost:8080/api/login
+content-type: application/json
+
+{
+"username": "11811499@mail.sustech.edu.cn",
+  "password": "11811499"
+}
+
+###
+
+POST http://localhost:8080/api/login
+content-type: application/json
+
+{
+"username": "11811499@mail.sustech.edu.cn",
+  "password": "1181149"
+}
+
+<> 2020-11-20T230724.200.json
+
+###
+
+GET http://localhost:8080/api/problem/1/statistics/
+
+<> 2020-11-19T005931.200.json
+
+###
+
+GET http://localhost:8080/api/user/problem
+content-type: application/json
+
+{
+"start": 1
+  ,"end": 1,
+  "filter": {}
+}
+
+<> 2020-11-18T173446.200.json
+
+###
+
