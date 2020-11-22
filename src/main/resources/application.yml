@@ -23,7 +23,14 @@ spring:
       filters: stat
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       use-global-data-source-stat: true
-
+  mail:
+    host: smtp.qq.com
+    username: 695297502@qq.com
+    password: cpbfgjargvrkbeec
+    default-encoding: utf-8
+    properties: { mail.smtp.auth: true,mail.smtp.starttls.enable: true,mail.smtp.starttls.required: true }
+  redis:
+    timeout: 5000
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: sustech.edu.phantom.dboj.entity.*

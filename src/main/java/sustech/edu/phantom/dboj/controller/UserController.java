@@ -2,6 +2,7 @@ package sustech.edu.phantom.dboj.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
@@ -12,6 +13,8 @@ import sustech.edu.phantom.dboj.form.RegisterForm;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,17 +42,17 @@ public class UserController {
      * @param registerForm 注册表单
      * @return 刚注册的user对象
      */
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public User signup(@RequestBody RegisterForm registerForm) throws Exception {
-        return userService.register(registerForm);
-    }
+//    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+//    public User signup(@RequestBody RegisterForm registerForm) throws Exception {
+//        return userService.register(registerForm);
+//    }
 
-    /**
-     * 登录api，还没写好
-     *
-     * @param loginForm 登录表单
-     * @return 登录的user对象
-     */
+//    /**
+//     * 登录api，还没写好
+//     *
+//     * @param loginForm 登录表单
+//     * @return 登录的user对象
+//     */
 //    @RequestMapping(value = "/login", method = RequestMethod.POST)
 //    public UserDetails login(@RequestBody LoginForm loginForm) {
 //        return userService.loadUserByUsername(loginForm.getUsername());
@@ -61,20 +64,21 @@ public class UserController {
      * @param pagination 前端传回的分页筛选信息 这个类有待完善
      * @return 公告list 这里就不设置 /announcement/{id} 这种api了，直接缓存
      */
-    @RequestMapping(value = "/announcement", method = RequestMethod.GET)
+    @RequestMapping(value = "/announcement", method = RequestMethod.POST)
     public List<Announcement> getAnnouncement(@RequestBody Pagination pagination) {
         return announcementService.getAnnouncementList(pagination);
     }
 
     /**
      * 所有的problem，是public的，没有权限控制
-     *
+     * problem id, problem name, problem tag
      * @param pagination 前端传回的分页筛选信息 这个类有待完善
      * @return list of problems
      */
     @RequestMapping(value = "/problem", method = RequestMethod.POST)
     public List<Problem> getProblemList(@RequestBody Pagination pagination) {
 //        List<Problem> p = problemService.getProblemList(pagination);
+        System.out.println(pagination);
         return problemService.getProblemList(pagination);
     }
 
@@ -86,11 +90,11 @@ public class UserController {
      */
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.GET)
     public Problem getOneProblem(@PathVariable int id, @AuthenticationPrincipal User user) {
-        System.out.println(user);
-        //if 存在 user 那么执行
-        //problem.setCode(codeService.queryCurrentCode(userid,id));
-//        int userId = 1;// 这里还需要改一改
-//        return problemService.(id);
+        Object principle = SecurityContextHolder.getContext().getAuthentication().getDetails();
+        System.out.println(principle);
+//        httpServletResponse.addCookie(new Cookie("Set-Cookie","1111111"));
+//        System.out.println(principle);
+//        System.out.println(user);
         return user != null ? problemService.getOneProblem(id, user.getId()) : problemService.getOneProblem(id);
     }
 
@@ -137,11 +141,11 @@ public class UserController {
 
     /**
      * 所有record记录
-     *
+     * assignment, problem title, username/nickname
      * @param pagination 前端传回的分页筛选信息 这个类有待完善
      * @return list of records
      */
-    @RequestMapping(value = "/record", method = RequestMethod.GET)
+    @RequestMapping(value = "/record", method = RequestMethod.POST)
     public List<Record> getRecords(@RequestBody Pagination pagination) {
         return recordService.getRecordList(pagination);
     }
