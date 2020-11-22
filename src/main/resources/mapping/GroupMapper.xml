@@ -25,4 +25,10 @@
             where valid
               and assignment_id = #{aid});
     </select>
+    <select id="getStudentGroup" resultType="sustech.edu.phantom.dboj.entity.Group">
+        select id, description
+        from "group"
+        where valid
+          and id in (select group_id from user_group where valid and user_id = #{sid});
+    </select>
 </mapper>

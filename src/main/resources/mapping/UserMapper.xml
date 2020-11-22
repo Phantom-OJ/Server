@@ -4,7 +4,6 @@
     <select id="login" parameterType="sustech.edu.phantom.dboj.entity.User"
             resultType="sustech.edu.phantom.dboj.entity.User">
         select id,
-               group_id,
                username,
                nickname,
                role,
@@ -24,8 +23,8 @@
                 #{password,jdbcType=VARCHAR},
                 #{nickname,jdbcType=VARCHAR})
     </insert>
-    <select id="findUserByUsername" resultType="java.lang.Integer">
-        select count(*)
+    <select id="findUserByUsername" resultType="sustech.edu.phantom.dboj.entity.User">
+        select *
         from "user"
         where username = #{param1};
     </select>
@@ -34,4 +33,10 @@
         set role = #{param2}
         where id = #{param1};
     </update>
+    <select id="findUserByName" resultType="sustech.edu.phantom.dboj.entity.User">
+        select *
+        from "user"
+        where nickname = #{name}
+           or username = #{name};
+    </select>
 </mapper>

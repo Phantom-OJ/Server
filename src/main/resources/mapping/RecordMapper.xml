@@ -44,13 +44,13 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title,
+               p.title as problem_title,
                u.avatar,
                u.username
         from "record" r
-                 join "problem" p on r.problem_id = p.id
-                 join "user" u on r.user_id = u.id
-        where valid
+                 join "problem" p on r.problem_id = p.id and p. valid
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
         order by r.submit_time desc
         offset #{offset} limit #{limit};
     </select>
@@ -67,5 +67,186 @@
         where valid
           and problem_id = #{id}
         group by dialect;
+    </select>
+    <select id="getOneRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.*, c.code
+        from record r
+                 join code c on r.code_id = c.id
+        where r.valid
+          and r.user_id = #{userId}
+          and r.id = #{id};
+    </select>
+    <select id="getRecordsOfOnePerson" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+          and r.user_id = #{userId}
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsOfPersonByAssignment" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid
+                 join "assignment" a
+                      on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+          and r.user_id = #{userId}
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsOfPersonByProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+          and r.user_id = #{userId}
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsOfPersonByAssignmentAndProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
+                 join "assignment" a
+                      on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+          and r.user_id = #{userId}
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsByAssignment" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid
+                 join "assignment" a
+                      on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsByProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsByAssignmentAndProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               u.avatar,
+               u.username
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
+                 join "assignment" a
+                      on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+        order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
     </select>
 </mapper>

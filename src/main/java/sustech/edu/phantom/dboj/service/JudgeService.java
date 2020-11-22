@@ -10,10 +10,7 @@ import sustech.edu.phantom.dboj.entity.JudgePoint;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.Record;
 import sustech.edu.phantom.dboj.form.CodeForm;
-import sustech.edu.phantom.dboj.mapper.CodeMapper;
-import sustech.edu.phantom.dboj.mapper.JudgeDatabaseMapper;
-import sustech.edu.phantom.dboj.mapper.JudgePointMapper;
-import sustech.edu.phantom.dboj.mapper.ProblemMapper;
+import sustech.edu.phantom.dboj.mapper.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -29,8 +26,6 @@ public class JudgeService {
     private final static int WA = 3;// wrong answer
     private final static int MLE = 4;// memory limit exceed
     private final static int RE = 5;// runtime error
-    private final static String username = "postgres";//
-    private final static String password = "abc123";
 
     @Autowired
     ProblemMapper problemMapper;
@@ -44,12 +39,16 @@ public class JudgeService {
     @Autowired
     CodeMapper codeMapper;
 
+    @Autowired
+    RecordMapper recordMapper;
+
     private List<JudgeResult> judgeResults = new ArrayList<>();
 
     /**
      * 接受code (还有 problem id 和 user id)
      * -> 取出判题信息problem表、judge_database表 judge_point表
      * -> 插入code表
+     * ->
      * -> 消息队列
      * -> 传给判题机判题
      * -> 消息队列
@@ -68,6 +67,7 @@ public class JudgeService {
                 .submitTime(codeForm.getSubmitTime())
                 .build();
         codeMapper.saveCode(c);
+
 
         Record record = new Record();
         Problem problem = problemMapper.queryCurrentProblem(id);
@@ -108,11 +108,16 @@ public class JudgeService {
         long time = 0, space = 0;
 
         for (JudgeResult j : judgeResults) {
-            time += j.getRunTime();
+            time = Math.max(time, j.getRunTime());
+//            time += j.getRunTime();
 //            time +=j.getTime();
 //            space += j.getSpace();
             totalDescription.append(j.getCodeDescription());
+            totalDescription.append("\n");
         }
+        recordMapper.saveRecord(record);
+
+
         return null;
     }
 
@@ -143,6 +148,7 @@ class Buffer {
             System.out.println("目前没有代码了");
             this.wait();
         }
+        --productNumber;
         System.out.println();
     }
 }

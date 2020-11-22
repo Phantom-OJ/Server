@@ -1,8 +1,11 @@
 begin transaction;
+drop table "announcement", assignment, assignment_group,
+    code, grade, "group", judge_database, judge_point,
+    judge_script, "permission", problem, problem_tag,
+    record, tag, "user", user_group;
 create table if not exists "user"
 (
     id         serial primary key,
-    group_id   int,
     username   varchar(45)  not null unique,
     password   varchar(100) not null,
     nickname   varchar(45),
@@ -32,23 +35,24 @@ create table if not exists "record"
 create table if not exists "problem"
 (
     id                  serial primary key,
-    assignment_id       int  not null,
-    title               text not null,
-    description         text not null,
-    full_score          int  not null,
-    space_limit         int  not null,
-    time_limit          int  not null,
-    number_submit       int  not null,
-    number_solve        int  not null,
-    index_in_assignment int  not null,
-    solution            text not null,
-    valid               bool not null default true
+    assignment_id       int     not null,
+    title               text    not null,
+    description         text    not null,
+    full_score          int     not null,
+    space_limit         int     not null,
+    time_limit          int     not null,
+    number_submit       int     not null,
+    number_solve        int     not null,
+    index_in_assignment int     not null,
+    solution            text    not null,
+    valid               bool    not null default true,
+    status              varchar not null default 'private'
 );
 create table if not exists "judge_database"
 (
     id           serial primary key,
-    database_url text    not null default 'jdbc:postgresql://localhost:5432/postgres',
-    valid        bool    not null default true
+    database_url text not null default 'jdbc:postgresql://localhost:5432/postgres',
+    valid        bool not null default true
 );
 create table if not exists "judge_point"
 (
@@ -208,8 +212,7 @@ VALUES ('ROLE_STUDENT', 'modify personal information'),
        ('ROLE_TEACHER', 'modify assignment'),
        ('ROLE_TEACHER', 'grant other users');
 insert into "group" (description)
-values
-       ('group1'),
+values ('group1'),
        ('group2'),
        ('group3'),
        ('group4'),

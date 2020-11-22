@@ -7,7 +7,7 @@ public class Pagination {
     private int end;
     private transient int limit;
     private transient int offset;
-    private HashMap<String, String> filter;
+    private HashMap<String, Object> filter;
 
     public int getStart() {
         return start;
@@ -38,11 +38,11 @@ public class Pagination {
         return offset;
     }
 
-    public HashMap<String, String> getFilter() {
+    public HashMap<String, Object> getFilter() {
         return filter;
     }
 
-    public void setFilter(HashMap<String, String> filter) {
+    public void setFilter(HashMap<String, Object> filter) {
         this.filter = filter;
     }
 }

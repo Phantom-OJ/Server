@@ -16,9 +16,9 @@
         set valid= false
         where id = #{id};
     </update>
-    <select id="queryRecentCode" resultType="sustech.edu.phantom.dboj.entity.Code">
-        select id, code, code_length, submit_time
-        from code
+    <select id="queryRecentCode" resultType="java.lang.String">
+        select code
+        from "code"
         where id = (
             select code_id
             from record

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.ProblemMapper">
-    <select id="queryProblem" resultType="sustech.edu.phantom.dboj.entity.Problem">
+    <select id="queryProblemWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
                assignment_id,
                title,
@@ -76,7 +76,8 @@
                index_in_assignment,
                solution
         from "problem"
-        where id in (
+        where valid
+          and id in (
             select distinct problem_id
             from "problem_tag"
             where valid
@@ -88,4 +89,66 @@
         set number_submit = #{numberSubmit} and number_solve = #{numberSolve}
         where id = #{id};
     </update>
+    <select id="queryProblemsByTags" resultType="sustech.edu.phantom.dboj.entity.Problem">
+        select id,
+        assignment_id,
+        title,
+        description,
+        full_score,
+        space_limit,
+        time_limit,
+        number_submit,
+        number_solve,
+        index_in_assignment,
+        solution
+        from "problem"
+        where valid
+        and status = 'public'
+        and id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        <foreach collection="tags" index="index" item="tag" separator="," close="">
+            #{tag}
+        </foreach>
+        )) order by id offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="queryProblemsByTagAndName" resultType="sustech.edu.phantom.dboj.entity.Problem">
+        select id,
+        assignment_id,
+        title,
+        description,
+        full_score,
+        space_limit,
+        time_limit,
+        number_submit,
+        number_solve,
+        index_in_assignment,
+        solution
+        from "problem"
+        where valid
+        and status = 'public'
+        and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        <foreach collection="tags" index="index" item="tag" separator="," close="">
+            #{tag}
+        </foreach>)
+        or title like '%'||#{title}||'%'))
+        order by id offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="queryProblemsByName" resultType="sustech.edu.phantom.dboj.entity.Problem">
+        select id,
+               assignment_id,
+               title,
+               description,
+               full_score,
+               space_limit,
+               time_limit,
+               number_submit,
+               number_solve,
+               index_in_assignment,
+               solution
+        from "problem"
+        where valid
+          and status = 'public'
+          and title like '%' || #{title} || '%'
+        order by id
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
 </mapper>

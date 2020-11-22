@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.form.Pagination;
 
@@ -7,42 +8,36 @@ import java.util.List;
 
 public interface ProblemMapper {
     /**
-     *
      * @param pagination
      * @return
      */
-    List<Problem> queryProblem(Pagination pagination);
+    List<Problem> queryProblemWithoutFilter(Pagination pagination);
 
     /**
-     *
      * @param id
      * @return
      */
     Problem queryCurrentProblem(int id);
 
     /**
-     *
      * @param id
      * @return
      */
     int invalidateProblem(int id);
 
     /**
-     *
      * @param id
      * @return
      */
     int validateProblem(int id);
 
     /**
-     *
      * @param id
      * @return
      */
     List<Problem> oneAssignmentProblems(int id);
 
     /**
-     *
      * @param id
      * @return
      */
@@ -55,8 +50,32 @@ public interface ProblemMapper {
      * @return 影响的行数
      */
     int updateProblemInfo(Problem problem);
-/**
- * 还没写好
- */
-//    List<Problem> multipleProblems(List<Integer> tagList);
+
+    /**
+     * 通过tags来找problem
+     *
+     * @param pagination 分页信息
+     * @param tags       tags信息
+     * @return list of problems
+     */
+    List<Problem> queryProblemsByTags(Pagination pagination, @Param("tags") List<Integer> tags);
+
+    /**
+     * 通过tags 和 title 来查找信息
+     *
+     * @param pagination 分页信息
+     * @param tags       tags
+     * @param title      problem title
+     * @return list of problems
+     */
+    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title);
+
+    /**
+     * 通过title 获取筛选问题
+     *
+     * @param pagination 分页信息
+     * @param title      problem title
+     * @return list of problems
+     */
+    List<Problem> queryProblemsByName(Pagination pagination, String title);
 }

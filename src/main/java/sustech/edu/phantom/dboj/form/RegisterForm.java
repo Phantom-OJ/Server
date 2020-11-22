@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Lori
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,4 +16,5 @@ public class RegisterForm {
     private String username;
     private String password;
     private String nickname;
+    private String vcode;
 }
