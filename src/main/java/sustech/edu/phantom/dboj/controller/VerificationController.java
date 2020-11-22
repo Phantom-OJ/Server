@@ -40,6 +40,7 @@ public class VerificationController {
         ValueOperations<String, String> forValue = redisTemplate.opsForValue();
         String validateCodeInRedis = forValue.get(registerForm.getUsername());
         User user = new User();
+        System.out.println(validateCodeInRedis);
         if (registerForm.getVcode().equals(validateCodeInRedis)) {
             userService.register(registerForm);
             return true;

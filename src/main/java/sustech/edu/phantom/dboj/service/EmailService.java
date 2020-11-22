@@ -32,13 +32,14 @@ public class EmailService {
         try {
             String title = "Verification Code for Phantom DBOJ";
             String text = "Your verification code is ";
+            String tail = ".The verification code is valid within 5 minutes";
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(from);
             message.setTo(toMail);
             message.setSubject(title);
-            message.setText(text + verificationCode);
+            message.setText(text + verificationCode + tail);
             mailSender.send(message);
-            logger.info("Sending successfully.");
+            logger.info("Verification code {} is sent to {} successfully.", verificationCode, toMail);
         } catch (Exception e) {
             throw new Exception("send error," + e.getMessage());
         }
