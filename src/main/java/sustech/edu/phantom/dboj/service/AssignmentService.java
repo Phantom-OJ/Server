@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class AssignmentService {
     private final static String ID = "id";
     private final static String NAME = "name";
@@ -46,8 +48,9 @@ public class AssignmentService {
     }
 
     /**
-     * @param pagination
-     * @return
+     *
+     * @param pagination 分页信息
+     * @return list of assignments
      */
     public List<Assignment> getAssignmentList(Pagination pagination) {
         pagination.setParameters();

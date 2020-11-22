@@ -41,8 +41,8 @@ public class RecordService {
     }
 
     /**
-     * @param pagination
-     * @return
+     * @param pagination 分页信息
+     * @return list of records
      */
     public List<Record> getRecordList(Pagination pagination) {
         pagination.setParameters();
@@ -61,6 +61,7 @@ public class RecordService {
     }
 
     /**
+     *
      * @param id
      * @param userId
      * @return

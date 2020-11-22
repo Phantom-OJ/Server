@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/admin")
+@Slf4j
 /**
  * 这里所有的方法都得要权限
  */

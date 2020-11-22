@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -12,8 +13,12 @@ import sustech.edu.phantom.dboj.service.UserService;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Lori
+ */
 @RestController
 @RequestMapping(value = "/api")
+@Slf4j
 public class VerificationController {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
