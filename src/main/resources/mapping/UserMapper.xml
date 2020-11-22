@@ -34,4 +34,10 @@
         set role = #{param2}
         where id = #{param1};
     </update>
+    <select id="findUserByName" resultType="sustech.edu.phantom.dboj.entity.User">
+        select *
+        from "user"
+        where nickname = #{name}
+           or username = #{name};
+    </select>
 </mapper>

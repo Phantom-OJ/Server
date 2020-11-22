@@ -31,4 +31,6 @@ public interface UserMapper {
      * @return
      */
     int privilegeEscalation(int uid, char role);
+
+    User findUserByName(String name);
 }

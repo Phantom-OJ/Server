@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Announcement;
 import sustech.edu.phantom.dboj.entity.Permission;
 import sustech.edu.phantom.dboj.entity.User;
@@ -23,6 +24,7 @@ import java.util.List;
  * 作为注册、登录、修改用户信息、提权的服务类
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserService implements UserDetailsService {
     @Autowired
     UserMapper userMapper;
