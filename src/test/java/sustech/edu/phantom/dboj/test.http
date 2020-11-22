@@ -1,10 +1,71 @@
-POST http://localhost:9999/api/user/signup
-Content-Type: application/json
+### id -> problem id, name -> problem title, tag -> "tag1 tag2 tag3"
+POST http://localhost:8080/api/problem
+content-type: application/json
 
 {
-  "username": "11811410@mail.sustech.edu.cn",
-  "password": "lsl213",
-  "nickname": "god"
+  "start": 1,
+  "end": 1,
+  "filter": {
+    "id": "",
+    "name": "",
+    "tag": ""
+  }
+}
+
+### user -> username/ nickname problem -> problem title assignment -> assignment title
+POST http://localhost:8080/api/record
+content-type: application/json
+
+{
+  "start": 1,
+  "end": 1,
+  "filter": {
+    "user": "",
+    "problem": "",
+    "assignment": ""
+  }
+}
+
+### id -> assignment id, name -> assignment name
+POST http://localhost:8080/api/assignment
+content-type: application/json
+
+{
+  "start": 1,
+  "end": 1,
+  "filter": {
+    "id": "",
+    "name": ""
+  }
 }
 
 ###
+POST http://localhost:8080/api/sendvcode/11811407@mail.sustech.edu.cn
+
+<> 2020-11-22T163147.200.jstd
+<> 2020-11-22T162249.200.jstd
+<> 2020-11-22T162218.200.jstd
+<> 2020-11-22T162207.200.jstd
+<> 2020-11-22T160841.500.json
+
+###
+POST http://localhost:8080/api/signup
+content-type: application/json
+
+{
+  "username": "11811407@mail.sustech.edu.cn",
+  "password": "11811407",
+  "vcode": "651698"
+}
+
+###
+POST http://localhost:8080/api/login
+content-type: application/json
+
+{
+  "username": "11811407@mail.sustech.edu.cn",
+  "password": "11811407"
+}
+
+<> 2020-11-22T163518.200.json
+<> 2020-11-22T163507.401.json
