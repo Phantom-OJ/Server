@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.mapper;
 
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.form.UserForm;
 
 public interface UserMapper {
     /**
@@ -32,5 +33,17 @@ public interface UserMapper {
      */
     int privilegeEscalation(int uid, char role);
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     User findUserByName(String name);
+
+    /**
+     *
+     * @param userForm
+     * @return
+     */
+    User updateUserInfo(UserForm userForm, int userId);
 }

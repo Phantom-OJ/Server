@@ -1,5 +1,5 @@
 begin transaction;
-drop table "announcement", assignment, assignment_group,
+drop table if exists "announcement", assignment, assignment_group,
     code, grade, "group", judge_database, judge_point,
     judge_script, "permission", problem, problem_tag,
     record, tag, "user", user_group;
@@ -153,10 +153,11 @@ create table if not exists "announcement"
 
 --这里要改的，现在只是测试用的，密码都没有加密
 insert into "user" (username, password, nickname)
-values ('11811407@mail.sustech.edu.cn', 'lsllsl', 'god1'),
-       ('11812318@mail.sustech.edu.cn', 'zjxzjx', 'god2'),
-       ('11813207@mail.sustech.edu.cn', 'nqsnqs', 'god3'),
-       ('11811620@mail.sustech.edu.cn', 'mzymzy', 'god4');
+values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qBibXqf4uhbQK.7buetZKN6', 'god1'),
+       ('11813207@mail.sustech.edu.cn', '$2a$10$lbvy1xOwq0zHU.nsoxZmWeoYGmsrCI1545oh3Ahvh0VAnkTR/Nk2q', 'god1'),
+       ('11812318@mail.sustech.edu.cn', '$2a$10$kP9KNT/Hb.QOrCaEItzMRuKrfhWOOttUt2R/46.XjHdjPX7FGqcjm', 'god1'),
+       ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', 'god1')
+;
 insert into "tag" (keyword, description)
 VALUES ('k1', 'd1'),
        ('k2', 'd2'),

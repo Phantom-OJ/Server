@@ -40,7 +40,7 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:8080/api/sendvcode/11811407@mail.sustech.edu.cn
+POST http://localhost:8080/api/sendvcode/11811620@mail.sustech.edu.cn
 
 <> 2020-11-22T163147.200.jstd
 <> 2020-11-22T162249.200.jstd
@@ -53,9 +53,9 @@ POST http://localhost:8080/api/signup
 content-type: application/json
 
 {
-  "username": "11811407@mail.sustech.edu.cn",
-  "password": "11811407",
-  "vcode": "651698"
+  "username": "11811620@mail.sustech.edu.cn",
+  "password": "11811620",
+  "vcode": "449432"
 }
 
 ###
