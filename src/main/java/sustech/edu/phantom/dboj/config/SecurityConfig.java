@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -14,13 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.service.UserService;
 
-import javax.servlet.Filter;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,14 +34,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.cors().disable();
+        http.cors();
         http.authorizeRequests()
                 .antMatchers("/api/login").permitAll()
 //                .anyRequest().authenticated()
                 .and()
-                .addFilterAt(myAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                .loginProcessingUrl("/api/login")
+                .loginPage("/")
+                .and()
+                .addFilterAt(myAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .formLogin()
+//                .loginProcessingUrl("/api/login")
+//                .permitAll()
+//                .and()
+                .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    httpServletResponse.setContentType("application/json;charset=utf-8");
+                    PrintWriter out = httpServletResponse.getWriter();
+                    Map<String, Object> map = new HashMap<>(2);
+                    map.put("status", 200);
+                    map.put("msg", "Log out successfully!");
+                    out.write(new ObjectMapper().writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                })
                 .permitAll();
     }
 
@@ -54,8 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             httpServletResponse.setContentType("application/json;charset=utf-8");
             PrintWriter out = httpServletResponse.getWriter();
             Map<String, Object> map = new HashMap<>();
+            User user = (User) authentication.getPrincipal();
+            user.setPassword(null);
+            map.put("msg", user);
             map.put("status", 200);
-            map.put("msg", authentication.getPrincipal());
+            out.write(new ObjectMapper().writeValueAsString(map));
             out.flush();
             out.close();
         });

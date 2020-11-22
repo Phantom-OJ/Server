@@ -21,7 +21,8 @@ public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter
         if (!"POST".equals(request.getMethod())) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+        String re = "^application/json(;charset=[a-zA-Z0-9-_]+$)?";
+        if (request.getContentType().matches(re)) {
             String username = null;
             String password = null;
             try {
