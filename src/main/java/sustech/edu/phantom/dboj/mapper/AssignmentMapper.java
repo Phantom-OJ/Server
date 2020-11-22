@@ -7,23 +7,30 @@ import java.util.List;
 
 public interface AssignmentMapper {
     /**
-     *
-     * @param pagination
-     * @return
+     * 返回分页的作业信息
+     * @param pagination 分页信息
+     * @return 作业 list
      */
-    List<Assignment> getAssignment(Pagination pagination);
+    List<Assignment> queryAssignments(Pagination pagination);
 
     /**
-     *
-     * @return
+     * 返回所有的作业
+     * @return 作业 list
      */
     List<Assignment> getAllAssignment();
 
     /**
-     *
-     * @param aid
-     * @return
+     * 返回一个assignment的信息
+     * @param aid assignment id
+     * @return assignment对象
      */
     Assignment getOneAssignment(int aid);
 
+    /**
+     * 使一个assignment失效
+     * @param aid assignment id
+     * @return 影响的行数
+     */
+    int invalidateAssignment(int aid);
+//剩下来的修改作业的sql我都没加，暂时先搁置
 }

@@ -11,8 +11,7 @@
                avatar,
                state_save,
                state,
-               lang,
-               valid
+               lang
         from "user"
         where valid
           and username = #{username,jdbcType=VARCHAR}

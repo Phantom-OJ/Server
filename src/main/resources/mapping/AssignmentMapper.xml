@@ -1,22 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.AssignmentMapper">
-    <select id="getAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
-        select *
+    <select id="queryAssignments" resultType="sustech.edu.phantom.dboj.entity.Assignment">
+        select id,
+               title,
+               description,
+               start_time,
+               end_time,
+               status,
+               full_score,
+               sample_database_path
         from "assignment"
         where valid
         order by start_time
         offset #{offset} limit #{limit};
     </select>
     <select id="getAllAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
-        select *
+        select id,
+               title,
+               description,
+               start_time,
+               end_time,
+               status,
+               full_score,
+               sample_database_path
         from "assignment"
         where valid;
-</select>
+    </select>
     <select id="getOneAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
-        select *
+        select id,
+               title,
+               description,
+               start_time,
+               end_time,
+               status,
+               full_score,
+               sample_database_path
         from "assignment"
         where valid
           and id = #{id};
     </select>
+    <update id="invalidateAssignment">
+        update "assignment"
+        set valid = false
+        where id = #{aid};
+    </update>
 </mapper>

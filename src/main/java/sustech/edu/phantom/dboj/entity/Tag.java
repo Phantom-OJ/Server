@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,5 +15,5 @@ public class Tag {
     private Integer id;
     private String keyword;
     private String description;
-    private Boolean valid;
+//    private Boolean valid;
 }

@@ -1,4 +1,4 @@
-//package sustech.edu.phantom.dboj.basicJudge;
+package sustech.edu.phantom.dboj.basicJudge;//package sustech.edu.phantom.dboj.basicJudge;
 //
 //
 //import com.alibaba.fastjson.JSONObject;

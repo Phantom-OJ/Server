@@ -6,5 +6,5 @@ import lombok.Data;
 public class JudgeScript {
     private Integer id;
     private String script;
-    private Boolean valid;
+//    private Boolean valid;
 }

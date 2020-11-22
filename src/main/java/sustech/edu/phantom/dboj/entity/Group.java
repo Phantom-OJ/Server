@@ -6,5 +6,5 @@ import lombok.Data;
 public class Group {
     private Integer id;
     private String description;
-    private Boolean valid;
+//    private Boolean valid;
 }

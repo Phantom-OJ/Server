@@ -12,12 +12,13 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 import java.util.List;
 
+/**
+ * 作为注册、登录、修改用户信息、提权的服务类
+ */
 @Service
 public class UserService {
     @Autowired
     UserMapper userMapper;
-    @Autowired
-    AnnouncementMapper announcementMapper;
 
     /**
      * 这里还差一个加密
@@ -48,14 +49,5 @@ public class UserService {
         User user = User.builder().username(loginForm.getUsername()).password(loginForm.getPassword()).build();
 //        User user = new User(loginForm);
         return userMapper.login(user);
-    }
-
-    public List<Announcement> announcementList(Pagination pagination) {
-        pagination.setParameters();
-        return announcementMapper.queryAnnouncement(pagination);
-    }
-
-    public int insertAnnouncementList(List<Announcement> announcementList) {
-        return announcementMapper.insertAnnouncement(announcementList);
     }
 }

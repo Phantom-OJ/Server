@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.TagMapper">
-    <select id="getAllTags">
-        select *
+    <select id="allTagList" resultType="sustech.edu.phantom.dboj.entity.Tag">
+        select distinct id, keyword
         from "tag"
         where valid;
+    </select>
+    <select id="getProblemTags" resultType="sustech.edu.phantom.dboj.entity.Tag">
+        select id, keyword, description
+        from tag
+        where valid and id in (
+            select distinct tag_id
+            from "problem_tag"
+            where problem_id = #{pid} and valid);
     </select>
 </mapper>

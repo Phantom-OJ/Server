@@ -17,5 +17,5 @@ public class Announcement {
     private String description;
     private Long createDate;
     private Long lastModified;
-    private Boolean valid;
+//    private Boolean valid;
 }

@@ -60,7 +60,7 @@ public class Client {
 
 
     private static void handle(InputStream input, OutputStream output) throws IOException {
-        String jsonpath = "D:\\courseStation\\CS309\\phantom\\src\\main\\java\\sustech\\edu\\phantom\\dboj\\basicJudge\\JudgeTestJson\\success.json";
+        String jsonpath = "D:\\courseStation\\CS309\\phantom\\judge\\src\\main\\java\\basicJudge\\JudgeTestJson\\success.json";
         JudgeInput judgeInput = readJson(jsonpath);
         DataOutputStream dataOutputStream = new DataOutputStream(output);
     //    DataInputStream dataInputStream = new DataInputStream(input);

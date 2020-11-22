@@ -7,12 +7,12 @@ import java.util.concurrent.*;
 
 public class JudgeService {
     public static void main(String[] args) throws SQLException {
-        JudgeInput judgeInput = new JudgeInput();
-        judgeInput.userInput = JudgeInsafe.assignment1[0];
-        judgeInput.standardAnswer = getResult(JudgeInsafe.assignment1[1], connection);
-        judgeInput.timeLimit = 2L;
-        JudgeResult judgeResult = judgeSingle(judgeInput);
-        System.out.println(judgeResult.toString());
+//        JudgeInput judgeInput = new JudgeInput();
+//        judgeInput.userInput = JudgeInsafe.assignment1[0];
+//        judgeInput.standardAnswer = getResult(JudgeInsafe.assignment1[1], connection);
+//        judgeInput.timeLimit = 2L;
+//        JudgeResult judgeResult = judgeSingle(judgeInput);
+//        System.out.println(judgeResult.toString());
 
     }
 
@@ -54,7 +54,8 @@ public class JudgeService {
         try {
             userDefineConnection = DriverManager.getConnection(judgeInput.judgeDatabaseUrl, judgeInput.userName, judgeInput.passWord);
             if(userDefineConnection==null){
-                throw new Exception();
+                Exception e=new Exception("连接这是怎么了？");
+                e.printStackTrace();
             }
             //userDefineConnection.createArrayOf()
         } catch (Exception e) {
@@ -93,10 +94,10 @@ public class JudgeService {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             future.cancel(true);
             timeOutFlag = 1;
-            System.out.println("任务超时。");
-        } finally {
-            executorService.shutdown();
-        }
+            System.out.println("任务超时。");}
+//        } finally {
+//            executorService.shutdown();
+//        }
         Long timeEnd = System.currentTimeMillis();
         Long runtime = timeEnd - timeStart;
         if (timeOutFlag == 1) {

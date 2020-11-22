@@ -1,14 +1,25 @@
 package sustech.edu.phantom.dboj.basicJudge;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JudgeInput implements Serializable {
+    String JudgeDatabase;
 
     String judgeDatabaseUrl;
     String userName;
     String passWord;
+
     String beforeInput;
     //DML
     String userInput;
@@ -18,24 +29,6 @@ public class JudgeInput implements Serializable {
     Long timeLimit;
     HashMap<String,Object> additionFields;
 
-
-    public JudgeInput() {
-    }
-
-    @Override
-    public String toString() {
-        return "JudgeInput{" +
-                "judgeDatabaseUrl='" + judgeDatabaseUrl + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + passWord + '\'' +
-                ", beforeInput='" + beforeInput + '\'' +
-                ", userInput='" + userInput + '\'' +
-                ", afterInput='" + afterInput + '\'' +
-                ", standardAnswer=" + standardAnswer +
-                ", timeLimit=" + timeLimit +
-                ", additionFields=" + additionFields +
-                '}';
-    }
 
     public String getBeforeInput() {
         return beforeInput;

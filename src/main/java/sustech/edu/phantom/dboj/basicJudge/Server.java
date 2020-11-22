@@ -78,6 +78,7 @@ class Handler implements Runnable {
             }
             else {
                 JudgeResult judgeResult=JudgeService.judgeSingle(judgeInput);
+                System.out.println("返回的result:"+judgeResult);
                 writer.write(gson.toJson(judgeResult));
                 writer.newLine();
                 writer.flush();
