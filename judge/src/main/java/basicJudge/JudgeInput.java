@@ -14,9 +14,9 @@ import java.util.HashMap;
 @AllArgsConstructor
 @Builder
 public class JudgeInput implements Serializable {
-    //String JudgeDatabase;
+    String JudgeDatabase;
 
-    String judgeDatabaseUrl;
+    //String judgeDatabaseUrl;
     String userName;
     String passWord;
     String beforeInput;

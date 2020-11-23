@@ -1,5 +1,5 @@
 begin transaction;
-drop table "announcement", assignment, assignment_group,
+drop table if exists "announcement", assignment, assignment_group,
     code, grade, "group", judge_database, judge_point,
     judge_script, "permission", problem, problem_tag,
     record, tag, "user", user_group;

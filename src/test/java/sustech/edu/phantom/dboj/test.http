@@ -69,3 +69,15 @@ content-type: application/json
 
 <> 2020-11-22T163518.200.json
 <> 2020-11-22T163507.401.json
+
+###
+POST http://localhost:8080/api/problem/1/submit
+content-type: application/json
+
+{
+"code": "SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'",
+  "dialect": "pgsql",
+  "submitTime": 12345
+}
+
+###

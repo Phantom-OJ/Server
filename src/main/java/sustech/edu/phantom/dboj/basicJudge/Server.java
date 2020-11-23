@@ -1,7 +1,6 @@
 package sustech.edu.phantom.dboj.basicJudge;
 
 import com.google.gson.Gson;
-import org.bouncycastle.util.Arrays;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -70,14 +69,14 @@ class Handler implements Runnable {
             //System.out.println("read返回值："+a);
             JudgeInput judgeInput=gson.fromJson(s,JudgeInput.class);
             System.out.println("拿到的报文值："+ gson.toJson(judgeInput));
-            if(judgeInput.judgeDatabaseUrl==null){
+            if(judgeInput.JudgeDatabase==null){
                 writer.write(gson.toJson(JudgeResult.CONNECTION_ERROR));
                 writer.newLine();
                 writer.flush();
                 System.out.println("database为空");
             }
             else {
-                JudgeResult judgeResult=JudgeService.judgeSingle(judgeInput);
+                JudgeResult judgeResult=JudgeService.judgeDecide(judgeInput);
                 System.out.println("返回的result:"+judgeResult);
                 writer.write(gson.toJson(judgeResult));
                 writer.newLine();
@@ -87,21 +86,21 @@ class Handler implements Runnable {
             }
         }
     }
-    public static void handleTest(InputStream input, OutputStream output) throws IOException {
-        var writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
-        var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-        //DataInputStream dataInputStream=new DataInputStream(new InputStreamReader(input, StandardCharsets.UTF_8));
-        writer.write("hello\n");
-        writer.flush();
-        for (;;) {
-            String s = reader.readLine();
-            if (s.equals("bye")) {
-                writer.write("bye\n");
-                writer.flush();
-                break;
-            }
-            writer.write("ok: " + s + "\n");
-            writer.flush();
-        }
-    }
+//    public static void handleTest(InputStream input, OutputStream output) throws IOException {
+//        var writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
+//        var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+//        //DataInputStream dataInputStream=new DataInputStream(new InputStreamReader(input, StandardCharsets.UTF_8));
+//        writer.write("hello\n");
+//        ((BufferedWriter) writer).flush();
+//        for (;;) {
+//            String s = reader.readLine();
+//            if (s.equals("bye")) {
+//                writer.write("bye\n");
+//                writer.flush();
+//                break;
+//            }
+//            writer.write("ok: " + s + "\n");
+//            writer.flush();
+//        }
+//    }
 }

@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Client {
@@ -35,8 +36,12 @@ public class Client {
     private static void handle2(InputStream input, OutputStream output) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-        String jsonpath = "D:\\courseStation\\CS309\\phantom\\src\\main\\java\\sustech\\edu\\phantom\\dboj\\basicJudge\\JudgeTestJson\\success.json";
+        String jsonpath = "D:\\courseStation\\CS309\\phantom\\judge\\src\\main\\java\\basicJudge\\JudgeTestJson\\input2.json";
         JudgeInput judgeInput = readJson(jsonpath);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("type","trigger");
+        judgeInput.additionFields=hashMap;
+
         Gson gson=new Gson();
 
         Scanner scanner = new Scanner(System.in);
@@ -58,37 +63,37 @@ public class Client {
 
 
 
-    private static void handle(InputStream input, OutputStream output) throws IOException {
-        String jsonpath = "D:\\courseStation\\CS309\\phantom\\judge\\src\\main\\java\\basicJudge\\JudgeTestJson\\success.json";
-        JudgeInput judgeInput = readJson(jsonpath);
-        DataOutputStream dataOutputStream = new DataOutputStream(output);
-    //    DataInputStream dataInputStream = new DataInputStream(input);
-
-//        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-        Scanner scanner = new Scanner(System.in);
-     //   System.out.println("[server] " + reader.readLine());
-        Gson gson = new Gson();
-        System.out.print(">>>");
-       // StringBuilder json = new StringBuilder();
-        String resp="";
-        while (true) {
-            System.out.print(">>> "); // 打印提示
-            String s=scanner.nextLine();
-            System.out.println(s);
-            dataOutputStream.writeUTF(judgeInput.toString());
-            // dataOutputStream.writeUTF();
-            //writer.newLine();
-            dataOutputStream.flush();
-       //     json.delete(0, json.length() + 1);
-            System.out.println("<<< " + resp);
-            resp = reader.readLine();
-            if (resp.equals("bye")) {
-                break;
-            }
-        }
-
-    }
+//    private static void handle(InputStream input, OutputStream output) throws IOException {
+//        String jsonpath = "D:\\courseStation\\CS309\\phantom\\judge\\src\\main\\java\\basicJudge\\JudgeTestJson\\success.json";
+//        JudgeInput judgeInput = readJson(jsonpath);
+//        DataOutputStream dataOutputStream = new DataOutputStream(output);
+//    //    DataInputStream dataInputStream = new DataInputStream(input);
+//
+////        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+//        Scanner scanner = new Scanner(System.in);
+//     //   System.out.println("[server] " + reader.readLine());
+//        Gson gson = new Gson();
+//        System.out.print(">>>");
+//       // StringBuilder json = new StringBuilder();
+//        String resp="";
+//        while (true) {
+//            System.out.print(">>> "); // 打印提示
+//            String s=scanner.nextLine();
+//            System.out.println(s);
+//            dataOutputStream.writeUTF(judgeInput.toString());
+//            // dataOutputStream.writeUTF();
+//            //writer.newLine();
+//            dataOutputStream.flush();
+//       //     json.delete(0, json.length() + 1);
+//            System.out.println("<<< " + resp);
+//            resp = reader.readLine();
+//            if (resp.equals("bye")) {
+//                break;
+//            }
+//        }
+//
+//    }
 
     public static JudgeInput readJson(String path) throws IOException {
         String dataSourceFile = path;

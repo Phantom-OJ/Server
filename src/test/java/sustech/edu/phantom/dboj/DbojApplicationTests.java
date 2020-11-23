@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import sustech.edu.phantom.dboj.entity.Grade;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.mapper.GradeMapper;
 import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
-import sustech.edu.phantom.dboj.service.AssignmentService;
-import sustech.edu.phantom.dboj.service.GroupService;
-import sustech.edu.phantom.dboj.service.TagService;
-import sustech.edu.phantom.dboj.service.UserService;
+import sustech.edu.phantom.dboj.service.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +25,10 @@ import java.util.Map;
 @SpringBootTest
 @MapperScan("sustech.edu.phantom.dboj")
 public class DbojApplicationTests {
+    @Autowired
+    GradeMapper gradeMapper;
+    @Autowired
+    JudgeService judgeService;
 
     @Autowired
     UserService userService;
@@ -40,6 +44,17 @@ public class DbojApplicationTests {
 
     @Autowired
     UserMapper userMapper;
+
+    @Test
+
+    public void  testGradeMapper(){
+        Grade grade=Grade.builder().userId(1).problemId(1).score(100).build();
+    gradeMapper.saveOneGrade(grade);
+    Grade grade1=gradeMapper.getOneGrade(1,1);
+        System.out.println("查询结果"+grade1.toString());
+        //grade1.setScore(3);
+        gradeMapper.updateOneGrade(1,1,123);
+    }
 
 
     @Test
@@ -94,5 +109,18 @@ public class DbojApplicationTests {
 //                .build()));
 //        System.out.println(userMapper.login(User.builder().username("11811499@mail.sustech.edu.cn").password(encoder.encode("11811499")).build()));
         System.out.println(userService.loadUserByUsername("11811499@mail.sustech.edu.cn"));
+    }
+
+
+
+    static String answer="SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'";
+    @Test
+    public void judgeCode() {
+        CodeForm codeForm=new CodeForm();
+        codeForm.setCode(answer);
+        codeForm.setDialect("pgsql");
+        codeForm.setSubmitTime(12345L);
+        System.out.println(judgeService);
+
     }
 }

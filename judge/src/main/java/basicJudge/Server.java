@@ -69,14 +69,14 @@ class Handler implements Runnable {
             //System.out.println("read返回值："+a);
             JudgeInput judgeInput=gson.fromJson(s,JudgeInput.class);
             System.out.println("拿到的报文值："+ gson.toJson(judgeInput));
-            if(judgeInput.judgeDatabaseUrl==null){
+            if(judgeInput.JudgeDatabase==null){
                 writer.write(gson.toJson(JudgeResult.CONNECTION_ERROR));
                 writer.newLine();
                 writer.flush();
                 System.out.println("database为空");
             }
             else {
-                JudgeResult judgeResult=JudgeService.judgeSingle(judgeInput);
+                JudgeResult judgeResult=JudgeService.judgeDecide(judgeInput);
                 System.out.println("返回的result:"+judgeResult);
                 writer.write(gson.toJson(judgeResult));
                 writer.newLine();

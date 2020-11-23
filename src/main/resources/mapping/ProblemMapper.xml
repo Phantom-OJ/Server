@@ -86,7 +86,7 @@
     </select>
     <update id="updateProblemInfo">
         update "problem"
-        set number_submit = #{numberSubmit} and number_solve = #{numberSolve}
+        set number_submit = #{numberSubmit} , number_solve = #{numberSolve}
         where id = #{id};
     </update>
     <select id="queryProblemsByTags" resultType="sustech.edu.phantom.dboj.entity.Problem">

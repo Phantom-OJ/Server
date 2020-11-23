@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +16,9 @@ import java.util.ArrayList;
 public class JudgeInput implements Serializable {
     String JudgeDatabase;
 
+    //String judgeDatabaseUrl;
+    String userName;
+    String passWord;
     String beforeInput;
 
     //DML
@@ -22,7 +27,7 @@ public class JudgeInput implements Serializable {
     String afterInput;
     ArrayList<String> standardAnswer;
     Long timeLimit;
-
+    HashMap<String,Object> additionFields;
 
 
     public String getBeforeInput() {

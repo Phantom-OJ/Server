@@ -1,0 +1,7 @@
+{
+	"beforeInput": "insert into movies (movieid, title, country, year_released, runtime) values (9539, 'The Sliver Bullet', 'us', 1991, 999);insert into movies (movieid, title, country, year_released, runtime) values (9540, 'The Gold Bullet', 'cn', 1991, 999);insert into movies (movieid, title, country, year_released, runtime) values (9541, 'The Bronze Bullet', 'cn', 1992, 999);",
+	"userInput": "SELECT title, country, year_released FROM movies WHERE country <> 'us' AND year_released = 1991 AND title LIKE 'The%';",
+	"afterInput": null,
+	"standardAnswer": ["title|country|year_released","The Adjuster|ca|1991", "The Commitments|ie|1991", "The Miracle|gb|1991", "The Gold Bullet|cn|1991"],
+	"timeLimit": 10000
+}

@@ -18,9 +18,11 @@ public class JudgeResult {
     public static JudgeResult SYNTAX_ERROR=new JudgeResult(1,"Systax Error");
     public static JudgeResult TIME_LIMIT_EXCEED=new JudgeResult(2,"Time Limit Exceed");
     public static JudgeResult WRONG_ANSWER=new JudgeResult(3,"Wrong Answer");
-    public static JudgeResult RUN_TIME_ERROR=new JudgeResult(4,"Wrong time error");
+    public static JudgeResult RUN_TIME_ERROR=new JudgeResult(4,"Runtime error");
     public static JudgeResult CONNECTION_ERROR=new JudgeResult(5,"Failed to connect to given database");
     public static JudgeResult UNKNOWN_ERROR=new JudgeResult(6,"未知错误，估计是判题机出bug了ORZ");
+    public static JudgeResult METHOD_ERROR=new JudgeResult(7,"TYPE类型不支持");
+    public static JudgeResult FORMAT_ERROR=new JudgeResult(8,"报文格式不正确");
 
     @Override
     public String toString() {
@@ -34,6 +36,7 @@ public class JudgeResult {
     }
 
     public JudgeResult(Integer code, String codeDescription) {
+        this.runTime=0L;
         this.code = code;
         this.codeDescription = codeDescription;
     }

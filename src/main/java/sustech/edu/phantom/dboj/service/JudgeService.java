@@ -5,14 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sustech.edu.phantom.dboj.basicJudge.JudgeInput;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResult;
-import sustech.edu.phantom.dboj.entity.Code;
-import sustech.edu.phantom.dboj.entity.JudgePoint;
-import sustech.edu.phantom.dboj.entity.Problem;
-import sustech.edu.phantom.dboj.entity.Record;
+import sustech.edu.phantom.dboj.entity.*;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.mapper.*;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -26,6 +24,26 @@ public class JudgeService {
     private final static int WA = 3;// wrong answer
     private final static int MLE = 4;// memory limit exceed
     private final static int RE = 5;// runtime error
+
+    static Buffer simpleQueue = new Buffer();
+    static Producer producer = new Producer(simpleQueue);
+    static Consumer consumer = new Consumer(simpleQueue);
+
+    //    static {
+//        new Thread(()->{
+//            while (true){
+//                try {
+//                    simpleQueue.judgeSQLCode();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
+    @Autowired
+    GradeMapper gradeMapper;
 
     @Autowired
     ProblemMapper problemMapper;
@@ -44,6 +62,21 @@ public class JudgeService {
 
     private List<JudgeResult> judgeResults = new ArrayList<>();
 
+    public static ArrayList<String> answerStringToArrayList(String textAnswer) {
+        ArrayList<String> answer = new ArrayList<>();
+        String[] rows = textAnswer.split(",");
+        for (int i = 0; i < rows.length; i++) {
+            String curentRow = rows[i].replace("\"", "").trim();
+            answer.add(curentRow);
+        }
+        return answer;
+    }
+
+//    public  void addRequestToQueue(int id, CodeForm codeForm, int userId) {
+//        JudgeMessage judgeMessage = new JudgeMessage(id, codeForm, userId);
+//        simpleQueue.addSQLCode(judgeMessage);
+//    }
+
     /**
      * 接受code (还有 problem id 和 user id)
      * -> 取出判题信息problem表、judge_database表 judge_point表
@@ -60,48 +93,103 @@ public class JudgeService {
      *
      * @param id problem id
      */
-    public void judgeCode(int id, CodeForm codeForm, int userId) {
+    public void judgeCode(int id, CodeForm codeForm, int userId) throws SQLException, InterruptedException {
+        /*插入code表*/
         Code c = Code.builder()
                 .code(codeForm.getCode())
                 .codeLength(codeForm.getCode().getBytes(StandardCharsets.UTF_8).length)
                 .submitTime(codeForm.getSubmitTime())
                 .build();
         codeMapper.saveCode(c);
-
-
-        Record record = new Record();
+        System.out.println(c.getId());
         Problem problem = problemMapper.queryCurrentProblem(id);
         List<JudgeInput> judgeInputList = new ArrayList<>();
 
         List<JudgePoint> judgePointList = judgePointMapper.getAllJudgePointsOfProblem(id);
         for (JudgePoint j : judgePointList) {
-            ArrayList<String> answer = new ArrayList<>();
-            answer.add(j.getAnswer());
+            ArrayList<String> answer = answerStringToArrayList(j.getAnswer());
             String dbPath = judgeDatabaseMapper.getJudgeDatabaseById(j.getJudgeDatabaseId()).getDatabaseUrl();
-            judgeInputList.add(JudgeInput.builder()
+            JudgeInput currentInput = JudgeInput.builder()
                     .JudgeDatabase(dbPath)
                     .beforeInput(j.getBeforeSql())
                     .userInput(codeForm.getCode())
                     .afterInput(j.getAfterSql())
                     .timeLimit(problem.getTimeLimit())
                     .standardAnswer(answer)
-                    .build());
+                    .build();
+            judgeInputList.add(currentInput);
+            System.out.println("测试点报文：" + currentInput);
         }
-        // socket.send()
+        int totalTestPoint = judgePointList.size();
+        ArrayList<JudgeResult> judgeResults = new ArrayList<>();
+        int acNum = 0;
+        for (JudgeInput judgeInput : judgeInputList
+        ) {
 
+            JudgeResult judgeResult = sustech.edu.phantom.dboj.basicJudge.JudgeService.judgeDecide(judgeInput);
+            System.out.println(judgeResult);
+            judgeResults.add(judgeResult);
+            if (judgeResult.getCode() == 0) {
+                acNum += 1;
+            }
+        }
+        int score = 100 * acNum / totalTestPoint;
+        /*1.更新proble表*/
+        if (acNum == totalTestPoint) {
+            problem.setNumberSubmit(problem.getNumberSubmit() + 1);
+            problem.setNumberSolve(problem.getNumberSolve() + 1);
+        } else {
+            problem.setNumberSubmit(problem.getNumberSubmit() + 1);
+        }
+        String result = "WA";
+        if (acNum == totalTestPoint) {
+            result = "AC";
+        }
 
+        problemMapper.updateProblemInfo(problem);
+        /*2.更新Record表*/
+        StringBuilder totalDescription = new StringBuilder();
+        long time = 0, space = 0;
+        for (JudgeResult j : judgeResults) {
+            time = Math.max(time, j.getRunTime());
+            totalDescription.append(j.getCodeDescription());
+            totalDescription.append("\n");
+        }
+        Record record = Record.builder()
+                .codeId(c.getId())
+                .userId(userId)
+                .problemId(problem.getId())
+
+                .codeLength(c.getCodeLength())
+                .submitTime(1L).
+                        score(score).
+                        result(result).
+                        description(totalDescription.toString()).
+                        space(space).
+                        time(time)
+                .dialect("known").
+                        build();
+        recordMapper.saveRecord(record);
+        /*3.更新grade表*/
+        Grade oldGrade = gradeMapper.getOneGrade(userId, problem.getId());
+        if (oldGrade == null) {
+            Grade grade =
+                    Grade.builder()
+                            .userId(userId)
+                            .problemId(problem.getId())
+                            .score(score)
+                            .build();
+            gradeMapper.saveOneGrade(grade);
+        } else {
+            if (score > oldGrade.getScore()) {
+                gradeMapper.updateOneGrade(userId, problem.getId(), score);
+            }
+        }
     }
 
-    public Record receiveJudgeResult(List<JudgeResult> judgeResults) {
+    public void receiveJudgeResult(List<JudgeResult> judgeResults, Record record) {
         // 先build好已知的变量
-        Record record = Record.builder()
-                .codeId(1)
-                .userId(1)
-                .problemId(1)
-                .dialect("known")
-                .codeLength(1)
-                .submitTime(1L).
-                        build();
+
         StringBuilder totalDescription = new StringBuilder();
         long score = 0;
         String result = "";
@@ -109,52 +197,66 @@ public class JudgeService {
 
         for (JudgeResult j : judgeResults) {
             time = Math.max(time, j.getRunTime());
-//            time += j.getRunTime();
-//            time +=j.getTime();
-//            space += j.getSpace();
             totalDescription.append(j.getCodeDescription());
             totalDescription.append("\n");
         }
         recordMapper.saveRecord(record);
-
-
-        return null;
     }
 
     public JudgeResult judgeOnePoint() {
         return null;
     }
 
+
 }
 
 class Buffer {
     private static int productNumber = 0;
     private static final int MAX = 20;//队列长度
-    public static Queue<JudgeInput> judgeInputQueue = new ArrayBlockingQueue<>(MAX);
+    public static Queue<JudgeMessage> judgeMessageQueue = new ArrayBlockingQueue<>(MAX);
 
 
-    public synchronized void addSQLCode() throws InterruptedException {
+    public synchronized void addSQLCode(JudgeMessage judgeMessage) {
         while (productNumber == MAX) {
-            System.out.printf("目前队列中还有%d份代码没有评测，进入阻塞状态\n", productNumber);
-            this.wait();
+            System.out.printf("目前队列中还有%d份判题请求没有评测，进入阻塞状态\n", productNumber);
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
-        System.out.printf("目前队列中还有%d份代码没有评测\n", productNumber);
+        System.out.printf("目前队列中还有%d份判题请求没有评测\n", productNumber);
+        judgeMessageQueue.add(judgeMessage);
         ++productNumber;
         this.notifyAll();
     }
 
-    public synchronized void judgeSQLCode() throws InterruptedException {
+    public synchronized JudgeMessage judgeSQLCode() throws InterruptedException, SQLException {
         while (productNumber == 0) {
             System.out.println("目前没有代码了");
             this.wait();
         }
+        JudgeMessage judgeMessage = judgeMessageQueue.poll();
         --productNumber;
-        System.out.println();
+        System.out.println("消费一次judgeInput:" + judgeMessage);
+        this.notifyAll();
+        return judgeMessage;
     }
 }
 
 class Producer implements Runnable {
+
     private Buffer product;
+    private JudgeMessage judgeMessage;
+
+    public void setProduct(Buffer product) {
+        this.product = product;
+    }
+
+    public void setJudgeMessage(JudgeMessage judgeMessage) {
+        this.judgeMessage = judgeMessage;
+    }
 
     public Producer(Buffer product) {
         this.product = product;
@@ -162,13 +264,10 @@ class Producer implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                product.addSQLCode();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+
+        product.addSQLCode(judgeMessage);
+
+
     }
 }
 
@@ -182,8 +281,24 @@ class Consumer implements Runnable {
     @SneakyThrows
     @Override
     public void run() {
-        while (true) {
-            consumer.judgeSQLCode();
-        }
+        JudgeMessage judgeMessage = consumer.judgeSQLCode();
+
+
     }
+}
+
+class JudgeMessage {
+    int id;
+    CodeForm codeForm;
+    int userId;
+
+    public JudgeMessage() {
+    }
+
+    public JudgeMessage(int id, CodeForm codeForm, int userId) {
+        this.id = id;
+        this.codeForm = codeForm;
+        this.userId = userId;
+    }
+
 }
