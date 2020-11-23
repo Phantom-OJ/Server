@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Lori
+ */
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
@@ -74,6 +77,7 @@ public class UserController {
     /**
      * 所有的problem，是public的，没有权限控制
      * problem id, problem name, problem tag
+     *
      * @param pagination 前端传回的分页筛选信息 这个类有待完善
      * @return list of problems
      */
@@ -144,6 +148,7 @@ public class UserController {
     /**
      * 所有record记录
      * assignment, problem title, username/nickname
+     *
      * @param pagination 前端传回的分页筛选信息 这个类有待完善
      * @return list of records
      */
@@ -165,6 +170,7 @@ public class UserController {
             record = recordService.getOneRecord(id, user.getId());
         } catch (NullPointerException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
+            log.error("Error: {}", (Object) e.getStackTrace());
         }
         return record;
     }
@@ -178,5 +184,14 @@ public class UserController {
     @RequestMapping(value = "/problem/{id}/statistics/", method = RequestMethod.GET)
     public ProblemStatSet getOneProblemStatistics(@PathVariable int id) {
         return recordService.getOneProblemStat(id);
+    }
+
+    @RequestMapping(value = "/code/{id}", method = RequestMethod.GET)
+    public Code getOneCode(@PathVariable int id, @AuthenticationPrincipal User user) {
+        log.info("user information is {}", user);
+        if (user == null) {
+            return null;
+        }
+        return codeService.queryCode(id);
     }
 }

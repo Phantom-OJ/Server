@@ -23,7 +23,7 @@ import java.util.Locale;
 public class ProblemService {
     private final static String ID = "id";
     private final static String NAME = "name";
-    private final static String TAG = "tag";
+    private final static String TAG = "tags";
 
     @Autowired
     ProblemMapper problemMapper;

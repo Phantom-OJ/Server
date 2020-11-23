@@ -30,14 +30,14 @@ public class VerificationController {
     UserService userService;
 
     @RequestMapping(value = "/sendvcode/{username}", method = RequestMethod.POST)
-    public String sendVCode(@PathVariable String username) throws Exception {
+    public Object sendVCode(@PathVariable String username) throws Exception {
         int code = new Random().nextInt(900000) + 100000;
         String codeString = code + "";
         emailService.sendVerifyCode(username, code);
         ValueOperations forValue = redisTemplate.opsForValue();
         forValue.set(username, codeString);
         redisTemplate.expire(username, 5 * 60, TimeUnit.SECONDS);
-        return "OK";
+        return "200";
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -46,7 +46,7 @@ public class VerificationController {
         String validateCodeInRedis = forValue.get(registerForm.getUsername());
         User user = new User();
         System.out.println(validateCodeInRedis);
-        if (registerForm.getVcode().equals(validateCodeInRedis)) {
+        if (registerForm.getVCode().equals(validateCodeInRedis)) {
             userService.register(registerForm);
             return true;
         } else {
