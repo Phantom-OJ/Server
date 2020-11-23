@@ -41,9 +41,17 @@ public interface UserMapper {
     User findUserByName(String name);
 
     /**
-     *
-     * @param userForm
-     * @return
+     * update information
+     * @param userForm user form
+     * @param userId user id
+     * @return boolean
      */
-    User updateUserInfo(UserForm userForm, int userId);
+    boolean updateUserInfo(UserForm userForm, int userId);
+
+    /**
+     * 通过id找user
+     * @param userId user id
+     * @return User 对象
+     */
+    User findUserById(int userId);
 }

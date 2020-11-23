@@ -48,7 +48,7 @@
                u.avatar,
                u.username
         from "record" r
-                 join "problem" p on r.problem_id = p.id and p. valid
+                 join "problem" p on r.problem_id = p.id and p.valid
                  join "user" u on r.user_id = u.id and u.valid
         where r.valid
         order by r.submit_time desc
@@ -69,9 +69,23 @@
         group by dialect;
     </select>
     <select id="getOneRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
-        select r.*, c.code
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.description,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               c.code
         from record r
                  join code c on r.code_id = c.id
+                 join problem p on r.problem_id = p.id
         where r.valid
           and r.user_id = #{userId}
           and r.id = #{id};
