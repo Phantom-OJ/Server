@@ -11,11 +11,9 @@ public abstract class GenericResponse implements RestResponse{
     private boolean isDataSet = false;
     private Map<String, Object> fields;
     private Object data;
-    private int code;
     private String message;
 
-    public GenericResponse(int code, String message) {
-        this.code = code;
+    public GenericResponse(String message) {
         this.message = message;
     }
 
@@ -33,7 +31,6 @@ public abstract class GenericResponse implements RestResponse{
         if (!this.isDataSet) {
             this.isDataSet = true;
         }
-
         this.data = data;
         return this;
     }
@@ -46,11 +43,6 @@ public abstract class GenericResponse implements RestResponse{
     @Override
     public Optional<Object> getData() {
         return this.isDataSet ? Optional.ofNullable(this.data) : Optional.empty();
-    }
-
-    @Override
-    public int getCode() {
-        return code;
     }
 
     @Override

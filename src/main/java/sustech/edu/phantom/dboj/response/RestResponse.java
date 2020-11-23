@@ -12,7 +12,16 @@ import java.util.Optional;
  */
 @JsonDeserialize(using = JsonDeserializer.class)
 @JsonSerialize(using = JsonSerializer.class)
-public interface RestResponse<T> extends IErrorCode {
+public interface RestResponse<T> extends IErrorMsg {
+    /**
+     *
+     * @return
+     */
     Optional<Map<String, Object>> getFields();
+
+    /**
+     *
+     * @return
+     */
     Optional<T> getData();
 }
