@@ -67,5 +67,6 @@ content-type: application/json
   "password": "11811407"
 }
 
-<> 2020-11-22T163518.200.json
-<> 2020-11-22T163507.401.json
+
+###
+GET http://localhost:8080/api/record/6

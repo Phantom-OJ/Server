@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import sustech.edu.phantom.dboj.entity.User;
@@ -94,5 +95,18 @@ public class DbojApplicationTests {
 //                .build()));
 //        System.out.println(userMapper.login(User.builder().username("11811499@mail.sustech.edu.cn").password(encoder.encode("11811499")).build()));
         System.out.println(userService.loadUserByUsername("11811499@mail.sustech.edu.cn"));
+    }
+
+    @Test
+    public void test6() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println(encoder.encode("123456"));
+        BCrypt bCrypt = new BCrypt();
+
+        System.out.println(encoder.matches("123456", "$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m"));
+        System.out.println(encoder.encode("123456"));
+        System.out.println(encoder.encode("123456"));
+        System.out.println(encoder.encode("123456"));
+        System.out.println(encoder.encode("123456"));
     }
 }
