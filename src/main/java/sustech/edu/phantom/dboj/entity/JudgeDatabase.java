@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Lori
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class JudgeDatabase {
     private Integer id;
-    private String databaseUrl;//改成judgeDatabaseUrl
-//    private Boolean valid;
+    private String databaseUrl;
 }

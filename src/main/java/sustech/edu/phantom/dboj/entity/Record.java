@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+/**
+ * @author Lori
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-// 一个名字 一个头像
-//不给code
-//Problem
 public class Record {
     private Integer id;
     private Integer codeId;
@@ -27,7 +27,6 @@ public class Record {
     private String dialect;
     private Integer codeLength;
     private Long submitTime;
-//    private Boolean valid;
     private String problemTitle;
     private String avatar;
     private String username;
