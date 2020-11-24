@@ -40,7 +40,7 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:8080/api/sendvcode/11811620@mail.sustech.edu.cn
+POST http://localhost:8080/api/sendvcode/11813207@mail.sustech.edu.cn
 
 <> 2020-11-22T163147.200.jstd
 <> 2020-11-22T162249.200.jstd
