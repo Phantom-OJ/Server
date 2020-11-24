@@ -55,4 +55,15 @@ public class Pagination {
     public void setFilter(HashMap<String, Object> filter) {
         this.filter = filter;
     }
+
+    @Override
+    public String toString() {
+        return "Pagination{" +
+                "start=" + start +
+                ", end=" + end +
+                ", limit=" + limit +
+                ", offset=" + offset +
+                ", filter=" + filter +
+                '}';
+    }
 }
