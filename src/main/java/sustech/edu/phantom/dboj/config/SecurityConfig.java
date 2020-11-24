@@ -53,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
-                    Map<String, Object> map = new HashMap<>(2);
-                    map.put("status", 200);
+                    Map<String, Object> map = new HashMap<>(1);
+//                    map.put("status", 200);
                     map.put("msg", "Log out successfully!");
                     out.write(new ObjectMapper().writeValueAsString(map));
                     out.flush();
@@ -70,11 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
             httpServletResponse.setContentType("application/json;charset=utf-8");
             PrintWriter out = httpServletResponse.getWriter();
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>(2);
             User user = (User) authentication.getPrincipal();
             user.setPassword(null);
-            map.put("msg", user);
-            map.put("status", 200);
+            map.put("msg", "success");
+            map.put("data", user);
             out.write(new ObjectMapper().writeValueAsString(map));
             out.flush();
             out.close();
@@ -91,10 +91,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
                 "/swagger-ui.html",
-                "/v2/api-docs", // swagger api json
-                "/swagger-resources/configuration/ui", // 用来获取支持的动作
-                "/swagger-resources", // 用来获取api-docs的URI
-                "/swagger-resources/configuration/security", // 安全选项
+                "/v2/api-docs",
+                "/swagger-resources/configuration/ui",
+                "/swagger-resources",
+                "/swagger-resources/configuration/security",
                 "/swagger-resources/**"
         );
     }
