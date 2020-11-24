@@ -54,10 +54,9 @@ public class JudgeService {
                             judgeResult = JudgeResult.METHOD_ERROR;
                             break;
                     }
-                }
-                else{
-                /*没有type字段，默认single*/
-                judgeResult = judgeSingle(judgeInput);
+                } else {
+                    /*没有type字段，默认single*/
+                    judgeResult = judgeSingle(judgeInput);
                 }
             } else {
                 /*报文为空，发生一些未知错误*/
@@ -220,25 +219,43 @@ public class JudgeService {
             }
             /*timeOutFlag: 1为超时，0为未超时*/
             int timeOutFlag = 0;
+            int runTimeErrorFlag = 0;
             ArrayList<String> userResult = null;
             Long timeStart = System.currentTimeMillis();
             try {
                 new Thread(future).start();
                 userResult = future.get(judgeInput.timeLimit, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            } catch (TimeoutException e) {
                 e.printStackTrace();
                 future.cancel(true);
                 timeOutFlag = 1;
                 System.out.println("任务超时。");
+            } catch (InterruptedException | ExecutionException e) {
+                Long timeEnd = System.currentTimeMillis();
+                Long runtime = timeEnd - timeStart;
+                e.printStackTrace();
+                System.out.println("執行錯誤");
+                future.cancel(true);
+                judgeResult.setCode(JudgeResult.RUN_TIME_ERROR.getCode());
+                judgeResult.setCodeDescription(JudgeResult.RUN_TIME_ERROR.getCodeDescription());
+                judgeResult.setRunTime(runtime);
+                ArrayList<String> arrayList=new ArrayList<>();
+                arrayList.add(e.getMessage());
+                judgeResult.userAnswer =arrayList;
+                return judgeResult;
+
             }
             Long timeEnd = System.currentTimeMillis();
             Long runtime = timeEnd - timeStart;
             if (timeOutFlag == 1) {
-                judgeResult = JudgeResult.TIME_LIMIT_EXCEED;
+                judgeResult.setCode(JudgeResult.TIME_LIMIT_EXCEED.code);
+                judgeResult.setCodeDescription(JudgeResult.TIME_LIMIT_EXCEED.getCodeDescription());
+                judgeResult.setRunTime(judgeInput.timeLimit);
                 judgeResult.userAnswer = null;
                 judgeResult.runTime = judgeInput.timeLimit;
                 return judgeResult;
             }
+
 
             //-1为正确，其它为错误的行数
             int compareResult = compareResult(userResult, judgeInput.standardAnswer);
@@ -305,7 +322,9 @@ public class JudgeService {
         }
         if (flag == 1) {
             return -1;
-        } else return 0;
+        } else {
+            return 0;
+        }
     }
 
     public static ArrayList<String> getResult(String sql, Connection connection) throws SQLException {

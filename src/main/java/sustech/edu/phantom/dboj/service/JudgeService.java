@@ -97,8 +97,9 @@ public class JudgeService {
      * @param id problem id
      */
     public void judgeCode(int id, CodeForm codeForm, int userId) throws IOException {
+        System.err.println(codeForm.getSubmitTime());
         long start=System.currentTimeMillis();
-        FastLinux.createDatabase("12002");
+        //FastLinux.createDatabase("12002");
         /*插入code表*/
         Code c = Code.builder()
                 .code(codeForm.getCode())
@@ -170,7 +171,7 @@ public class JudgeService {
                 .problemId(problem.getId())
 
                 .codeLength(c.getCodeLength())
-                .submitTime(1L).
+                .submitTime(codeForm.getSubmitTime()).
                         score(score).
                         result(result).
                         space(space).

@@ -28,7 +28,7 @@ create table if not exists "record"
     time        int         not null,
     dialect     varchar(45) not null,
     code_length int         not null,
-    submit_time bigint      not null default floor(extract(epoch from now())),
+    submit_time bigint      not null default floor(extract(epoch from((current_timestamp - timestamp '1970-01-01 00:00:00')*1000))),
     valid       bool        not null default true
 );
 create table if not exists "record_problem_judge_point"
@@ -120,7 +120,7 @@ create table if not exists "code"
     id          serial primary key,
     code        text,
     code_length int    not null,
-    submit_time bigint not null default floor(extract(epoch from now())),
+    submit_time bigint not null default floor(extract(epoch from((current_timestamp - timestamp '1970-01-01 00:00:00')*1000))),
     valid       bool   not null default true
 );
 create table if not exists "tag"
@@ -162,8 +162,8 @@ create table if not exists "announcement"
     id            serial primary key,
     title         text   not null,
     description   text   not null,
-    create_date   bigint not null default floor(extract(epoch from now())),
-    last_modified bigint not null default floor(extract(epoch from now())),
+    create_date   bigint not null default floor(extract(epoch from((current_timestamp - timestamp '1970-01-01 00:00:00')*1000))),
+    last_modified bigint not null default floor(extract(epoch from((current_timestamp - timestamp '1970-01-01 00:00:00')*1000))),
     valid         bool   not null default true
 );
 

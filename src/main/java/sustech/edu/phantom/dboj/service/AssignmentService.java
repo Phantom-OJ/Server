@@ -41,6 +41,7 @@ public class AssignmentService {
      * @return
      */
     public Assignment getOneAssignment(int id) {
+        System.err.println("assignment_id:"+id);
         Assignment a = assignmentMapper.getOneAssignment(id);
         List<Problem> problemList = problemMapper.oneAssignmentProblems(id);
         a.setProblemList(problemList);

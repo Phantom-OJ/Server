@@ -21,9 +21,9 @@
         offset #{offset} limit #{limit};
     </select>
     <insert id="saveRecord">
-        insert into "record" (code_id, user_id, problem_id, result, score, space, time, dialect, code_length)
-        VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{score} #{space}, #{time}, #{dialect},
-                #{codeLength});
+        insert into "record" (code_id, user_id, problem_id, result, score, space, time, dialect, code_length,submit_time)
+        VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{score}, #{space}, #{time}, #{dialect},
+                #{codeLength},#{submitTime});
     </insert>
     <update id="invalidateRecord">
         update "record"
