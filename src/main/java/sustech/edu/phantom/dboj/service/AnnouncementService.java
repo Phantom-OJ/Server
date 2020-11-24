@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Announcement;
+import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.AnnouncementMapper;
 
@@ -22,5 +23,10 @@ public class AnnouncementService {
 
     public List<Announcement> getAnnouncementList(Pagination pagination) {
         return announcementMapper.queryAnnouncement(pagination);
+    }
+
+    public EntityVO<Announcement> announcementEntityVO(Pagination pagination) {
+        pagination.setParameters();
+        return new EntityVO<>(announcementMapper.queryAnnouncement(pagination), announcementMapper.getCount(pagination));
     }
 }

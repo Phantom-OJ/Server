@@ -17,6 +17,8 @@ public interface AssignmentMapper {
      */
     List<Assignment> queryAssignmentsWithoutFilter(Pagination pagination);
 
+    Integer queryAssignmentsWithoutFilterCounter(Pagination pagination);
+
     /**
      * 返回分页的作业信息，过滤器为assignment title
      * @param pagination 分页信息
@@ -24,6 +26,8 @@ public interface AssignmentMapper {
      * @return list of assignment
      */
     List<Assignment> queryAssignmentByName(Pagination pagination, String name);
+
+    Integer queryAssignmentByNameCounter(Pagination pagination, String name);
 
     /**
      * 返回所有的作业

@@ -2,6 +2,7 @@ package sustech.edu.phantom.dboj.response.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sustech.edu.phantom.dboj.response.RestResponse;
@@ -12,14 +13,12 @@ import java.util.Map;
 /**
  * @author Lori
  */
+@Slf4j
 public class JsonSerializer extends com.fasterxml.jackson.databind.JsonSerializer<RestResponse<Object>> {
-    private static final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
-
     @Override
     public void serialize(RestResponse<Object> response, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        logger.debug("Start serialize Response: {}", response);
+        log.debug("Start serialize Response: {}", response);
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeStringField(KeyDictionary.CODE_KEY, String.valueOf(response.getCode()));
         jsonGenerator.writeStringField(KeyDictionary.MESSAGE_KEY, response.getMessage());
         if (response.getData().isPresent()) {
             jsonGenerator.writeObjectField(KeyDictionary.DATA_KEY, response.getData().get());
@@ -31,12 +30,12 @@ public class JsonSerializer extends com.fasterxml.jackson.databind.JsonSerialize
                 try {
                     jsonGenerator.writeObjectField(k, v);
                 } catch (IOException e) {
-                    logger.error("write object field fail,key:[{}],value:[{}]", k, v);
+                    log.error("write object field fail,key:[{}],value:[{}]", k, v);
                 }
             });
         }
 
         jsonGenerator.writeEndObject();
-        logger.debug("Finished serialize Response：{}", response);
+        log.debug("Finished serialize Response：{}", response);
     }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sustech.edu.phantom.dboj.mapper.RecordProblemMapper">
+    <insert id="saveOneRecordDetails">
+        insert into "record_problem_judge_point" (record_id, problem_id, judge_point_index, time, space, result,
+        description)
+        VALUES
+        <foreach collection="judgePointList" index="index" separator="," close=";" item="jp">
+            (#{jp.recordId},#{jp.problemId},#{jp.judgePointIndex},#{jp.time},#{jp.space},#{jp.result},#{jp.description})
+        </foreach>
+    </insert>
+
+    <select id="getOneRecordDetails" resultType="sustech.edu.phantom.dboj.entity.RecordProblemJudgePoint">
+        select record_id,
+               problem_id,
+               judge_point_index,
+               time,
+               space,
+               result,
+               description
+        from "record_problem_judge_point"
+        where record_id = #{recordId}
+          and problem_id = #{problemId}
+        order by judge_point_index;
+    </select>
+</mapper>

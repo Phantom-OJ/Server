@@ -35,4 +35,20 @@ mybatis 的 mapper
 
 ## judger
 
-- 判题机? 
+- 判题机?
+
+## TODO
+1. 统一的返回对象
+
+    - msg: xxxxx
+    - data: xxxxxx
+    
+2. 多权限
+
+3. 消息队列
+
+4. 分组显示
+
+5. 根据user中的权限来控制
+
+6. 查询record的时候，要控制好代码的显示

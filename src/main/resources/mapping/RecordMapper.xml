@@ -11,7 +11,6 @@
                problem_id,
                score,
                result,
-               description,
                space,
                time,
                dialect,
@@ -22,7 +21,7 @@
         offset #{offset} limit #{limit};
     </select>
     <insert id="saveRecord">
-        insert into "record" (code_id, user_id, problem_id, result, description, space, time, dialect, code_length)
+        insert into "record" (code_id, user_id, problem_id, result, space, time, dialect, code_length)
         VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{description}, #{space}, #{time}, #{dialect},
                 #{codeLength});
     </insert>
@@ -38,7 +37,6 @@
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -48,7 +46,7 @@
                u.avatar,
                u.username
         from "record" r
-                 join "problem" p on r.problem_id = p.id and p. valid
+                 join "problem" p on r.problem_id = p.id and p.valid
                  join "user" u on r.user_id = u.id and u.valid
         where r.valid
         order by r.submit_time desc
@@ -68,10 +66,23 @@
           and problem_id = #{id}
         group by dialect;
     </select>
-    <select id="getOneRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
-        select r.*, c.code
+    <select id="getOneRecord" resultType="sustech.edu.phantom.dboj.entity.vo.RecordDetail">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               p.title as problem_title,
+               c.code
         from record r
                  join code c on r.code_id = c.id
+                 join problem p on r.problem_id = p.id
         where r.valid
           and r.user_id = #{userId}
           and r.id = #{id};
@@ -83,7 +94,6 @@
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -107,7 +117,6 @@
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -133,7 +142,6 @@
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -150,14 +158,13 @@
         order by submit_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
-    <select id="getRecordsOfPersonByAssignmentAndProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsOfPersonByAssignmentAndProblem" resultType="sustech.edu.phantom.dboj.entity.vo.RecordDetail">
         select r.id,
                r.code_id,
                r.user_id,
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -176,6 +183,17 @@
         order by submit_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
+    <select id="getRecordsOfPersonByAssignmentAndProblemCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
+                 join "assignment" a
+                      on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
+          and r.user_id = #{userId}
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
     <select id="getRecordsByAssignment" resultType="sustech.edu.phantom.dboj.entity.Record">
         select r.id,
                r.code_id,
@@ -183,7 +201,6 @@
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -208,7 +225,6 @@
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -224,14 +240,13 @@
         order by submit_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
-    <select id="getRecordsByAssignmentAndProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsByAssignmentAndProblem" resultType="sustech.edu.phantom.dboj.entity.vo.RecordDetail">
         select r.id,
                r.code_id,
                r.user_id,
                r.problem_id,
                r.score,
                r.result,
-               r.description,
                r.space,
                r.time,
                r.dialect,
@@ -247,6 +262,16 @@
                  join "user" u on r.user_id = u.id and u.valid
         where r.valid
         order by submit_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="getRecordsByAssignmentAndProblemCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
+                 join "assignment" a
+                      on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
+                 join "user" u on r.user_id = u.id and u.valid
+        where r.valid
         offset #{param1.offset} limit #{param1.limit};
     </select>
 </mapper>

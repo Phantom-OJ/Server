@@ -24,7 +24,6 @@ create table if not exists "record"
     problem_id  int         not null,
     score       int         not null default 0,
     result      char(3)     not null,
-    description text        not null,
     space       int         not null,
     time        int         not null,
     dialect     varchar(45) not null,
@@ -32,6 +31,19 @@ create table if not exists "record"
     submit_time bigint      not null default floor(extract(epoch from now())),
     valid       bool        not null default true
 );
+create table if not exists "record_problem_judge_point"
+(
+    id                serial primary key,
+    record_id         int     not null,
+    problem_id        int     not null,
+    judge_point_index int     not null,
+    time              bigint  not null,
+    space             bigint  not null,
+    result            char(3) not null,
+    description       text,
+    unique (problem_id, judge_point_index)
+);
+
 create table if not exists "problem"
 (
     id                  serial primary key,
@@ -153,10 +165,11 @@ create table if not exists "announcement"
 
 --这里要改的，现在只是测试用的，密码都没有加密
 insert into "user" (username, password, nickname)
-values ('11811407@mail.sustech.edu.cn', 'lsllsl', 'god1'),
-       ('11812318@mail.sustech.edu.cn', 'zjxzjx', 'god2'),
-       ('11813207@mail.sustech.edu.cn', 'nqsnqs', 'god3'),
-       ('11811620@mail.sustech.edu.cn', 'mzymzy', 'god4');
+values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qBibXqf4uhbQK.7buetZKN6', 'god1'),
+       ('11813207@mail.sustech.edu.cn', '$2a$10$lbvy1xOwq0zHU.nsoxZmWeoYGmsrCI1545oh3Ahvh0VAnkTR/Nk2q', 'god1'),
+       ('11812318@mail.sustech.edu.cn', '$2a$10$kP9KNT/Hb.QOrCaEItzMRuKrfhWOOttUt2R/46.XjHdjPX7FGqcjm', 'god1'),
+       ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', 'god1')
+;
 insert into "tag" (keyword, description)
 VALUES ('k1', 'd1'),
        ('k2', 'd2'),

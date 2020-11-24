@@ -10,6 +10,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
-                    Map<String, Object> map = new HashMap<>(2);
-                    map.put("status", 200);
+                    Map<String, Object> map = new HashMap<>(1);
+//                    map.put("status", 200);
                     map.put("msg", "Log out successfully!");
                     out.write(new ObjectMapper().writeValueAsString(map));
                     out.flush();
@@ -69,11 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
             httpServletResponse.setContentType("application/json;charset=utf-8");
             PrintWriter out = httpServletResponse.getWriter();
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>(2);
             User user = (User) authentication.getPrincipal();
             user.setPassword(null);
-            map.put("msg", user);
-            map.put("status", 200);
+            map.put("msg", "success");
+            map.put("data", user);
             out.write(new ObjectMapper().writeValueAsString(map));
             out.flush();
             out.close();
@@ -84,6 +85,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/swagger-ui.html",
+                "/v2/api-docs",
+                "/swagger-resources/configuration/ui",
+                "/swagger-resources",
+                "/swagger-resources/configuration/security",
+                "/swagger-resources/**"
+        );
     }
 
     @Bean

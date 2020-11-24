@@ -1,18 +1,20 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @author Lori
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class JudgeDatabase {
-    private Integer id;
-    private String databaseUrl;
+public class EntityVO<T> {
+    private List<T> entities;
+    private Integer count;
 }

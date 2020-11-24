@@ -1,27 +1,29 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.vo;
+
+import sustech.edu.phantom.dboj.entity.RecordProblemJudgePoint;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 /**
  * @author Lori
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Record {
+public class RecordDetail {
     private Integer id;
     private Integer codeId;
     private Integer userId;
     private Integer problemId;
     private Integer score;
     private String result;
-//    private String description;
+    private List<RecordProblemJudgePoint> description;
     private Long space;
     private Long time;
     private String dialect;

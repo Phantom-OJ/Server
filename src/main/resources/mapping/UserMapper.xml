@@ -39,4 +39,26 @@
         where nickname = #{name}
            or username = #{name};
     </select>
+    <update id="updateUserInfo">
+        update "user"
+        set nickname = #{nickname},
+            password = #{password},
+            avatar = #{avatar},
+            state_save = #{stateSave},
+            lang = #{lang}
+        where id = #{userId}
+    </update>
+    <select id="findUserById" resultType="sustech.edu.phantom.dboj.entity.User">
+        select id,
+               username,
+               nickname,
+               role,
+               avatar,
+               state_save,
+               state,
+               lang,
+               valid
+        from "user"
+        where id = #{userId};
+    </select>
 </mapper>

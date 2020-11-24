@@ -26,4 +26,6 @@ public interface AnnouncementMapper {
      * @return
      */
     int insertOneAnnouncement(Announcement announcement);
+
+    Integer getCount(Pagination pagination);
 }

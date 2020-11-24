@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Record;
+import sustech.edu.phantom.dboj.entity.RecordProblemJudgePoint;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.vo.EntityVO;
+import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
+import sustech.edu.phantom.dboj.mapper.RecordProblemMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 import java.util.ArrayList;
@@ -30,6 +34,9 @@ public class RecordService {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    RecordProblemMapper recordProblemMapper;
+
     /**
      * 保存判题记录
      *
@@ -39,35 +46,65 @@ public class RecordService {
     public int saveRecord(Record record) {
         return recordMapper.saveRecord(record);
     }
+//
+//    /**
+//     * @param pagination 分页信息
+//     * @return list of records
+//     */
+//    public List<Record> getRecordList(Pagination pagination) {
+//        pagination.setParameters();
+//        List<Record> records = new ArrayList<>();
+//        HashMap<String, Object> hm = pagination.getFilter();
+//        String usrname = (String) hm.get(USER);
+//        if ("".equals(usrname.trim())) {
+//            records = recordMapper.getRecordsByAssignmentAndProblem(pagination, (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
+//        } else {
+//            User tmp = userMapper.findUserByName(usrname);
+//            if (tmp != null) {
+//                records = recordMapper.getRecordsOfPersonByAssignmentAndProblem(pagination, tmp.getId(), (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
+//            }
+//        }
+//        return records;
+//    }
 
-    /**
-     * @param pagination 分页信息
-     * @return list of records
-     */
-    public List<Record> getRecordList(Pagination pagination) {
+    public EntityVO<RecordDetail> getRecordDetailList(Pagination pagination) {
         pagination.setParameters();
-        List<Record> records = new ArrayList<>();
+        List<RecordDetail> records = new ArrayList<>();
         HashMap<String, Object> hm = pagination.getFilter();
         String usrname = (String) hm.get(USER);
+        Integer counter = 0;
+        List<RecordProblemJudgePoint> recordProblemJudgePointList = new ArrayList<>();
         if ("".equals(usrname.trim())) {
             records = recordMapper.getRecordsByAssignmentAndProblem(pagination, (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
+            counter = recordMapper.getRecordsByAssignmentAndProblemCounter(pagination, (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
+            for (int i = 0; i < records.size(); i++) {
+                records.get(i).setDescription(recordProblemMapper.getOneRecordDetails(records.get(i).getId(), records.get(i).getProblemId()));
+            }
         } else {
             User tmp = userMapper.findUserByName(usrname);
             if (tmp != null) {
                 records = recordMapper.getRecordsOfPersonByAssignmentAndProblem(pagination, tmp.getId(), (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
+                counter = recordMapper.getRecordsOfPersonByAssignmentAndProblemCounter(pagination, tmp.getId(), (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
+                for (int i = 0; i < records.size(); i++) {
+                    records.get(i).setDescription(recordProblemMapper.getOneRecordDetails(records.get(i).getId(), records.get(i).getProblemId()));
+                }
             }
         }
-        return records;
+        return EntityVO.<RecordDetail>builder()
+                .entities(records)
+                .count(counter)
+                .build();
     }
 
     /**
-     *
      * @param id
      * @param userId
      * @return
      */
-    public Record getOneRecord(int id, int userId) {
-        return recordMapper.getOneRecord(id, userId);
+    public RecordDetail getOneRecord(int id, int userId) {
+        RecordDetail r = recordMapper.getOneRecord(id, userId);
+        r.setDescription(recordProblemMapper.getOneRecordDetails(id, r.getProblemId()));
+        return r;
     }
 
     /**

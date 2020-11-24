@@ -1,7 +1,5 @@
 package sustech.edu.phantom.dboj.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel(description = "group")
-public class Group {
-    @ApiModelProperty(value = "group id")
-    private Integer id;
-    @ApiModelProperty(value = "group description")
+public class RecordProblemJudgePoint {
+    private transient Integer recordId;
+    private transient Integer problemId;
+    private Integer judgePointIndex;
+    private Long time;
+    private Long space;
+    private String result;
     private String description;
 }

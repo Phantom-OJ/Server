@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.Tag;
+import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.CodeMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
@@ -23,7 +24,7 @@ import java.util.Locale;
 public class ProblemService {
     private final static String ID = "id";
     private final static String NAME = "name";
-    private final static String TAG = "tag";
+    private final static String TAG = "tags";
 
     @Autowired
     ProblemMapper problemMapper;
@@ -106,5 +107,44 @@ public class ProblemService {
             }
         }
         return tags;
+    }
+
+    public EntityVO<Problem> problemEntityVO(Pagination pagination) {
+        pagination.setParameters();
+        List<Problem> problemList = new ArrayList<>();
+        HashMap<String, Object> hm = pagination.getFilter();
+        String idString = (String) hm.get(ID);
+        String name = (String) hm.get(NAME);
+        String tagString = (String) hm.get(TAG);
+        Integer count = 0;
+        if ("".equals(idString.trim()) && "".equals(name.trim()) && "".equals(tagString.trim())){
+            problemList = problemMapper.queryProblemWithoutFilter(pagination);
+            count = problemMapper.queryProblemWithoutFilterCounter(pagination);
+        } else{
+            try {
+                int id = Integer.parseInt(idString.trim());
+                // 如果有id直接返回problemid=id的问题
+                Problem p = problemMapper.queryCurrentProblem(id);
+                if (p != null) {
+                    problemList.add(p);
+                    count = 1;
+                }
+            } catch (NumberFormatException e) {
+                if ("".equals(name.trim()) && "".equals(tagString.trim())){
+                    return null;
+                } else if ("".equals(tagString.trim())) {
+                    problemList = problemMapper.queryProblemsByName(pagination, name.trim());
+                    count = problemMapper.queryProblemsByNameCounter(pagination, name.trim());
+                } else {
+                    List<Integer> tags = getProblemTagsIdList(pagination);
+                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim());
+                    count = problemMapper.queryProblemsByTagAndNameCounter(pagination, tags, name.trim());
+                }
+            }
+        }
+        for (Problem p : problemList) {
+            p.setTagList(tagMapper.getProblemTags(p.getId()));
+        }
+        return EntityVO.<Problem>builder().entities(problemList).count(count).build();
     }
 }

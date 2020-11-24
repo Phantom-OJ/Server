@@ -17,7 +17,7 @@
         where valid
           and status = 'public'
         order by id
-        offset #{offset} limit #{limit}
+        offset #{offset} limit #{limit};
     </select>
     <select id="queryCurrentProblem" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
@@ -110,6 +110,17 @@
         </foreach>
         )) order by id offset #{param1.offset} limit #{param1.limit};
     </select>
+    <select id="queryProblemsByTagsCounter" resultType="java.lang.Integer">
+        select count(*) over ()
+        from "problem"
+        where valid
+        and status = 'public'
+        and id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        <foreach collection="tags" index="index" item="tag" separator="," close="">
+            #{tag}
+        </foreach>
+        ))offset #{param1.offset} limit #{param1.limit};
+    </select>
     <select id="queryProblemsByTagAndName" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
         assignment_id,
@@ -132,6 +143,18 @@
         or title like '%'||#{title}||'%'))
         order by id offset #{param1.offset} limit #{param1.limit};
     </select>
+    <select id="queryProblemsByTagAndNameCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "problem"
+        where valid
+        and status = 'public'
+        and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        <foreach collection="tags" index="index" item="tag" separator="," close="">
+            #{tag}
+        </foreach>)
+        or title like '%'||#{title}||'%'))
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
     <select id="queryProblemsByName" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
                assignment_id,
@@ -150,5 +173,20 @@
           and title like '%' || #{title} || '%'
         order by id
         offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="queryProblemsByNameCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "problem"
+        where valid
+          and status = 'public'
+          and title like '%' || #{title} || '%'
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="queryProblemWithoutFilterCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "problem"
+        where valid
+          and status = 'public'
+        offset #{offset} limit #{limit};
     </select>
 </mapper>
