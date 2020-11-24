@@ -4,6 +4,9 @@ import sustech.edu.phantom.dboj.entity.Permission;
 
 import java.util.List;
 
+/**
+ * @author Lori
+ */
 public interface PermissionMapper {
     List<Permission> getUserPermission(String role);
 }

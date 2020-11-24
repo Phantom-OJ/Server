@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.mapper;
 
 import sustech.edu.phantom.dboj.entity.Record;
+import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.stat.ProblemStat;
 
@@ -55,20 +56,22 @@ public interface RecordMapper {
      * @param userId user id
      * @return Record 对象
      */
-    Record getOneRecord(int id, int userId);
+    RecordDetail getOneRecord(int id, int userId);
 
     /**
      * 通过userid去查
+     *
      * @param pagination 分页信息
-     * @param userId user id
+     * @param userId     user id
      * @return list of records
      */
     List<Record> getRecordsOfOnePerson(Pagination pagination, int userId);
 
     /**
      * 通过userid assignment title去查
-     * @param pagination 分页信息
-     * @param userId user id
+     *
+     * @param pagination      分页信息
+     * @param userId          user id
      * @param assignmentTitle assignment的标题
      * @return list of records
      */
@@ -76,8 +79,9 @@ public interface RecordMapper {
 
     /**
      * 通过userid problem title去查
-     * @param pagination 分页信息
-     * @param userId user id
+     *
+     * @param pagination   分页信息
+     * @param userId       user id
      * @param problemTitle problem的标题
      * @return list of records
      */
@@ -85,17 +89,21 @@ public interface RecordMapper {
 
     /**
      * 通过userid assignment title problem title去查
-     * @param pagination 分页信息
-     * @param userId user id
+     *
+     * @param pagination      分页信息
+     * @param userId          user id
      * @param assignmentTitle assignment的标题
-     * @param problemTitle problem的标题
+     * @param problemTitle    problem的标题
      * @return list of records
      */
-    List<Record> getRecordsOfPersonByAssignmentAndProblem(Pagination pagination, int userId, String assignmentTitle, String problemTitle);
+    List<RecordDetail> getRecordsOfPersonByAssignmentAndProblem(Pagination pagination, int userId, String assignmentTitle, String problemTitle);
+
+    Integer getRecordsOfPersonByAssignmentAndProblemCounter(Pagination pagination, int userId, String assignmentTitle, String problemTitle);
 
     /**
      * 通过assignment title去查
-     * @param pagination 分页信息
+     *
+     * @param pagination      分页信息
      * @param assignmentTitle assignment的标题
      * @return list of records
      */
@@ -103,7 +111,8 @@ public interface RecordMapper {
 
     /**
      * 通过problem title去查
-     * @param pagination 分页信息
+     *
+     * @param pagination   分页信息
      * @param problemTitle problem的标题
      * @return list of records
      */
@@ -111,10 +120,14 @@ public interface RecordMapper {
 
     /**
      * 通过assignment title problem title去查
-     * @param pagination 分页信息
+     *
+     * @param pagination      分页信息
      * @param assignmentTitle assignment的标题
-     * @param problemTitle problem的标题
+     * @param problemTitle    problem的标题
      * @return list of records
      */
-    List<Record> getRecordsByAssignmentAndProblem(Pagination pagination, String assignmentTitle, String problemTitle);
+    List<RecordDetail> getRecordsByAssignmentAndProblem(Pagination pagination, String assignmentTitle, String problemTitle);
+
+    Integer getRecordsByAssignmentAndProblemCounter(Pagination pagination, String assignmentTitle, String problemTitle);
+
 }

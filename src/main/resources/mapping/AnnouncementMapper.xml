@@ -20,4 +20,9 @@
         insert into "announcement" (title, description)
         values (#{title}, #{description});
     </insert>
+    <select id="getCount" resultType="integer">
+        select count(*)
+        from "announcement"
+        offset #{offset} limit #{limit};
+    </select>
 </mapper>

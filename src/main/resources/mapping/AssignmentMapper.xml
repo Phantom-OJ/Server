@@ -15,6 +15,12 @@
         order by start_time desc
         offset #{offset} limit #{limit};
     </select>
+    <select id="queryAssignmentsWithoutFilterCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "assignment"
+        where valid
+        offset #{offset} limit #{limit};
+    </select>
     <select id="queryAssignmentByName" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
                title,
@@ -28,6 +34,13 @@
         where valid
           and title like '%' || #{name} || '%'
         order by start_time desc
+        offset #{param1.offset} limit #{param1.limit};
+    </select>
+    <select id="queryAssignmentByNameCounter" resultType="java.lang.Integer">
+        select count(*)
+        from "assignment"
+        where valid
+          and title like '%' || #{name} || '%'
         offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="getAllAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">

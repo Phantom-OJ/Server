@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.entity.Problem;
+import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.AssignmentMapper;
 import sustech.edu.phantom.dboj.mapper.GroupMapper;
@@ -48,7 +49,6 @@ public class AssignmentService {
     }
 
     /**
-     *
      * @param pagination 分页信息
      * @return list of assignments
      */
@@ -74,5 +74,34 @@ public class AssignmentService {
             a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
         }
         return assignmentList;
+    }
+
+    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination) {
+        pagination.setParameters();
+        List<Assignment> assignmentList = new ArrayList<>();
+        HashMap<String, Object> hm = pagination.getFilter();
+        String idString = (String) hm.get(ID);
+        String name = (String) hm.get(NAME);
+        Integer count = 0;
+        if ("".equals(idString.trim()) && "".equals(name.trim())) {
+            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination);
+            count = assignmentMapper.queryAssignmentsWithoutFilterCounter(pagination);
+        } else {
+            try {
+                int id = Integer.parseInt(idString.trim());
+                Assignment a = assignmentMapper.getOneAssignment(id);
+                if (a != null) {
+                    assignmentList.add(a);
+                    count = 1;
+                }
+            } catch (NumberFormatException e) {
+                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim());
+                count = assignmentMapper.queryAssignmentByNameCounter(pagination, name.trim());
+            }
+        }
+        for (Assignment a : assignmentList) {
+            a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
+        }
+        return EntityVO.<Assignment>builder().entities(assignmentList).count(count).build();
     }
 }

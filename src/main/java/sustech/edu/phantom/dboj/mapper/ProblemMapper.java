@@ -13,6 +13,8 @@ public interface ProblemMapper {
      */
     List<Problem> queryProblemWithoutFilter(Pagination pagination);
 
+    Integer queryProblemWithoutFilterCounter(Pagination pagination);
+
     /**
      * @param id
      * @return
@@ -38,10 +40,11 @@ public interface ProblemMapper {
     List<Problem> oneAssignmentProblems(int id);
 
     /**
-     * @param id
-     * @return
+     * @param pagination 分页过滤信息
+     * @param id         tag id
+     * @return list of problems
      */
-    List<Problem> oneTagProblems(int id);
+    List<Problem> oneTagProblems(Pagination pagination, int id);
 
     /**
      * 对提交的问题进行更新，提交次数和通过次数
@@ -60,6 +63,8 @@ public interface ProblemMapper {
      */
     List<Problem> queryProblemsByTags(Pagination pagination, @Param("tags") List<Integer> tags);
 
+    Integer queryProblemsByTagsCounter(Pagination pagination, @Param("tags") List<Integer> tags);
+
     /**
      * 通过tags 和 title 来查找信息
      *
@@ -70,6 +75,10 @@ public interface ProblemMapper {
      */
     List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title);
 
+
+    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title);
+
+
     /**
      * 通过title 获取筛选问题
      *
@@ -78,4 +87,6 @@ public interface ProblemMapper {
      * @return list of problems
      */
     List<Problem> queryProblemsByName(Pagination pagination, String title);
+
+    Integer queryProblemsByNameCounter(Pagination pagination, String title);
 }

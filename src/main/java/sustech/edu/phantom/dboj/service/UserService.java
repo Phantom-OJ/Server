@@ -21,7 +21,8 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
 import java.util.List;
 
 /**
- * 作为注册、登录、修改用户信息、提权的服务类
+ * @author Lori
+ * @date
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -35,12 +36,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     GroupMapper groupMapper;
 
-    /**
-     * 这里还差一个加密
-     *
-     * @param registerForm
-     * @return
-     */
     public User register(RegisterForm registerForm) throws Exception {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User user = User.builder().
