@@ -3,12 +3,14 @@ package sustech.edu.phantom.dboj.service;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sustech.edu.phantom.dboj.basicJudge.FastLinux;
 import sustech.edu.phantom.dboj.basicJudge.JudgeInput;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResult;
 import sustech.edu.phantom.dboj.entity.*;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.mapper.*;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,7 +67,7 @@ public class JudgeService {
 
     public static ArrayList<String> answerStringToArrayList(String textAnswer) {
         ArrayList<String> answer = new ArrayList<>();
-        String[] rows = textAnswer.split("\n");
+        String[] rows = textAnswer.trim().split("\n");
         for (int i = 0; i < rows.length; i++) {
             String curentRow = rows[i].replace("\"", "").trim();
             answer.add(curentRow);
@@ -94,7 +96,9 @@ public class JudgeService {
      *
      * @param id problem id
      */
-    public void judgeCode(int id, CodeForm codeForm, int userId) throws SQLException, InterruptedException {
+    public void judgeCode(int id, CodeForm codeForm, int userId) throws SQLException, InterruptedException, IOException {
+        long start=System.currentTimeMillis();
+        FastLinux.createDatabase("12002");
         /*插入code表*/
         Code c = Code.builder()
                 .code(codeForm.getCode())
@@ -189,6 +193,10 @@ public class JudgeService {
                 gradeMapper.updateOneGrade(userId, problem.getId(), score);
             }
         }
+        long end=System.currentTimeMillis();
+        System.out.println("判一次题时间:"+(end-start));
+        FastLinux.executeDockerCmd("docker stop `docker ps -aq`");
+        FastLinux.createDatabase("12002");
     }
 
     public void receiveJudgeResult(List<JudgeResult> judgeResults, Record record) {
@@ -205,6 +213,7 @@ public class JudgeService {
             totalDescription.append("\n");
         }
         recordMapper.saveRecord(record);
+
     }
 
     public JudgeResult judgeOnePoint() {

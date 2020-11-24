@@ -13,7 +13,10 @@ public class changeParameter {
                 .withDockerHost("tcp://10.20.87.51:2375")
                 .build();
         DockerClient docker = DockerClientBuilder.getInstance(config).build();
-        CreateContainerResponse response=docker.createContainerCmd("hello-world").exec();
+        CreateContainerResponse response=
+                docker.createContainerCmd("hello-world").
+
+                exec();
         Info info = docker.infoCmd().exec();
         //System.out.print(info);
         System.out.println(response);

@@ -26,12 +26,42 @@ import static com.github.dockerjava.api.model.HostConfig.newHostConfig;
 public class DockerOperation {
     public static void main(String[] args) {
         DockerOperation op=new DockerOperation();
-        op.connectDocker();
+        //op.connectDocker();
+        portBinding();
     }
     /**
      * 连接docker服务器
      * @return
      */
+
+    public static void portBinding(){
+        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("tcp://47.102.221.90:2375")
+                .withDockerTlsVerify(false)
+                .build();
+
+
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        ExposedPort tcp12009 = ExposedPort.tcp(12009);
+
+        Ports portBindings = new Ports();
+        portBindings.bind(tcp12009, Ports.Binding.bindPort(5432));
+        CreateContainerResponse response = dockerClient.
+                createContainerCmd("judgedb")
+                .withImage("judgedb:1.0")
+                .withExposedPorts(tcp12009)
+                .withPortBindings(portBindings)
+                .withAttachStderr(false)
+                .withAttachStdin(false)
+                .withAttachStdout(false)
+                .exec();
+
+
+    }
     public DockerClient connectDocker(){
 
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
@@ -44,6 +74,7 @@ public class DockerOperation {
                 .sslConfig(config.getSSLConfig())
                 .build();
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.pingCmd().exec();
 //        HashMap<String,String> map=new HashMap<>();
 //        map.put("--rm","");
 //        map.put("--name","ok");

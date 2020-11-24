@@ -13,6 +13,21 @@ import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
 
 public class FastLinux {
+
+    private static Connection connection=null;
+
+    static {
+        try {
+            String ip = "47.102.221.90";
+            String username = "phantom";
+            String password = "^70516807OJ$";
+            String cmd = "docker run -p 12009:5432 -e POSTGRES_PASSWORD=abc123 -d  judgedb:1.0";
+            connection = login(ip, username, password);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static String DEFAULTCHART = "UTF-8";
 
     static Connection login(String ip, String username, String password) {
@@ -63,8 +78,7 @@ public class FastLinux {
             e.printStackTrace();
         }
         return result;
-
-    }
+     }
 
     /**
      * 解析脚本执行返回的结果集
@@ -97,18 +111,42 @@ public class FastLinux {
         return buffer.toString();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         //long currentTimeMillis = System.currentTimeMillis();
-        String ip = "10.20.87.51";
-        String username = "maozunyao";
-        String password = "qweasdzxc";
-        String cmd = "//usr//bin//docker run hello-world";
+        String ip = "47.102.221.90";
+        String username = "phantom";
+        String password = "^70516807OJ$";
+        String cmd = "docker run -p 12009:5432 -e POSTGRES_PASSWORD=abc123 -d  judgedb:1.0";
         Connection connection = login(ip, username, password);
         Session session = connection.openSession();// 打开一个会话
         session.execCommand(cmd);// 执行命令
         String result = processStdout(session.getStdout(), DEFAULTCHART);
-        System.out.println(result);
-        //long currentTimeMillis1 = System.currentTimeMillis();
-       // System.out.println("ganymed-ssh2方式"+(currentTimeMillis1-currentTimeMillis));
+        Thread.sleep(10000L);
+        String rmCmd ="docker stop "+result;
+        session.close();
+        session=connection.openSession();
+        session.execCommand(rmCmd);
+        session.close();
+    }
+    public  static String createDatabase(String hostPost) throws IOException {
+        String cmd = "docker run -p "+hostPost+":5432 -e POSTGRES_PASSWORD=abc123 -d --rm judgedb:1.1";
+        Session session = connection.openSession();// 打开一个会话
+        session.execCommand(cmd);// 执行命令
+        String result = processStdout(session.getStdout(), DEFAULTCHART);
+        session.close();
+        return result;
+    }
+    public static void stopDatabaseContainer(String containerID) throws IOException {
+        String cmd = "docker stop "+containerID;
+        Session session = connection.openSession();// 打开一个会话
+        session.execCommand(cmd);// 执行命令
+        String result = processStdout(session.getStdout(), DEFAULTCHART);
+        session.close();
+    }
+    public static void executeDockerCmd(String cmd) throws IOException {
+        Session session = connection.openSession();// 打开一个会话
+        session.execCommand(cmd);// 执行命令
+        String result = processStdout(session.getStdout(), DEFAULTCHART);
+        session.close();
     }
 }
