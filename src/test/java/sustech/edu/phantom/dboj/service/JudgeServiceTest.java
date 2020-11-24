@@ -26,10 +26,10 @@ class JudgeServiceTest {
     @Test
     public void judgeCode() throws SQLException, InterruptedException, IOException {
         CodeForm codeForm=new CodeForm();
-        codeForm.setCode(ACanswer);
+        codeForm.setCode(trigger_AC);
         codeForm.setDialect("pgsql");
         codeForm.setSubmitTime(12345L);
-        judgeService.judgeCode(1,codeForm,1);
+        judgeService.judgeCode(2,codeForm,1);
     }
 
     @Test

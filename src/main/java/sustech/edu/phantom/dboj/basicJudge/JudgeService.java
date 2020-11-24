@@ -55,8 +55,10 @@ public class JudgeService {
                             break;
                     }
                 }
+                else{
                 /*没有type字段，默认single*/
                 judgeResult = judgeSingle(judgeInput);
+                }
             } else {
                 /*报文为空，发生一些未知错误*/
                 judgeResult = JudgeResult.FORMAT_ERROR;
