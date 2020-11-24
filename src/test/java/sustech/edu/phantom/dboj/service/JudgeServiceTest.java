@@ -18,12 +18,13 @@ class JudgeServiceTest {
     @Autowired
     JudgeService judgeService;
 
-    static String answer="SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'";
+    static String ACanswer="SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'";
+    static String WAanswer="SELECT title, country, year_released FROM movies WHERE year_released = 1991 AND title LIKE 'The%'";
 
     @Test
     public void judgeCode() throws SQLException, InterruptedException {
         CodeForm codeForm=new CodeForm();
-        codeForm.setCode(answer);
+        codeForm.setCode(WAanswer);
         codeForm.setDialect("pgsql");
         codeForm.setSubmitTime(12345L);
         judgeService.judgeCode(1,codeForm,1);

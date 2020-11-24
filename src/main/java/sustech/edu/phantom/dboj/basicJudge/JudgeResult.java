@@ -75,6 +75,7 @@ public class JudgeResult {
         this.userAnswer = userAnswer;
     }
 
+
     public void setCodeDescription(String codeDescription) {
         this.codeDescription = codeDescription;
     }

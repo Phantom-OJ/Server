@@ -65,15 +65,28 @@ public class JudgeService {
         try {
             connection = getConnection(judgeInput);
             connection.setAutoCommit(true);
+
             Statement statement = connection.createStatement();
             /*由老师输入的sql，通常为ddl或插入数据*/
             if (judgeInput.beforeInput != null) {
                 statement.execute(judgeInput.getBeforeInput());
             }
+            FutureTask<Boolean> future = new FutureTask<>(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    return statement.execute(judgeInput.userInput);
+                }
+            }
+            );
             Long timeStart = System.currentTimeMillis();
             try {
-                statement.execute(judgeInput.userInput);
-            } catch (Exception e) {
+                new Thread(future).start();
+                future.get(judgeInput.timeLimit,TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e){
+                System.out.println("超时");
+
+                return JudgeResult.TIME_LIMIT_EXCEED;
+            }catch (Exception e) {
                 System.out.println("执行错误");
                 return JudgeResult.RUN_TIME_ERROR;
             }
@@ -198,6 +211,7 @@ public class JudgeService {
                 new Thread(future).start();
                 userResult = future.get(judgeInput.timeLimit, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
                 future.cancel(true);
                 timeOutFlag = 1;
                 System.out.println("任务超时。");

@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     druid:
-      url: jdbc:postgresql://localhost:5432/testsec
-      username: postgres
-      password: abc123
+      url: jdbc:postgresql://47.102.221.90:5432/testsec
+      username: checker
+      password: lsl213
       driver-class-name: org.postgresql.Driver
       initial-size: 8
       min-idle: 1

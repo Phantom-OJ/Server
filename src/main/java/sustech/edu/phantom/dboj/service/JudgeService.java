@@ -103,6 +103,7 @@ public class JudgeService {
         codeMapper.saveCode(c);
         System.out.println(c.getId());
         Problem problem = problemMapper.queryCurrentProblem(id);
+        System.out.println(problem);
         List<JudgeInput> judgeInputList = new ArrayList<>();
 
         List<JudgePoint> judgePointList = judgePointMapper.getAllJudgePointsOfProblem(id);
