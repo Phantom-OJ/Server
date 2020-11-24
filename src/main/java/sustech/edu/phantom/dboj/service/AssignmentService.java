@@ -101,6 +101,7 @@ public class AssignmentService {
         }
         for (Assignment a : assignmentList) {
             a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
+            a.setProblemList(problemMapper.oneAssignmentProblems(a.getId()));
         }
         return EntityVO.<Assignment>builder().entities(assignmentList).count(count).build();
     }

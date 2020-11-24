@@ -162,7 +162,7 @@ public class UserController {
      * @return 这份代码提交的record, 还未实现
      */
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
-    public Record submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
+    public Boolean submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
         //这个方法要用到消息队列
 
         try {
