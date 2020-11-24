@@ -21,7 +21,7 @@ public class Record {
     private Integer problemId;
     private Integer score;
     private String result;
-    private String description;
+//    private String description;
     private Long space;
     private Long time;
     private String dialect;
