@@ -18,7 +18,7 @@
                space,
                result,
                description
-        from "record_problem_judge_point"
+        from record_problem_judge_point
         where record_id = #{recordId}
           and problem_id = #{problemId}
         order by judge_point_index;
