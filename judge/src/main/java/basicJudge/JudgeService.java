@@ -94,6 +94,7 @@ public class JudgeService {
             try {
                 statement.execute(judgeInput.userInput);
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("执行错误");
                 return JudgeResult.RUN_TIME_ERROR;
             }

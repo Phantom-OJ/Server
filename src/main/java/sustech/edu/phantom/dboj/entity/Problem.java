@@ -26,4 +26,5 @@ public class Problem {
 //    private Boolean valid;
     private List<Tag> tagList;
     private String recentCode;
+    private  String type;
 }

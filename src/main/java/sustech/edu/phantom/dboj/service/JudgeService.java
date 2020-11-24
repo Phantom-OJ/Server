@@ -12,6 +12,7 @@ import sustech.edu.phantom.dboj.mapper.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -64,7 +65,7 @@ public class JudgeService {
 
     public static ArrayList<String> answerStringToArrayList(String textAnswer) {
         ArrayList<String> answer = new ArrayList<>();
-        String[] rows = textAnswer.split(",");
+        String[] rows = textAnswer.split("\n");
         for (int i = 0; i < rows.length; i++) {
             String curentRow = rows[i].replace("\"", "").trim();
             answer.add(curentRow);
@@ -105,6 +106,8 @@ public class JudgeService {
         Problem problem = problemMapper.queryCurrentProblem(id);
         System.out.println(problem);
         List<JudgeInput> judgeInputList = new ArrayList<>();
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("type",problem.getType());
 
         List<JudgePoint> judgePointList = judgePointMapper.getAllJudgePointsOfProblem(id);
         for (JudgePoint j : judgePointList) {
@@ -117,6 +120,7 @@ public class JudgeService {
                     .afterInput(j.getAfterSql())
                     .timeLimit(problem.getTimeLimit())
                     .standardAnswer(answer)
+                    .additionFields(map)
                     .build();
             judgeInputList.add(currentInput);
             System.out.println("测试点报文：" + currentInput);
@@ -165,7 +169,6 @@ public class JudgeService {
                 .submitTime(1L).
                         score(score).
                         result(result).
-                        description(totalDescription.toString()).
                         space(space).
                         time(time)
                 .dialect("known").

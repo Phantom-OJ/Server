@@ -30,7 +30,8 @@
                number_submit,
                number_solve,
                index_in_assignment,
-               solution
+               solution,
+               type
         from "problem"
         where valid
           and status = 'public'

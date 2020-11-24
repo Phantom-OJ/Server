@@ -22,7 +22,7 @@
     </select>
     <insert id="saveRecord">
         insert into "record" (code_id, user_id, problem_id, result, space, time, dialect, code_length)
-        VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{description}, #{space}, #{time}, #{dialect},
+        VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{space}, #{time}, #{dialect},
                 #{codeLength});
     </insert>
     <update id="invalidateRecord">
