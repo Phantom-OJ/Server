@@ -2,12 +2,15 @@ package sustech.edu.phantom.dboj.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
+import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.LoginForm;
@@ -72,9 +75,12 @@ public class UserController {
      * @return 公告list 这里就不设置 /announcement/{id} 这种api了，直接缓存
      */
     @RequestMapping(value = "/announcement", method = RequestMethod.POST)
-    public EntityVO<Announcement> getAnnouncement(@RequestBody Pagination pagination) {
+    public ResponseEntity<GlobalResponse<EntityVO<Announcement>>> getAnnouncement(@RequestBody Pagination pagination) {
         log.info("进入公告页面");
-        return announcementService.announcementEntityVO(pagination);
+        return new ResponseEntity<>(GlobalResponse.<EntityVO<Announcement>>builder()
+                .msg("Success")
+                .data(announcementService.announcementEntityVO(pagination))
+                .build(), HttpStatus.OK);
     }
 
     /**
@@ -85,8 +91,19 @@ public class UserController {
      * @return list of problems
      */
     @RequestMapping(value = "/problem", method = RequestMethod.POST)
-    public EntityVO<Problem> getProblemList(@RequestBody Pagination pagination) {
-        return problemService.problemEntityVO(pagination);
+    public ResponseEntity<GlobalResponse<EntityVO<Problem>>> getProblemList(@RequestBody Pagination pagination) {
+        try {
+            EntityVO<Problem> entityVO = problemService.problemEntityVO(pagination);
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<Problem>>builder()
+                    .msg("sucess")
+                    .data(problemService.problemEntityVO(pagination))
+                    .build(), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>
+                    (GlobalResponse.<EntityVO<Problem>>builder()
+                            .msg("Number format exception.")
+                            .build(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -96,10 +113,14 @@ public class UserController {
      * @return 查询的problem的对象
      */
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.GET)
-    public Problem getOneProblem(@PathVariable int id, @AuthenticationPrincipal User user) {
-        Object principle = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        System.out.println(principle);
-        return user != null ? problemService.getOneProblem(id, user.getId()) : problemService.getOneProblem(id);
+    public ResponseEntity<GlobalResponse<Problem>> getOneProblem(@PathVariable int id, @AuthenticationPrincipal User user) {
+        try {
+            Problem p = problemService.getOneProblem(id, user.getId());
+            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
+        } catch (NullPointerException e) {
+            Problem p = problemService.getOneProblem(id);
+            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
+        }
     }
 
     /**
@@ -109,8 +130,13 @@ public class UserController {
      * @return list of assignments
      */
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public EntityVO<Assignment> getAllAssignments(@RequestBody Pagination pagination) {
-        return assignmentService.assignmentEntityVO(pagination);
+    public ResponseEntity<GlobalResponse<EntityVO<Assignment>>> getAllAssignments(@RequestBody Pagination pagination) {
+        try {
+            EntityVO<Assignment> a = assignmentService.assignmentEntityVO(pagination);
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg("success").data(a).build(), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg("Number Format error.").build(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -120,8 +146,12 @@ public class UserController {
      * @return assignment的对象
      */
     @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
-    public Assignment getOneAssignment(@PathVariable int id) {
-        return assignmentService.getOneAssignment(id);
+    public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(@PathVariable int id) {
+        Assignment a = assignmentService.getOneAssignment(id);
+        if (a == null) {
+            return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg("No such assignment.").build(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg("success").data(a).build(), HttpStatus.OK);
     }
 
     /**
@@ -151,8 +181,19 @@ public class UserController {
      * @return list of records
      */
     @RequestMapping(value = "/record", method = RequestMethod.POST)
-    public EntityVO<RecordDetail> getRecords(@RequestBody Pagination pagination) {
-        return recordService.getRecordDetailList(pagination);
+    public ResponseEntity<GlobalResponse<EntityVO<RecordDetail>>> getRecords(@RequestBody Pagination pagination) {
+        try {
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+                    .data(recordService.getRecordDetailList(pagination))
+                    .msg("success")
+                    .build(),
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+                    .msg("Internal server error.")
+                    .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -162,16 +203,24 @@ public class UserController {
      * @return 查询的record的类
      */
     @RequestMapping(value = "/record/{id}", method = RequestMethod.GET)
-    public RecordDetail getOneRecord(@PathVariable int id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(@PathVariable int id, @AuthenticationPrincipal User user) {
         RecordDetail record = null;
         try {
             record = recordService.getOneRecord(id, user.getId());
             log.info("The permission is {}", user.getPermissionList());
+            return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder()
+                    .msg("success")
+                    .data(record)
+                    .build(),
+                    HttpStatus.OK);
         } catch (NullPointerException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             log.error("Error: {}", (Object) e.getStackTrace());
+            return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder()
+                    .msg("you have not signed in.")
+                    .build(),
+                    HttpStatus.UNAUTHORIZED);
         }
-        return record;
     }
 
     /**
@@ -181,16 +230,34 @@ public class UserController {
      * @return ProblemStatisticsSet对象，包含result结果和语言结果
      */
     @RequestMapping(value = "/problem/{id}/statistics/", method = RequestMethod.GET)
-    public ProblemStatSet getOneProblemStatistics(@PathVariable int id) {
-        return recordService.getOneProblemStat(id);
+    public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneProblemStatistics(@PathVariable int id) {
+        try {
+            return new ResponseEntity<>(GlobalResponse.<ProblemStatSet>builder().msg("success").data(recordService.getOneProblemStat(id)).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(GlobalResponse.<ProblemStatSet>builder().msg("error").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/code/{id}", method = RequestMethod.GET)
-    public Code getOneCode(@PathVariable int id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<GlobalResponse<Code>> getOneCode(@PathVariable int id, @AuthenticationPrincipal User user) {
         log.info("user information is {}", user);
         if (user == null) {
-            return null;
+            return new ResponseEntity<>(GlobalResponse.<Code>builder()
+                    .msg("you have not signed in.")
+                    .build(),
+                    HttpStatus.UNAUTHORIZED);
         }
-        return codeService.queryCode(id);
+        Code c = codeService.queryCode(id);
+        if (!user.getId().equals(recordService.getUserIdByCodeId(id))) {
+            return new ResponseEntity<>(GlobalResponse.<Code>builder()
+                    .msg("you have not such authorizations.")
+                    .build(),
+                    HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(GlobalResponse.<Code>builder()
+                .msg("success")
+                .data(c)
+                .build(),
+                HttpStatus.OK);
     }
 }
