@@ -49,6 +49,21 @@ POST http://localhost:8080/api/sendvcode/11813207@mail.sustech.edu.cn
 <> 2020-11-22T160841.500.json
 
 ###
+POST http://localhost:8080/api/sendvcode
+content-type: application/json
+
+{
+  "username": "11811407@mail.sustech.edu.cn",
+  "mode": "register"
+}
+
+<> 2020-11-22T163147.200.jstd
+<> 2020-11-22T162249.200.jstd
+<> 2020-11-22T162218.200.jstd
+<> 2020-11-22T162207.200.jstd
+<> 2020-11-22T160841.500.json
+
+###
 POST http://localhost:8080/api/signup
 content-type: application/json
 
@@ -73,7 +88,7 @@ POST http://localhost:8080/api/problem/1/submit
 content-type: application/json
 
 {
-"code": "SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'",
+  "code": "SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'",
   "dialect": "pgsql",
   "submitTime": 12345
 }
