@@ -2,10 +2,7 @@ package sustech.edu.phantom.dboj.basicJudge;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,30 +32,47 @@ public class JudgeService {
     /*judgeService先调用judgeDecide方法，如果additional字段里有type=trigger字段，则
      * 调用judgeDDL方法判trigger题，否则默认select题
      * 后续还可以添加*/
-    public static JudgeResult judgeDecide(JudgeInput judgeInput) throws SQLException {
-        if (judgeInput != null) {
-            HashMap<String, Object> additionFields = judgeInput.additionFields;
-            if (judgeInput.additionFields != null) {
-                String type = (String) additionFields.get("type");
-                switch (type) {
-                    case "select":
-                        return judgeSingle(judgeInput);
-                    case "trigger":
-                        return judgeDDL(judgeInput);
-                    default:
-                        System.out.println("type不支持");
-                        return JudgeResult.METHOD_ERROR;
+    public static JudgeResult judgeDecide(JudgeInput judgeInput) {
+        try {
+            JudgeResult judgeResult = new JudgeResult();
+
+
+            if (judgeInput != null) {
+                HashMap<String, Object> additionFields = judgeInput.additionFields;
+                if (judgeInput.additionFields != null) {
+                    String type = (String) additionFields.get("type");
+                    switch (type) {
+                        case "select":
+                            judgeResult = judgeSingle(judgeInput);
+                            break;
+
+                        case "trigger":
+                            judgeResult = judgeDDL(judgeInput);
+                            break;
+                        default:
+                            System.out.println("type不支持");
+                            judgeResult = JudgeResult.METHOD_ERROR;
+                            break;
+                    }
                 }
+                else{
+                /*没有type字段，默认single*/
+                judgeResult = judgeSingle(judgeInput);
+                }
+            } else {
+                /*报文为空，发生一些未知错误*/
+                judgeResult = JudgeResult.FORMAT_ERROR;
             }
-            /*没有type字段，默认single*/
-            return judgeSingle(judgeInput);
-        } else {
-            /*报文为空，发生一些未知错误*/
-            return JudgeResult.FORMAT_ERROR;
+
+            return judgeResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("创建容器失败");
+            return JudgeResult.UNKNOWN_ERROR;
         }
     }
 
-    public static JudgeResult judgeDDL(JudgeInput judgeInput)  {
+    public static JudgeResult judgeDDL(JudgeInput judgeInput) {
 
         JudgeResult judgeResult = new JudgeResult();
         ArrayList<String> resultRow = new ArrayList<>();
@@ -81,12 +95,12 @@ public class JudgeService {
             Long timeStart = System.currentTimeMillis();
             try {
                 new Thread(future).start();
-                future.get(judgeInput.timeLimit,TimeUnit.MILLISECONDS);
-            } catch (TimeoutException e){
+                future.get(judgeInput.timeLimit, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
                 System.out.println("超时");
 
                 return JudgeResult.TIME_LIMIT_EXCEED;
-            }catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("执行错误");
                 return JudgeResult.RUN_TIME_ERROR;
             }
@@ -164,8 +178,9 @@ public class JudgeService {
     }
 
     public static Connection getConnection(JudgeInput judgeInput) throws Exception {
-
+        DriverManager.setLoginTimeout(3);
         userDefineConnection = DriverManager.getConnection(judgeInput.JudgeDatabase, userName, passWord);
+
         if (userDefineConnection == null) {
             Exception e = new Exception("连接这是怎么了？");
             e.printStackTrace();
@@ -175,7 +190,7 @@ public class JudgeService {
 
     }
 
-    public static JudgeResult judgeSingle(JudgeInput judgeInput)  {
+    public static JudgeResult judgeSingle(JudgeInput judgeInput) {
 
         //给后端返回的json报文
         JudgeResult judgeResult = new JudgeResult();
@@ -228,11 +243,11 @@ public class JudgeService {
             //-1为正确，其它为错误的行数
             int compareResult = compareResult(userResult, judgeInput.standardAnswer);
             System.out.println("学生测试结果：");
-            for (int i = 0; i <userResult.size() ; i++) {
+            for (int i = 0; i < userResult.size(); i++) {
                 System.out.println(userResult.get(i));
             }
             System.out.println("标准答案:");
-            for (int i = 0; i <judgeInput.standardAnswer.size() ; i++) {
+            for (int i = 0; i < judgeInput.standardAnswer.size(); i++) {
                 System.out.println(judgeInput.standardAnswer.get(i));
             }
             System.out.println("compareResult:" + compareResult);
@@ -263,7 +278,7 @@ public class JudgeService {
         int wrongRow = 0;
 
         if (userResult.size() != standardResult.size()) {
-            System.out.printf("用户行数:%d,标准行数:%d",userResult.size(),standardResult.size());
+            System.out.printf("用户行数:%d,标准行数:%d", userResult.size(), standardResult.size());
             //这里没有返回不对的行数
             return 0;
         }

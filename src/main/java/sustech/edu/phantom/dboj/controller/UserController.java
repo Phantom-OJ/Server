@@ -164,13 +164,13 @@ public class UserController {
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
     public Record submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
         //这个方法要用到消息队列
-        judgeService.judgeCode(id, codeForm, 1);
-//        try {
-//
-//        } catch (NullPointerException e) {
-////            throw new Exception("You have not signed in.");
-//        }
-        return null;
+
+        try {
+            judgeService.judgeCode(id, codeForm, 1);
+            return true;
+        } catch (NullPointerException e) {
+            throw new Exception("You have not signed in.");
+        }
     }
 
     /**
@@ -182,19 +182,19 @@ public class UserController {
      */
     @RequestMapping(value = "/record", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<EntityVO<RecordDetail>>> getRecords(@RequestBody Pagination pagination) {
-        try {
+//        try {
             return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
                     .data(recordService.getRecordDetailList(pagination))
                     .msg("success")
                     .build(),
                     HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("error is {}", e.getStackTrace());
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
-                    .msg("Internal server error.")
-                    .build(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        } catch (Exception e) {
+//            log.error("error is {}", e.getStackTrace());
+//            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+//                    .msg("Internal server error.")
+//                    .build(),
+//                    HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
     }
 
     /**
