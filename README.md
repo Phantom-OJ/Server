@@ -1,5 +1,12 @@
 # OOAD presentation
 
+## 0.判题机刷新
+在服务器上执行可以启动目前的判题测试库：
+`docker run -p 12002:5432 -e POSTGRES_PASSWORD=abc123 -d --rm judgedb:1.0`
+-p为端口映射，12002为服务器主机端口（也就是JDBC要连接的端口，-e POSTGRES_PASSWORD=abc123 为设置容器的密码，账户默认为postgres,-d为不开命令行，后台运行服务，--rm为停止容器后自动删除，judgedb:1.0为目前的镜像）
+然后如果测试数据库被污染，可以`docker stop [容器ID]`
+关闭容器并删除，然后重新运行上述命令
+
 ## 1.需求
 
 Online Judge的作用？（
