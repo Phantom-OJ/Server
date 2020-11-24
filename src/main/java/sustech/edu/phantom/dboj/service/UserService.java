@@ -64,6 +64,10 @@ public class UserService implements UserDetailsService {
         return userMapper.login(user);
     }
 
+    public User find(String username) {
+        return userMapper.findUserByUsername(username);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userMapper.findUserByUsername(username);

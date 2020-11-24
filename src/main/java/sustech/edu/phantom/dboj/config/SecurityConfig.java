@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
                     Map<String, Object> map = new HashMap<>(1);
-//                    map.put("status", 200);
+
                     map.put("msg", "Log out successfully!");
                     out.write(new ObjectMapper().writeValueAsString(map));
                     out.flush();

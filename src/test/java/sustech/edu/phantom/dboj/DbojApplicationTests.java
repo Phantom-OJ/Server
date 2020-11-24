@@ -130,7 +130,7 @@ public class DbojApplicationTests {
     static String answer="SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'";
     @Test
     public void judgeCode() {
-        CodeForm codeForm=new CodeForm();
+        CodeForm codeForm = new CodeForm();
         codeForm.setCode(answer);
         codeForm.setDialect("pgsql");
         codeForm.setSubmitTime(12345L);

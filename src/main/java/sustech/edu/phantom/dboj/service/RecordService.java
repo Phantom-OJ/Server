@@ -73,20 +73,19 @@ public class RecordService {
         HashMap<String, Object> hm = pagination.getFilter();
         String usrname = (String) hm.get(USER);
         Integer counter = 0;
-        List<RecordProblemJudgePoint> recordProblemJudgePointList = new ArrayList<>();
         if ("".equals(usrname.trim())) {
             records = recordMapper.getRecordsByAssignmentAndProblem(pagination, (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
             counter = recordMapper.getRecordsByAssignmentAndProblemCounter(pagination, (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
-            for (int i = 0; i < records.size(); i++) {
-                records.get(i).setDescription(recordProblemMapper.getOneRecordDetails(records.get(i).getId(), records.get(i).getProblemId()));
+            for (RecordDetail record : records) {
+                record.setDescription(recordProblemMapper.getOneRecordDetails(record.getId(), record.getProblemId()));
             }
         } else {
             User tmp = userMapper.findUserByName(usrname);
             if (tmp != null) {
                 records = recordMapper.getRecordsOfPersonByAssignmentAndProblem(pagination, tmp.getId(), (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
                 counter = recordMapper.getRecordsOfPersonByAssignmentAndProblemCounter(pagination, tmp.getId(), (String) hm.get(ASSIGNMENT), (String) hm.get(PROBLEM));
-                for (int i = 0; i < records.size(); i++) {
-                    records.get(i).setDescription(recordProblemMapper.getOneRecordDetails(records.get(i).getId(), records.get(i).getProblemId()));
+                for (RecordDetail record : records) {
+                    record.setDescription(recordProblemMapper.getOneRecordDetails(record.getId(), record.getProblemId()));
                 }
             }
         }
@@ -117,5 +116,9 @@ public class RecordService {
                 .resultSet(recordMapper.getProblemResultSet(id))
                 .dialectSet(recordMapper.getProblemDialectSet(id))
                 .build();
+    }
+
+    public Integer getUserIdByCodeId(int cid) {
+        return recordMapper.getUserIdByCodeId(cid);
     }
 }

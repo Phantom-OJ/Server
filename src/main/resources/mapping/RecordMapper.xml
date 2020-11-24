@@ -274,4 +274,10 @@
         where r.valid
         offset #{param1.offset} limit #{param1.limit};
     </select>
+    <select id="getUserIdByCodeId" resultType="java.lang.Integer">
+        select user_id
+        from "record"
+        where valid
+          and code_id = #{cid};
+    </select>
 </mapper>
