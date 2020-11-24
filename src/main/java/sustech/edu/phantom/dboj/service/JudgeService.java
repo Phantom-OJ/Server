@@ -96,7 +96,7 @@ public class JudgeService {
      *
      * @param id problem id
      */
-    public void judgeCode(int id, CodeForm codeForm, int userId) throws SQLException, InterruptedException, IOException {
+    public void judgeCode(int id, CodeForm codeForm, int userId) throws IOException {
         long start=System.currentTimeMillis();
         FastLinux.createDatabase("12002");
         /*插入code表*/
@@ -195,8 +195,10 @@ public class JudgeService {
         }
         long end=System.currentTimeMillis();
         System.out.println("判一次题时间:"+(end-start));
+
         FastLinux.executeDockerCmd("docker stop `docker ps -aq`");
         FastLinux.createDatabase("12002");
+
     }
 
     public void receiveJudgeResult(List<JudgeResult> judgeResults, Record record) {
