@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sustech.edu.phantom.dboj.mapper.GradeMapper">
+    <select id="getOneGrade" resultType="sustech.edu.phantom.dboj.entity.Grade">
+        select user_id, problem_id, score
+        from "grade"
+        where valid
+          and user_id = #{userId}
+          and problem_id = #{problemId};
+    </select>
+    <update id="updateOneGrade">
+        update "grade"
+        set score=#{score}
+        where user_id = #{userId}
+          and problem_id = #{problemId};
+    </update>
+    <insert id="saveOneGrade">
+        insert into "grade" (user_id, problem_id, score)
+        values (#{userId}, #{problemId}, #{score});
+    </insert>
+</mapper>
