@@ -13,6 +13,7 @@ import sustech.edu.phantom.dboj.form.RegisterForm;
 import sustech.edu.phantom.dboj.service.EmailService;
 import sustech.edu.phantom.dboj.service.UserService;
 
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -32,11 +33,16 @@ public class VerificationController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/sendvcode/{username}", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<Object>> sendVCode(@PathVariable String username) throws Exception {
+    @RequestMapping(value = "/sendvcode", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<Object>> sendVCode(@RequestBody Map<String, Object> map) throws Exception {
+        String username = (String) map.get("username");
+        int mode = (int) map.get("mode");
         User user = userService.find(username);
-        if (user != null) {
+        if (mode == 0 && user != null) {
             return new ResponseEntity<>(GlobalResponse.builder().msg("The account has been registered.").build(), HttpStatus.BAD_REQUEST);
+        }
+        if (mode == 1 && user == null) {
+            return new ResponseEntity<>(GlobalResponse.builder().msg("The account does not exist.").build(), HttpStatus.BAD_REQUEST);
         }
         int code = new Random().nextInt(900000) + 100000;
         String codeString = code + "";

@@ -182,18 +182,19 @@ public class UserController {
      */
     @RequestMapping(value = "/record", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<EntityVO<RecordDetail>>> getRecords(@RequestBody Pagination pagination) {
-        try {
+//        try {
             return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
                     .data(recordService.getRecordDetailList(pagination))
                     .msg("success")
                     .build(),
                     HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
-                    .msg("Internal server error.")
-                    .build(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        } catch (Exception e) {
+//            log.error("error is {}", e.getStackTrace());
+//            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+//                    .msg("Internal server error.")
+//                    .build(),
+//                    HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
     }
 
     /**
