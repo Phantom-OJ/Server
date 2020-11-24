@@ -7,6 +7,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
+import sustech.edu.phantom.dboj.entity.vo.EntityVO;
+import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.LoginForm;
 import sustech.edu.phantom.dboj.form.Pagination;
@@ -70,8 +72,9 @@ public class UserController {
      * @return 公告list 这里就不设置 /announcement/{id} 这种api了，直接缓存
      */
     @RequestMapping(value = "/announcement", method = RequestMethod.POST)
-    public List<Announcement> getAnnouncement(@RequestBody Pagination pagination) {
-        return announcementService.getAnnouncementList(pagination);
+    public EntityVO<Announcement> getAnnouncement(@RequestBody Pagination pagination) {
+        log.info("进入公告页面");
+        return announcementService.announcementEntityVO(pagination);
     }
 
     /**
@@ -82,10 +85,8 @@ public class UserController {
      * @return list of problems
      */
     @RequestMapping(value = "/problem", method = RequestMethod.POST)
-    public List<Problem> getProblemList(@RequestBody Pagination pagination) {
-//        List<Problem> p = problemService.getProblemList(pagination);
-        System.out.println(pagination);
-        return problemService.getProblemList(pagination);
+    public EntityVO<Problem> getProblemList(@RequestBody Pagination pagination) {
+        return problemService.problemEntityVO(pagination);
     }
 
     /**
@@ -98,9 +99,6 @@ public class UserController {
     public Problem getOneProblem(@PathVariable int id, @AuthenticationPrincipal User user) {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getDetails();
         System.out.println(principle);
-//        httpServletResponse.addCookie(new Cookie("Set-Cookie","1111111"));
-//        System.out.println(principle);
-//        System.out.println(user);
         return user != null ? problemService.getOneProblem(id, user.getId()) : problemService.getOneProblem(id);
     }
 
@@ -111,8 +109,8 @@ public class UserController {
      * @return list of assignments
      */
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public List<Assignment> getAllAssignments(@RequestBody Pagination pagination) {
-        return assignmentService.getAssignmentList(pagination);
+    public EntityVO<Assignment> getAllAssignments(@RequestBody Pagination pagination) {
+        return assignmentService.assignmentEntityVO(pagination);
     }
 
     /**
@@ -153,8 +151,8 @@ public class UserController {
      * @return list of records
      */
     @RequestMapping(value = "/record", method = RequestMethod.POST)
-    public List<Record> getRecords(@RequestBody Pagination pagination) {
-        return recordService.getRecordList(pagination);
+    public EntityVO<RecordDetail> getRecords(@RequestBody Pagination pagination) {
+        return recordService.getRecordDetailList(pagination);
     }
 
     /**
@@ -164,10 +162,11 @@ public class UserController {
      * @return 查询的record的类
      */
     @RequestMapping(value = "/record/{id}", method = RequestMethod.GET)
-    public Record getOneRecord(@PathVariable int id, @AuthenticationPrincipal User user) {
-        Record record = null;
+    public RecordDetail getOneRecord(@PathVariable int id, @AuthenticationPrincipal User user) {
+        RecordDetail record = null;
         try {
             record = recordService.getOneRecord(id, user.getId());
+            log.info("The permission is {}", user.getPermissionList());
         } catch (NullPointerException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             log.error("Error: {}", (Object) e.getStackTrace());
