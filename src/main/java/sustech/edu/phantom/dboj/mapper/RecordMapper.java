@@ -130,4 +130,5 @@ public interface RecordMapper {
 
     Integer getRecordsByAssignmentAndProblemCounter(Pagination pagination, String assignmentTitle, String problemTitle);
 
+    Integer getUserIdByCodeId(int cid);
 }

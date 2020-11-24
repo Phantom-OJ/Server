@@ -131,7 +131,7 @@ public class ProblemService {
                 }
             } catch (NumberFormatException e) {
                 if ("".equals(name.trim()) && "".equals(tagString.trim())){
-                    return null;
+                    throw new RuntimeException("id format wrong");
                 } else if ("".equals(tagString.trim())) {
                     problemList = problemMapper.queryProblemsByName(pagination, name.trim());
                     count = problemMapper.queryProblemsByNameCounter(pagination, name.trim());
