@@ -42,9 +42,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid
                  join "user" u on r.user_id = u.id and u.valid
@@ -78,11 +78,14 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
-               c.code
+               p.title    as problem_title,
+               c.code,
+               u.nickname as username,
+               u.avatar
         from record r
                  join code c on r.code_id = c.id
                  join problem p on r.problem_id = p.id
+                 join "user" u on u.id = r.user_id
         where r.valid
           and r.user_id = #{userId}
           and r.id = #{id};
@@ -99,9 +102,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid
                  join "user" u on r.user_id = u.id and u.valid
@@ -122,9 +125,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid
                  join "assignment" a
@@ -147,9 +150,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
                  join "user" u on r.user_id = u.id and u.valid
@@ -170,9 +173,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
                  join "assignment" a
@@ -206,9 +209,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid
                  join "assignment" a
@@ -230,9 +233,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
                  join "user" u on r.user_id = u.id and u.valid
@@ -252,9 +255,9 @@
                r.dialect,
                r.code_length,
                r.submit_time,
-               p.title as problem_title,
+               p.title    as problem_title,
                u.avatar,
-               u.username
+               u.nickname as username
         from "record" r
                  join "problem" p on r.problem_id = p.id and p.valid and p.title like '%' || #{problemTitle} || '%'
                  join "assignment" a
