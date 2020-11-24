@@ -24,7 +24,6 @@ create table if not exists "record"
     problem_id  int         not null,
     score       int         not null default 0,
     result      char(3)     not null,
-    description text        not null,
     space       int         not null,
     time        int         not null,
     dialect     varchar(45) not null,
@@ -32,6 +31,19 @@ create table if not exists "record"
     submit_time bigint      not null default floor(extract(epoch from now())),
     valid       bool        not null default true
 );
+create table if not exists "record_problem_judge_point"
+(
+    id                serial primary key,
+    record_id         int     not null,
+    problem_id        int     not null,
+    judge_point_index int     not null,
+    time              bigint  not null,
+    space             bigint  not null,
+    result            char(3) not null,
+    description       text,
+    unique (problem_id, judge_point_index)
+);
+
 create table if not exists "problem"
 (
     id                  serial primary key,
