@@ -182,7 +182,7 @@ public class JudgeService {
                         result(result).
                         space(space).
                         time(time)
-                .dialect("known").
+                .dialect(codeForm.getDialect()).
                         build();
         recordMapper.saveRecord(record);
         /*3.更新grade表*/
