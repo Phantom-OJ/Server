@@ -20,7 +20,7 @@
         where valid
         offset #{offset} limit #{limit};
     </select>
-    <insert id="saveRecord">
+    <insert id="saveRecord" keyProperty="id" useGeneratedKeys="true">
         insert into "record" (code_id, user_id, problem_id, result, score, space, time, dialect, code_length,submit_time)
         VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{score}, #{space}, #{time}, #{dialect},
                 #{codeLength},#{submitTime});

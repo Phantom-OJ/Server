@@ -25,8 +25,11 @@ public class JudgeService {
     private final static int SE = 1;// system error
     private final static int TLE = 2;// time limit exceed
     private final static int WA = 3;// wrong answer
-    private final static int MLE = 4;// memory limit exceed
-    private final static int RE = 5;// runtime error
+    private final static int RE = 4;// runtime error
+    private final static int CNE = 5;// 连接失败
+    private final static int UE = 6;//未知错误
+    private final static int MLE = 9;// memory limit exceed
+
 
     static Buffer simpleQueue = new Buffer();
     static Producer producer = new Producer(simpleQueue);
@@ -63,6 +66,8 @@ public class JudgeService {
     @Autowired
     RecordMapper recordMapper;
 
+    @Autowired
+    RecordProblemMapper recordProblemMapper;
     private List<JudgeResult> judgeResults = new ArrayList<>();
 
     public static ArrayList<String> answerStringToArrayList(String textAnswer) {
@@ -137,12 +142,14 @@ public class JudgeService {
         ) {
 
             JudgeResult judgeResult = sustech.edu.phantom.dboj.basicJudge.JudgeService.judgeDecide(judgeInput);
-            System.out.println(judgeResult);
+
+            //System.out.println(judgeResult);
             judgeResults.add(judgeResult);
             if (judgeResult.getCode() == 0) {
                 acNum += 1;
             }
         }
+
         int score = 100 * acNum / totalTestPoint;
         /*1.更新proble表*/
         if (acNum == totalTestPoint) {
@@ -181,6 +188,27 @@ public class JudgeService {
         recordMapper.saveRecord(record);
         /*3.更新grade表*/
         Grade oldGrade = gradeMapper.getOneGrade(userId, problem.getId());
+        /*4.新增一张表*/
+        ArrayList<RecordProblemJudgePoint> recordProblemJudgePoints=new ArrayList<>();
+        for (int i=0;i<judgeResults.size();i++
+             ) {
+            JudgeResult judgeResult=judgeResults.get(i);
+
+            RecordProblemJudgePoint recordProblemJudgePoint=
+                    RecordProblemJudgePoint.builder()
+                            .recordId(record.getId())
+                            .problemId(problem.getId())
+                            .judgePointIndex(i+1)
+                            .time(judgeResult.getRunTime())
+                            .space(100L).
+                            result(codeToString(judgeResult.getCode()))
+                            .description(judgeResult.getCodeDescription())
+                            .build();
+            recordProblemJudgePoints.add(recordProblemJudgePoint);
+
+        }
+        recordProblemMapper.saveOneRecordDetails(recordProblemJudgePoints);
+
         if (oldGrade == null) {
             Grade grade =
                     Grade.builder()
@@ -200,6 +228,37 @@ public class JudgeService {
         FastLinux.executeDockerCmd("docker stop `docker ps -aq`");
         FastLinux.createDatabase("12002");
 
+    }
+
+    public static String codeToString(Integer code){
+        String s="";
+        switch (code){
+            case AC:
+                s="AC";
+                break;
+            case SE:
+                s="SE";
+                break;
+            case TLE:
+                s="TLE";
+                break;
+            case WA:
+                s="WA";
+                break;
+            case RE:
+                s="RE";
+                break;
+            case 5:
+                s="CNE";
+                break;//连接错误
+            case 6:
+                s="UE";
+                break;
+            default:
+                s="UE";
+                break;
+        }
+        return s;
     }
 
     public void receiveJudgeResult(List<JudgeResult> judgeResults, Record record) {
