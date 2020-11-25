@@ -42,6 +42,11 @@ public class JudgeResult {
     }
 
     public JudgeResult() {
+        Integer code=0;
+        Long runTime=0L;
+        String codeDescription="result未初始化";
+        ArrayList<String> userAnswer=new ArrayList<>();//执行结果，是一个以“|”分隔列的table，每一行是一个元素
+        HashMap<String,Object> additionFields=new HashMap<>();
     }
 
     public Integer getCode() {

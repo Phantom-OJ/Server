@@ -97,11 +97,16 @@ public class JudgeService {
                 future.get(judgeInput.timeLimit, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
                 System.out.println("超时");
-
                 return JudgeResult.TIME_LIMIT_EXCEED;
             } catch (Exception e) {
+                e.printStackTrace();
+                Long timeEnd = System.currentTimeMillis();
+                Long runtime = timeEnd - timeStart;
                 System.out.println("执行错误");
-                return JudgeResult.RUN_TIME_ERROR;
+                judgeResult.setCode(JudgeResult.RUN_TIME_ERROR.getCode());
+                judgeResult.setCodeDescription(JudgeResult.RUN_TIME_ERROR.getCodeDescription());
+                judgeResult.setRunTime(runtime);
+                return judgeResult;
             }
             Long timeEnd = System.currentTimeMillis();
             Long runtime = timeEnd - timeStart;
@@ -164,14 +169,20 @@ public class JudgeService {
                 judgeResult.userAnswer = resultRow;
                 return judgeResult;
             } else {
-                judgeResult = JudgeResult.WRONG_ANSWER;
-                judgeResult.runTime = runtime;
-                judgeResult.userAnswer = resultRow;
+                judgeResult.setCode(JudgeResult.WRONG_ANSWER.getCode());
+                if(resultFlag!=0){
+                judgeResult.setCodeDescription("row "+resultFlag+" does not equal");}
+                else {
+                    judgeResult.setCodeDescription("row or column number does not equal");
+                }
+                judgeResult.setRunTime(runtime);
+                judgeResult.setUserAnswer(resultRow);
                 return judgeResult;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            judgeResult.setCodeDescription(e.getMessage());
+            judgeResult.setCode(JudgeResult.UNKNOWN_ERROR.code);
+            judgeResult.setCodeDescription("系统未知错误，请联系管理员");
             return judgeResult;
         }
     }
@@ -279,9 +290,9 @@ public class JudgeService {
             }
             connection.rollback();
         } catch (Exception e) {
-            System.out.println("JudgeSingle过程发生错误");
-            judgeResult.setCodeDescription(e.getMessage());
+            System.out.println("执行过程发生错误");
             e.printStackTrace();
+            judgeResult=JudgeResult.RUN_TIME_ERROR;
             return judgeResult;
         }
 

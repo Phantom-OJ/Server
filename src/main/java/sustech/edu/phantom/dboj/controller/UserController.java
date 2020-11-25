@@ -168,7 +168,8 @@ public class UserController {
         try {
             judgeService.judgeCode(id, codeForm, 1);
             return true;
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+
             throw new Exception("You have not signed in.");
         }
     }

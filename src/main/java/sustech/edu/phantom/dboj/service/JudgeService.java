@@ -142,8 +142,7 @@ public class JudgeService {
         ) {
 
             JudgeResult judgeResult = sustech.edu.phantom.dboj.basicJudge.JudgeService.judgeDecide(judgeInput);
-
-            //System.out.println(judgeResult);
+            System.out.println(judgeResult);
             judgeResults.add(judgeResult);
             if (judgeResult.getCode() == 0) {
                 acNum += 1;
