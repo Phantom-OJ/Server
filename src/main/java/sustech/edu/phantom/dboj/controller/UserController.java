@@ -183,11 +183,11 @@ public class UserController {
     @RequestMapping(value = "/record", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<EntityVO<RecordDetail>>> getRecords(@RequestBody Pagination pagination) {
 //        try {
-        return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
-                .data(recordService.getRecordDetailList(pagination))
-                .msg("success")
-                .build(),
-                HttpStatus.OK);
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+                    .data(recordService.getRecordDetailList(pagination))
+                    .msg("success")
+                    .build(),
+                    HttpStatus.OK);
 //        } catch (Exception e) {
 //            log.error("error is {}", e.getStackTrace());
 //            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()

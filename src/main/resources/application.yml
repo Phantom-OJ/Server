@@ -29,6 +29,7 @@ spring:
     password: cpbfgjargvrkbeec
     default-encoding: utf-8
     properties: { mail.smtp.auth: true,mail.smtp.starttls.enable: true,mail.smtp.starttls.required: true }
+    port: 465
   redis:
     timeout: 5000
 mybatis:

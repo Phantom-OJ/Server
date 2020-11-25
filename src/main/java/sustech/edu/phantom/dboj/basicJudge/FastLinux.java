@@ -130,6 +130,10 @@ public class FastLinux {
     }
     public  static String createDatabase(String hostPost) throws IOException {
         String cmd = "docker run -p "+hostPost+":5432 -e POSTGRES_PASSWORD=abc123 -d --rm judgedb:1.1";
+        String ip = "47.102.221.90";
+        String username = "phantom";
+        String password = "^70516807OJ$";
+        connection = login(ip, username, password);
         Session session = connection.openSession();// 打开一个会话
         session.execCommand(cmd);// 执行命令
         String result = processStdout(session.getStdout(), DEFAULTCHART);
@@ -138,6 +142,10 @@ public class FastLinux {
     }
     public static void stopDatabaseContainer(String containerID) throws IOException {
         String cmd = "docker stop "+containerID;
+        String ip = "47.102.221.90";
+        String username = "phantom";
+        String password = "^70516807OJ$";
+        connection = login(ip, username, password);
         Session session = connection.openSession();// 打开一个会话
         session.execCommand(cmd);// 执行命令
         String result = processStdout(session.getStdout(), DEFAULTCHART);
