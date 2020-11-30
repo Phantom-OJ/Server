@@ -40,9 +40,7 @@ create table if not exists "record_problem_judge_point"
     time              bigint  not null,
     space             bigint  not null,
     result            char(3) not null,
-    description       text,
-
-    unique (problem_id, judge_point_index)
+    description       text
 );
 create table problem
 (
