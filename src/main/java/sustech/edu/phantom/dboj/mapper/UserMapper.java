@@ -54,4 +54,8 @@ public interface UserMapper {
      * @return User 对象
      */
     User findUserById(int userId);
+
+    boolean resetPassword(String username, String password);
+
+    int modifyPassword(String username, String password);
 }

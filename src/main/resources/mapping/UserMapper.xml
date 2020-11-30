@@ -41,11 +41,11 @@
     </select>
     <update id="updateUserInfo">
         update "user"
-        set nickname = #{nickname},
-            password = #{password},
-            avatar = #{avatar},
+        set nickname   = #{nickname},
+            password   = #{password},
+            avatar     = #{avatar},
             state_save = #{stateSave},
-            lang = #{lang}
+            lang       = #{lang}
         where id = #{userId}
     </update>
     <select id="findUserById" resultType="sustech.edu.phantom.dboj.entity.User">
@@ -61,4 +61,14 @@
         from "user"
         where id = #{userId};
     </select>
+    <update id="resetPassword">
+        update "user"
+        set password = #{password}
+        where username = #{username};
+    </update>
+    <update id="modifyPassword">
+        update "user"
+        set password = #{password}
+        where username = #{username};
+    </update>
 </mapper>

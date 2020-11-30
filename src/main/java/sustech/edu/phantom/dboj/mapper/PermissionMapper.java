@@ -8,5 +8,5 @@ import java.util.List;
  * @author Lori
  */
 public interface PermissionMapper {
-    List<Permission> getUserPermission(String role);
+    List<String> getUserPermission(String role);
 }

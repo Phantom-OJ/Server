@@ -7,13 +7,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sustech.edu.phantom.dboj.entity.Announcement;
 import sustech.edu.phantom.dboj.entity.Permission;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.form.LoginForm;
-import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.RegisterForm;
-import sustech.edu.phantom.dboj.mapper.AnnouncementMapper;
+import sustech.edu.phantom.dboj.form.home.RstPwdForm;
+import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
 import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.mapper.PermissionMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
@@ -60,12 +59,16 @@ public class UserService implements UserDetailsService {
 
     public User login(LoginForm loginForm) {
         User user = User.builder().username(loginForm.getUsername()).password(loginForm.getPassword()).build();
-//        User user = new User(loginForm);
         return userMapper.login(user);
     }
 
     public User find(String username) {
         return userMapper.findUserByUsername(username);
+    }
+
+    public Boolean resetPassword(RstPwdForm form) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return userMapper.resetPassword(form.getUsername(), encoder.encode(form.getNewPassword()));
     }
 
     @Override
@@ -74,9 +77,7 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Username does not exist");
         }
-        List<Permission> permissionList = permissionMapper.getUserPermission(user.getRole());
-        user.setPermissionList(permissionList);
-        // 密码是否对应?
+        user.setPermissionList(permissionMapper.getUserPermission(user.getRole()));
         return user;
     }
 }
