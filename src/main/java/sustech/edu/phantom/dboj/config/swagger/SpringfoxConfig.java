@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.config;
+package sustech.edu.phantom.dboj.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

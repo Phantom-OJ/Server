@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.config;
+package sustech.edu.phantom.dboj.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationServiceException;
