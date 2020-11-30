@@ -29,8 +29,8 @@ public class User implements UserDetails {
     private Boolean stateSave;
     private String state;
     private String lang;
-    private Boolean valid;
-    private List<Permission> permissionList;
+    private transient Boolean valid;
+    private transient List<String> permissionList;
     private List<Group> groupList;
 
     @Override

@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @ApiModel(description = "register form")
 public class RegisterForm {
-    @ApiModelProperty(value = "username")
+    @ApiModelProperty(name = "username")
     private String username;
-    @ApiModelProperty(value = "password")
+    @ApiModelProperty(name = "password")
     private String password;
-    @ApiModelProperty(value = "nickname")
+    @ApiModelProperty(name = "nickname")
     private String nickname;
-    @ApiModelProperty(value = "verification code")
-    private String vCode;
+    @ApiModelProperty(name = "verification code")
+    private String verifyCode;
 }
