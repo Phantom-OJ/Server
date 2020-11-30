@@ -165,13 +165,13 @@ public class UserController {
     public Boolean submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
         //这个方法要用到消息队列
 
-        try {
+//        try {
             judgeService.judgeCode(id, codeForm, 1);
             return true;
-        } catch (Exception e) {
-
-            throw new Exception("You have not signed in.");
-        }
+//        } catch (Exception e) {
+//            return false;
+////            throw new Exception("You have not signed in.");
+//        }
     }
 
     /**
@@ -261,5 +261,10 @@ public class UserController {
                 .data(c)
                 .build(),
                 HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<User>> userInfo(@PathVariable Integer id, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(GlobalResponse.<User>builder().data(user).msg("success").build(), HttpStatus.OK);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
 import sustech.edu.phantom.dboj.form.RegisterForm;
+import sustech.edu.phantom.dboj.form.home.RstPwdForm;
 import sustech.edu.phantom.dboj.service.EmailService;
 import sustech.edu.phantom.dboj.service.UserService;
 
@@ -55,15 +56,35 @@ public class VerificationController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<Object>> signup(@RequestBody RegisterForm registerForm) throws Exception {
+        User user = userService.find(registerForm.getUsername());
         ValueOperations<String, String> forValue = redisTemplate.opsForValue();
         String validateCodeInRedis = forValue.get(registerForm.getUsername());
-        User user = new User();
-        System.out.println(validateCodeInRedis);
-        if (registerForm.getVCode().equals(validateCodeInRedis)) {
+        log.info(registerForm.toString());
+        if (user != null || !registerForm.getVerifyCode().equals(validateCodeInRedis)) {
+            return new ResponseEntity<>(GlobalResponse.builder().msg("Register Fails").build(), HttpStatus.BAD_REQUEST);
+        } else {
             userService.register(registerForm);
             return new ResponseEntity<>(GlobalResponse.builder().msg("Register success").build(), HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/rstpwd")
+    public ResponseEntity<GlobalResponse<String>> resetPassword(@RequestBody RstPwdForm form) {
+        GlobalResponse<String> g = GlobalResponse.<String>builder().build();
+        User user = userService.find(form.getUsername());
+        ValueOperations<String, String> forValue = redisTemplate.opsForValue();
+        String validateCodeInRedis = forValue.get(form.getUsername());
+        if (!form.getVCode().equals(validateCodeInRedis) || user != null) {
+            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Register Fails").build(), HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(GlobalResponse.builder().msg("Register fails").build(), HttpStatus.BAD_REQUEST);
+            boolean a = userService.resetPassword(form);
+            if (a) {
+                g.setMsg("Modify successfully.");
+                return new ResponseEntity<>(g, HttpStatus.OK);
+            } else {
+                g.setMsg("Failure modification");
+                return new ResponseEntity<>(g, HttpStatus.BAD_REQUEST);
+            }
         }
     }
 }
