@@ -4,13 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -40,10 +44,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/")
                 .and()
                 .addFilterAt(myAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .formLogin()
-//                .loginProcessingUrl("/api/login")
-//                .permitAll()
-//                .and()
+                .exceptionHandling()
+                .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
+                    httpServletResponse.setContentType("application/json;charset=utf-8");
+                    httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+                    PrintWriter out = httpServletResponse.getWriter();
+                    Map<String, Object> map = new HashMap<>(2);
+                    map.put("msg", "Forbidden");
+                    map.put("data", null);
+                    out.write(new ObjectMapper().writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                })
+                .authenticationEntryPoint((httpServletRequest, httpServletResponse, e) -> {
+                    httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    httpServletResponse.setContentType("application/json;charset=utf-8");
+                    PrintWriter out = httpServletResponse.getWriter();
+                    Map<String, Object> map = new HashMap<>(2);
+                    map.put("msg", "Not authorized");
+                    map.put("data", null);
+                    out.write(new ObjectMapper().writeValueAsString(map));
+                    out.flush();
+                    out.close();
+                })
+                .and()
                 .logout()
                 .logoutUrl("/api/logout")
                 .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
@@ -64,6 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(super.authenticationManagerBean());
         filter.setFilterProcessesUrl("/api/login");
         filter.setAuthenticationSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
+            httpServletResponse.setStatus(HttpStatus.OK.value());
             httpServletResponse.setContentType("application/json;charset=utf-8");
             PrintWriter out = httpServletResponse.getWriter();
             Map<String, Object> map = new HashMap<>(2);
@@ -71,6 +96,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             user.setPassword(null);
             map.put("msg", "success");
             map.put("data", user);
+            out.write(new ObjectMapper().writeValueAsString(map));
+            out.flush();
+            out.close();
+        });
+        filter.setAuthenticationFailureHandler((httpServletRequest, httpServletResponse, e) -> {
+            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+            httpServletResponse.setContentType("application/json;charset=utf-8");
+            PrintWriter out = httpServletResponse.getWriter();
+            Map<String, Object> map = new HashMap<>(2);
+            if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
+                map.put("msg", "Username or password is wrong");
+            } else if (e instanceof DisabledException) {
+                map.put("msg", "The account has been invalidated");
+            } else {
+                map.put("msg", "Logging fails");
+            }
+            map.put("data", null);
             out.write(new ObjectMapper().writeValueAsString(map));
             out.flush();
             out.close();
