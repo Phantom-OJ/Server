@@ -5,72 +5,68 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.Assignment;
+import sustech.edu.phantom.dboj.entity.Permission;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
-import sustech.edu.phantom.dboj.form.UserForm;
-import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
-import sustech.edu.phantom.dboj.service.InfoModificationService;
+import sustech.edu.phantom.dboj.service.AdvancedInfoModificationService;
 
 import java.util.Map;
 
-
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
+ * @date 2020/11/26 20:10
  */
-@RestController
-@RequestMapping("/api")
 @Slf4j
-public class ModifyInfoController {
+@RestController
+@RequestMapping(value = "/api")
+public class AdvancedModifyInfoController {
 
     @Autowired
-    InfoModificationService infoModificationService;
+    AdvancedInfoModificationService advancedInfoModificationService;
+    /**
+     * 返回对应身份的权限信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/permission", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<Permission>> getPermission() {
 
-    @RequestMapping(value = "/modifyInfo")
-    public User user(@AuthenticationPrincipal User user, @RequestBody UserForm form) throws Exception {
-        User user1 = null;
-        try {
-            int id = user.getId();
-            user1 = infoModificationService.modifyPersonalInfo(form, id);
-        } catch (NullPointerException e) {
-            log.error("You have not signed in.");
-        }
+        //判断身份
 
-        return user1;
+        return new ResponseEntity<>(GlobalResponse.<Permission>builder().msg("Success").build(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/modifypasswd", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> modifyPassword(@AuthenticationPrincipal User user, @RequestBody ModifyPasswdForm form) {
-        if (!user.getUsername().equals(form.getUsername())) {
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").build(), HttpStatus.FORBIDDEN);
-        } else {
-            Object[] a = infoModificationService.modifyPassword(form);
-            return new ResponseEntity<>(
-                    GlobalResponse
-                            .<String>builder()
-                            .msg((String) a[0])
-                            .build(), (HttpStatus) a[1]);
-        }
+    @RequestMapping(value = "/permission", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<String>> modifyPermission(@AuthenticationPrincipal User user) {
+
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg("success").build(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/grant", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> grantOthers(@AuthenticationPrincipal User user, @RequestBody Map<String, String> hm) {
-        if (user == null) {
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("You have not logged in").build(), HttpStatus.UNAUTHORIZED);
-        }
-        if (!user.getPermissionList().contains("grant other users")) {
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").build(), HttpStatus.FORBIDDEN);
-        }
-        String msg;
+    public ResponseEntity<GlobalResponse<String>> grantOthers(@RequestBody Map<String, Object> hm) {
         try {
-            //TODO: 修改权限信息
-            msg = "success";
-        } catch (Exception e) {
-            msg = "fail";
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!user.getPermissionList().contains("grant other users")) {
+                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+            } else {
+                String msg;
+                try {
+                    advancedInfoModificationService.grantUser(hm);
+                    msg = "success";
+                } catch (Exception e) {
+                    msg = "fail";
+                }
+                return new ResponseEntity<>(GlobalResponse.<String>builder().build(), "success".equals(msg) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (ClassCastException e) {
+            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(GlobalResponse.<String>builder().build(), "success".equals(msg) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
+
 
     }
 
@@ -114,6 +110,4 @@ public class ModifyInfoController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().build(), "success".equals(msg) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
-
-
 }

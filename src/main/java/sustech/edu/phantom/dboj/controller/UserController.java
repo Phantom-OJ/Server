@@ -52,16 +52,6 @@ public class UserController {
 //        return userService.register(registerForm);
 //    }
 
-//    /**
-//     * 登录api，还没写好
-//     *
-//     * @param loginForm 登录表单
-//     * @return 登录的user对象
-//     */
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public UserDetails login(@RequestBody LoginForm loginForm) {
-//        return userService.loadUserByUsername(loginForm.getUsername());
-//    }
     @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<User>> forwardInfo(HttpServletRequest request) {
         try {
