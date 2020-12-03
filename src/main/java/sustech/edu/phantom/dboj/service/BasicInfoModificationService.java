@@ -10,15 +10,12 @@ import sustech.edu.phantom.dboj.form.UserForm;
 import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Lori
  */
 @Service
 @Slf4j
-public class InfoModificationService {
+public class BasicInfoModificationService {
 
     @Autowired
     UserMapper userMapper;

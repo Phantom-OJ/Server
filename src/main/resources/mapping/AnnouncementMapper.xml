@@ -14,11 +14,10 @@
         <foreach collection="announcementList" index="index" item="announcement" separator="," close=";">
             (#{announcement.title},#{announcement.description})
         </foreach>
-
     </insert>
     <insert id="insertOneAnnouncement">
-        insert into "announcement" (title, description)
-        values (#{title}, #{description});
+        insert into "announcement" (title, description, create_date)
+        values (#{title}, #{description}, #{createDate});
     </insert>
     <select id="getCount" resultType="integer">
         select count(*)

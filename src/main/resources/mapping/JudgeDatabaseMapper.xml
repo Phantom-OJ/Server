@@ -7,4 +7,11 @@
         where valid
           and id = #{id};
     </select>
+    <insert id="saveJudgeDatabase" parameterType="java.lang.String">
+        insert into "judge_database" (database_url)
+        values
+        <foreach collection="list" index="index" item="l" separator="," close=";">
+            (#{l})
+        </foreach>
+    </insert>
 </mapper>

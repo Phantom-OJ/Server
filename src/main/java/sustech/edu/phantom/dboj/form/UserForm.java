@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @ApiModel(description = "User form for modifications")
 public class UserForm {
+    private String username;
     @ApiModelProperty(value = "nickname")
     private String nickname;
     @ApiModelProperty(value = "password")

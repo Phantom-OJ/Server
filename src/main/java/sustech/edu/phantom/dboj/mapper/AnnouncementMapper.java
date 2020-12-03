@@ -2,6 +2,7 @@ package sustech.edu.phantom.dboj.mapper;
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.Announcement;
 import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface AnnouncementMapper {
      * @param announcement
      * @return
      */
-    int insertOneAnnouncement(Announcement announcement);
+    int insertOneAnnouncement(UploadAnnouncementForm announcement);
 
     Integer getCount(Pagination pagination);
 }
