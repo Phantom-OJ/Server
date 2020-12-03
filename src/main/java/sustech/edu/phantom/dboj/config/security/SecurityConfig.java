@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -71,6 +73,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/api/logout")
                 .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    String state = new String(httpServletRequest.getInputStream().readAllBytes());
+                    User u = (User) authentication.getPrincipal();
+                    if (u.getStateSave()){
+                        userService.saveState(state, u.getId());
+                        log.info("The state of "+ u.getUsername() +" has been saved into database.");
+                    } else {
+                        log.info("The state of "+ u.getUsername() +" has not been saved into database.");
+                    }
+                    log.info(u.getUsername()+" has signed out.");
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
                     Map<String, Object> map = new HashMap<>(2);
