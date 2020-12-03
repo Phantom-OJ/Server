@@ -71,4 +71,9 @@
         set password = #{password}
         where username = #{username};
     </update>
+    <update id="saveState">
+        update "user"
+        set state = #{state}
+        where id = #{id};
+    </update>
 </mapper>

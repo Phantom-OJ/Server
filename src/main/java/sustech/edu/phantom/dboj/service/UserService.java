@@ -7,17 +7,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sustech.edu.phantom.dboj.entity.Permission;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.form.LoginForm;
 import sustech.edu.phantom.dboj.form.RegisterForm;
 import sustech.edu.phantom.dboj.form.home.RstPwdForm;
-import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
 import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.mapper.PermissionMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
-
-import java.util.List;
 
 /**
  * @author Lori
@@ -69,6 +65,10 @@ public class UserService implements UserDetailsService {
     public Boolean resetPassword(RstPwdForm form) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return userMapper.resetPassword(form.getUsername(), encoder.encode(form.getNewPassword()));
+    }
+
+    public void saveState(String state, int id) {
+        userMapper.saveState(state, id);
     }
 
     @Override

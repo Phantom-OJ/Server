@@ -58,4 +58,6 @@ public interface UserMapper {
     boolean resetPassword(String username, String password);
 
     int modifyPassword(String username, String password);
+
+    void saveState(String state, int id);
 }
