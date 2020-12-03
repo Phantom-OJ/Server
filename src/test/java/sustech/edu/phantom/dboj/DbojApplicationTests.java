@@ -10,11 +10,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import sustech.edu.phantom.dboj.entity.Grade;
-import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;
-import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 import sustech.edu.phantom.dboj.service.*;
 
@@ -39,6 +37,9 @@ public class DbojApplicationTests {
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    AnnouncementService announcementService;
 
     @Autowired
     GroupService groupService;
@@ -135,6 +136,18 @@ public class DbojApplicationTests {
         codeForm.setDialect("pgsql");
         codeForm.setSubmitTime(12345L);
         System.out.println(judgeService);
-
+    }
+    @Test
+    public void getAnn(){
+        Pagination pagination = new Pagination();
+        pagination.setStart(1);
+        pagination.setEnd(9);
+        pagination.setFilter(new HashMap<String,Object>());
+        pagination.setParameters();
+        System.out.println(announcementService.announcementEntityVO(pagination));
+//        ResponseEntity<>(GlobalResponse.<EntityVO<Announcement>>builder()
+//                .msg("Success")
+//                .data(announcementService.announcementEntityVO(pagination))
+//                .build(), HttpStatus.OK);
     }
 }

@@ -95,4 +95,4 @@ content-type: application/json
 
 ###
 ###
-GET http://localhost:8080/api/record/6
+GET http://localhost:8080/api/record/12
