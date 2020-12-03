@@ -63,3 +63,7 @@
 10. nosql redis 部署
 
 11. 头像更改 存储路径
+
+12. 枚举类，permission 常量， response message
+
+13. 用户界面返回用户自己的数据
