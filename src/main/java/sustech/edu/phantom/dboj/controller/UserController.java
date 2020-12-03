@@ -6,23 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.CodeForm;
-import sustech.edu.phantom.dboj.form.LoginForm;
 import sustech.edu.phantom.dboj.form.Pagination;
-import sustech.edu.phantom.dboj.form.RegisterForm;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Lori
@@ -67,6 +62,16 @@ public class UserController {
 //    public UserDetails login(@RequestBody LoginForm loginForm) {
 //        return userService.loadUserByUsername(loginForm.getUsername());
 //    }
+    @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<User>> forwardInfo(HttpServletRequest request) {
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("User info").data(user).build(), HttpStatus.OK);
+        } catch (ClassCastException e) {
+            log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
+            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("You have not signed in.").data(null).build(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     /**
      * 所有的公告，是可以对所有人public的，没有权限限制
@@ -166,8 +171,8 @@ public class UserController {
         //这个方法要用到消息队列
 
 //        try {
-            judgeService.judgeCode(id, codeForm, 1);
-            return true;
+        judgeService.judgeCode(id, codeForm, 1);
+        return true;
 //        } catch (Exception e) {
 //            return false;
 ////            throw new Exception("You have not signed in.");
@@ -184,11 +189,11 @@ public class UserController {
     @RequestMapping(value = "/record", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<EntityVO<RecordDetail>>> getRecords(@RequestBody Pagination pagination) {
 //        try {
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
-                    .data(recordService.getRecordDetailList(pagination))
-                    .msg("success")
-                    .build(),
-                    HttpStatus.OK);
+        return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+                .data(recordService.getRecordDetailList(pagination))
+                .msg("success")
+                .build(),
+                HttpStatus.OK);
 //        } catch (Exception e) {
 //            log.error("error is {}", e.getStackTrace());
 //            return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()

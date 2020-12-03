@@ -1,6 +1,5 @@
 package sustech.edu.phantom.dboj.controller;
 
-import com.sun.mail.iap.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,12 @@ import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
 @RequestMapping(value = "/api")
 public class AdvancedController {
 
+    /**
+     * 返回对应身份的权限信息
+     * @return
+     */
     @RequestMapping(value = "/permission", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Permission>> getPermission(@AuthenticationPrincipal User user) {
+    public ResponseEntity<GlobalResponse<Permission>> getPermission() {
         //判断身份
 
         return new ResponseEntity<>(GlobalResponse.<Permission>builder().msg("Success").build(), HttpStatus.OK);
