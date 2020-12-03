@@ -80,6 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     out.flush();
                     out.close();
                 })
+                .deleteCookies("JSESSIONID")
                 .permitAll();
     }
 
