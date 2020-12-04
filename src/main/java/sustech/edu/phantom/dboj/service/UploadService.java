@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.mapper.AnnouncementMapper;
 
+import java.util.List;
+
 /**
  * @author Shilong Li (Lori)
  * @version 1.0
@@ -21,7 +23,25 @@ public class UploadService {
     AnnouncementMapper announcementMapper;
 
     public boolean saveAnnouncement(UploadAnnouncementForm form) {
-        int flag = announcementMapper.insertOneAnnouncement(form);
+        int flag = 0;
+        try {
+            flag = announcementMapper.insertOneAnnouncement(form);
+        } catch (Exception e) {
+            log.error("");
+        }
+
         return flag != 0;
+    }
+
+    public boolean saveJudgeDB(List<String> list) {
+        return false;
+    }
+
+    public boolean saveJudgeScript(List<String> list) {
+        return false;
+    }
+
+    public boolean saveJudgePoint() {
+        return false;
     }
 }
