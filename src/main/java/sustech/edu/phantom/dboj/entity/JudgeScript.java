@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class JudgeScript {
     private Integer id;
     private String script;
-//    private Boolean valid;
 }

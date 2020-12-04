@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sustech.edu.phantom.dboj.entity.Group;
 
 import java.util.List;
 
@@ -26,5 +25,5 @@ public class UploadAssignmentForm {
     private Integer fullScore;
     private String sampleDatabasePath;
     private List<UploadProblemForm> uploadProblemFormList;
-    private List<Group> groupList;
+    private List<Integer> groupList;
 }

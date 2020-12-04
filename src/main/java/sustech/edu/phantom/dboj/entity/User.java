@@ -59,4 +59,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return valid;
     }
+
+    public boolean containSomePermission(String perm) {
+        return this.permissionList.contains(perm);
+    }
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sustech.edu.phantom.dboj.entity.Tag;
 
 import java.util.List;
 
@@ -25,6 +24,6 @@ public class UploadProblemForm {
     private Long spaceLimit;
     private Long timeLimit;
     private String solution;
-    private List<Tag> tagList;
+    private List<Integer> tagList;
     private String type;
 }
