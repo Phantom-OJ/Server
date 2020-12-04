@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,11 @@ public class UploadController {
     @Autowired
     UploadService uploadService;
 
+    /**
+     * 上传公告
+     * @param form 公告表单
+     * @return
+     */
     @RequestMapping(value = "/upload/announcement", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadAnnouncement(@RequestBody UploadAnnouncementForm form) {
         try {
@@ -60,13 +66,26 @@ public class UploadController {
         }
     }
 
+    //TODO:上传照片
+    @RequestMapping(value = "/upload/avatar", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<String>> uploadAvatar(String path) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user.containSomePermission("modify personal information")){
+
+        } else{
+            return null;
+        }
+        return null;
+    }
+
     @RequestMapping(value = "/judgepoint", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<EntityVO<JudgePoint>>> getAllJudgePoint(HttpServletRequest request) {
         //这里需要管理员权限
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (user.getPermissionList().contains("View judge points")) {
-                //TODO: 获取所有的judgepoints
+                //TODO: 获取所有的judge points
                 return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgePoint>>builder().msg("success").build(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgePoint>>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);

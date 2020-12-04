@@ -257,9 +257,13 @@ public class UserController {
                 .build(),
                 HttpStatus.OK);
     }
-
+    //
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<User>> userInfo(@PathVariable Integer id, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(GlobalResponse.<User>builder().data(user).msg("success").build(), HttpStatus.OK);
     }
+
+    //TODO: 个人信息界面overview 所有的数据
+
+
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sustech.edu.phantom.dboj.mapper.JudgeScriptMapper">
+    <select id="getOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
+        select id, script
+        from judge_script
+        where id = #{id} and valid;
+    </select>
+    <insert id="saveJudgeScript">
+        insert into "judge_script" (script)
+        values
+        <foreach collection="list" index="index" item="l" separator="," close=";">
+            (#{l})
+        </foreach>
+    </insert>
+</mapper>
