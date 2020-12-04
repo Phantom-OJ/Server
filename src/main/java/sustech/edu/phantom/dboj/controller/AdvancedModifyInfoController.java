@@ -11,7 +11,7 @@ import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.entity.Permission;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.User;
-import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
+import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.AdvancedInfoModificationService;
 
 import java.util.Map;

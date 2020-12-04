@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.User;
-import sustech.edu.phantom.dboj.entity.vo.GlobalResponse;
+import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.UserForm;
 import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
 import sustech.edu.phantom.dboj.service.BasicInfoModificationService;
