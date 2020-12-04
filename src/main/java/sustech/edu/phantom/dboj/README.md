@@ -67,3 +67,5 @@
 12. 枚举类，permission 常量， response message
 
 13. 用户界面返回用户自己的数据
+
+14. 针对老师，要显示所有的内容，包含private的内容
