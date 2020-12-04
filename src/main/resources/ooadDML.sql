@@ -48,6 +48,12 @@ VALUES ('ROLE_STUDENT', 'modify personal information'),
        ('ROLE_TEACHER', 'view ranking'),
        ('ROLE_TEACHER', 'view all submissions'),
        ('ROLE_TEACHER', 'provide the solution'),
+       ('ROLE_TEACHER', 'upload judge point'),
+       ('ROLE_TEACHER', 'upload judge database'),
+       ('ROLE_TEACHER', 'upload judge script'),
+       ('ROLE_TEACHER', 'view judge point'),
+       ('ROLE_TEACHER', 'view judge database'),
+       ('ROLE_TEACHER', 'view judge script'),
        ('ROLE_TEACHER', 'publish the announcement'),
        ('ROLE_TEACHER', 'create assignment'),
        ('ROLE_TEACHER', 'create problem'),
@@ -190,7 +196,9 @@ In my solution, I consider `Mb` as `10**6 bits`.
 
 And in my solution, `0.5RTT` means in the final transmission, I just send the file, regardless of the return message from the receiver.  ',
         20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select');
-INSERT INTO public.assignment (id, title, description, start_time, end_time, status, full_score, sample_database_path, valid) VALUES (1, 'title1', '# Computer Network hw1
+INSERT INTO public.assignment (id, title, description, start_time, end_time, status, full_score, sample_database_path,
+                               valid)
+VALUES (1, 'title1', '# Computer Network hw1
 
 **Name**:黎诗龙
 
@@ -248,5 +256,6 @@ Since in the description it says that *The handshaking process costs 2RTT before
 
 In my solution, I consider `Mb` as `10**6 bits`.
 
-And in my solution, `0.5RTT` means in the final transmission, I just send the file, regardless of the return message from the receiver.  ', 1605546219888, 1605546251315, 'Running', 100, '/home/adoj/a1/s1.sql', true);
+And in my solution, `0.5RTT` means in the final transmission, I just send the file, regardless of the return message from the receiver.  ',
+        1605546219888, 1605546251315, 'Running', 100, '/home/adoj/a1/s1.sql', true);
 commit;
