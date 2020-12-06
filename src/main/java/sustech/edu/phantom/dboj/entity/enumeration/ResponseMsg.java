@@ -11,7 +11,8 @@ public enum ResponseMsg {
     USERNAME_OR_PASSWORD_ERROR("Username or password error", HttpStatus.BAD_REQUEST),
     FAIL("Not found", HttpStatus.NOT_FOUND),
     VERIFICATION_CODE_NOT_MATCHED("Verification code is not matched",HttpStatus.BAD_REQUEST),
-    AUTHENTICATION_FAILED("Authentication fails", HttpStatus.BAD_REQUEST),;
+    AUTHENTICATION_FAILED("Authentication fails", HttpStatus.BAD_REQUEST),
+    EMPTY_FILE("The file is empty", HttpStatus.BAD_REQUEST),;
 
     private final String msg;
     private final HttpStatus status;
