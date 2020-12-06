@@ -43,23 +43,23 @@ create table if not exists "record_problem_judge_point"
     result            char(3) not null,
     description       text
 );
-create table problem
+create table if not exists problem
 (
-    id                  serial                                       not null
+    id                  serial  not null
         constraint problem_pkey
             primary key,
-    assignment_id       integer                                      not null,
-    title               text                                         not null,
-    description         text                                         not null,
-    full_score          integer                                      not null,
-    space_limit         integer                                      not null,
-    time_limit          integer                                      not null,
-    number_submit       integer                                      not null,
-    number_solve        integer                                      not null,
-    index_in_assignment integer                                      not null,
-    solution            text                                         not null,
-    valid               boolean default true                         not null,
-    status              varchar default 'private'::character varying not null,
+    assignment_id       integer not null,
+    title               text    not null,
+    description         text    not null,
+    full_score          integer not null,
+    space_limit         integer not null default 256,
+    time_limit          integer not null default 3000,
+    number_submit       integer not null default 0,
+    number_solve        integer not null default 0,
+    index_in_assignment integer not null,
+    solution            text    not null,
+    valid               boolean          default true not null,
+    status              varchar          default 'private'::character varying not null,
     type                varchar(45)
 );
 
