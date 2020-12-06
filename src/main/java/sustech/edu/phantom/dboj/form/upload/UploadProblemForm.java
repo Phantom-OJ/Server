@@ -26,4 +26,5 @@ public class UploadProblemForm {
     private String solution;
     private List<Integer> tagList;
     private String type;
+    private List<UploadJudgePointForm> judgePointList;
 }

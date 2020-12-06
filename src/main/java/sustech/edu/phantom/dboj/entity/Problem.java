@@ -23,6 +23,7 @@ public class Problem {
     private Integer numberSolve;
     private Integer indexInAssignment;
     private String solution;
+    private String status;
 //    private Boolean valid;
     private List<Tag> tagList;
     private String recentCode;

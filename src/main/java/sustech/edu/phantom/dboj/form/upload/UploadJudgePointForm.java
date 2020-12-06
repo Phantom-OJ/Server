@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UploadJudgePointForm {
-    private Integer problemId;
     private String beforeSql;
     private String afterSql;
     private Integer judgeScriptId;
