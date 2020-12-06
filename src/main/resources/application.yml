@@ -43,5 +43,5 @@ mybatis:
     map-underscore-to-camel-case: true
 
 filerootpath:
-  windows: C:\Users\Lori\desktop\
+  windows: C:\Users\Lori\desktop\resources\
   linux: /home/phantom/ooadproject/backend/resources/
