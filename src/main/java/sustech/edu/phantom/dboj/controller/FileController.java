@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,9 +46,63 @@ public class FileController {
     @Autowired
     UploadService uploadService;
 
+    @RequestMapping(value = "/upload/avatar", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<String>> uploadAvatar(HttpServletRequest request) {
+        String resPath = getResourcesPath(null, true);
+        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+        List<MultipartFile> avatar = params.getFiles("avatar");
+        log.info(avatar.toString());
+        MultipartFile file;
+        BufferedOutputStream stream;
+        String picturePath = null;
+        ResponseMsg res;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            for (MultipartFile multipartFile : avatar) {
+                System.err.println(multipartFile.getContentType());
+                file = multipartFile;
+                if (!file.isEmpty()) {
+                    log.info("图片不为空，开始上传");
+                    String extName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+                    String fileName = user.getUsername().substring(0, user.getUsername().indexOf("@")) + "." + extName;
+                    String filePath = resPath + fileName;
+                    log.info(filePath);
+
+                    new File(filePath).createNewFile();
+
+                    byte[] bytes = file.getBytes();
+                    stream = new BufferedOutputStream(new FileOutputStream(filePath));
+                    stream.write(bytes);
+                    stream.close();
+                    picturePath = filePath;
+                } else {
+                    log.info("文件为空，退出");
+                    res = ResponseMsg.EMPTY_FILE;
+                    return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+                }
+                break;
+            }
+            //TODO: 上传图片
+            if (uploadService.uploadAvatar(picturePath, user.getId())) {
+                //TODO: 更新图片
+                res = ResponseMsg.OK;
+            } else {
+                log.info("Something happens inside the server.");
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            }
+
+        } catch (Exception e) {
+            System.out.println("You failed to upload " + " => "
+                    + e.getMessage());
+            res = ResponseMsg.BAD_REQUEST;
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+    }
+
     @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request) {
-        String resPath = getResourcesPath("judge_database");
+        String resPath = getResourcesPath("judge_database", false);
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = params.getFiles("file");
         String keyword = params.getParameter("keyword");
@@ -116,7 +171,7 @@ public class FileController {
 
     @RequestMapping(value = "/upload/judgescript", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request) {
-        String resPath = getResourcesPath("judge_script");
+        String resPath = getResourcesPath("judge_script", false);
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = params.getFiles("file");
         String keyword = params.getParameter("keyword");
@@ -174,26 +229,31 @@ public class FileController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
 
-    private String getResourcesPath(String type) {
+    private String getResourcesPath(String type, boolean pic) {
         String osName = System.getProperty("os.name");
         String path = null;
         if (Pattern.matches("Linux.*", osName) || Pattern.matches("Mac.*", osName)) {
-            path = UPLOAD_FOLDER_LINUX + "data/" + type + "/";
+            if (pic) {
+                path = UPLOAD_FOLDER_LINUX + "avatar/";
+            } else {
+                path = UPLOAD_FOLDER_LINUX + "data/" + type + "/";
+            }
         } else if (Pattern.matches("Windows.*", osName)) {
-            path = UPLOAD_FOLDER_WINDOWS + "data\\" + type + "\\";
-        } else if (Pattern.matches("Mac.*", osName)) {
-            path = UPLOAD_FOLDER_LINUX + "data/" + type + "/";
+            if (pic) {
+                path = UPLOAD_FOLDER_WINDOWS + "avatar\\";
+            } else {
+                path = UPLOAD_FOLDER_WINDOWS + "data\\" + type + "\\";
+            }
         }
         try {
             assert path != null;
             File filePath = new File(path);
             if (!filePath.exists() && filePath.mkdirs()) {
-                System.out.println("创建文件夹路径为：" + filePath);
+                log.info("创建文件夹路径为：" + filePath);
             }
         } catch (Exception e) {
             log.error("出错啦!");
         }
         return path;
     }
-
 }

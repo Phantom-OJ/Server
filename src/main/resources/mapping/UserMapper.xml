@@ -76,4 +76,9 @@
         set state = #{state}
         where id = #{id};
     </update>
+    <update id="uploadAvatar">
+        update "user"
+        set avatar = #{filePath}
+        where id = #{uid};
+    </update>
 </mapper>

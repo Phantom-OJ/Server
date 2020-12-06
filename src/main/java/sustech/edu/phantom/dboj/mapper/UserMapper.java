@@ -62,4 +62,6 @@ public interface UserMapper {
     void saveState(String state, int id);
 
     int addGroup();
+
+    int uploadAvatar(String filePath, int uid);
 }

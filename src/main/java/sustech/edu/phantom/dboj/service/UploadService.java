@@ -26,6 +26,9 @@ import java.util.List;
 public class UploadService {
 
     @Autowired
+    UserMapper userMapper;
+
+    @Autowired
     AnnouncementMapper announcementMapper;
 
     @Autowired
@@ -76,6 +79,7 @@ public class UploadService {
             return false;
         }
     }
+
     public JudgeDatabase selOneDB(int id) {
         JudgeDatabase j = null;
         try {
@@ -89,6 +93,7 @@ public class UploadService {
 
     /**
      * 获取所有的judge database信息
+     *
      * @return 所有的judge database
      */
     public List<JudgeDatabase> getAllJudgeDB() {
@@ -117,6 +122,7 @@ public class UploadService {
             return false;
         }
     }
+
     public List<JudgeScript> getAllJudgeScript() {
         List<JudgeScript> list = null;
         try {
@@ -203,5 +209,22 @@ public class UploadService {
             return false;
         }
         return true;
+    }
+
+    public boolean uploadAvatar(String filePath, int uid) {
+        try {
+            int a = userMapper.uploadAvatar(filePath, uid);
+            if (a > 0) {
+                log.info("update avatar successfully");
+                return true;
+            } else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                log.error("Inconsistency occurs in updating avatar");
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("Exception occurs in updating avatar");
+            return false;
+        }
     }
 }
