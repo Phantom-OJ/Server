@@ -9,13 +9,17 @@
     </select>
     <select id="getAllJudgeDB" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
         select id, keyword
-        from "judge_database";
+        from "judge_database"
+        where valid;
     </select>
-    <insert id="saveJudgeDatabase" parameterType="java.lang.String">
-        insert into "judge_database" (database_url)
-        values
-        <foreach collection="list" index="index" item="l" separator="," close=";">
-            (#{l})
-        </foreach>
+    <select id="selJudgeDatabaseById" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
+        select id, keyword, database_url
+        from "judge_database"
+        where id = #{id}
+          and valid;
+    </select>
+    <insert id="saveJudgeDatabase">
+        insert into "judge_database" (database_url, keyword)
+        values (#{databaseUrl}, #{keyword});
     </insert>
 </mapper>

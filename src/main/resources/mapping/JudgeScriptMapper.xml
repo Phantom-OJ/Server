@@ -9,13 +9,15 @@
     </select>
     <select id="getAllJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
         select id, keyword
-        from judge_script;
+        from judge_script where valid;
     </select>
+    <select id="selOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
+        select id, keyword, script
+        from "judge_script"
+        where id = #{id} and valid;
+        </select>
     <insert id="saveJudgeScript">
-        insert into "judge_script" (script)
-        values
-        <foreach collection="list" index="index" item="l" separator="," close=";">
-            (#{l})
-        </foreach>
+        insert into "judge_script" (script, keyword)
+        values (#{script}, #{keyword});
     </insert>
 </mapper>
