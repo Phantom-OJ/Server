@@ -96,3 +96,9 @@ content-type: application/json
 ###
 ###
 GET http://localhost:8080/api/record/12
+
+###
+POST http://localhost:8080/api/beacon
+Content-Type: text/plain
+
+lslnb

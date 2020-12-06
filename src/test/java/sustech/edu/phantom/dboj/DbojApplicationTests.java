@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import sustech.edu.phantom.dboj.controller.FileController;
 import sustech.edu.phantom.dboj.entity.Grade;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
@@ -46,6 +47,9 @@ public class DbojApplicationTests {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    FileController fileController;
 
     @Test
 
@@ -149,5 +153,10 @@ public class DbojApplicationTests {
 //                .msg("Success")
 //                .data(announcementService.announcementEntityVO(pagination))
 //                .build(), HttpStatus.OK);
+    }
+
+    @Test
+    public void test1111() {
+//        System.out.println(fileController.getOfficeHome());
     }
 }
