@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class JudgeScript {
     private Integer id;
+    private String keyword;
     private String script;
 }

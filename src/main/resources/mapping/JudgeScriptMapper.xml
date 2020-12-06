@@ -4,7 +4,12 @@
     <select id="getOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
         select id, script
         from judge_script
-        where id = #{id} and valid;
+        where id = #{id}
+          and valid;
+    </select>
+    <select id="getAllJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
+        select id, keyword
+        from judge_script;
     </select>
     <insert id="saveJudgeScript">
         insert into "judge_script" (script)

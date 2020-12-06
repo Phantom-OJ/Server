@@ -9,4 +9,6 @@ public interface JudgeDatabaseMapper {
     JudgeDatabase getJudgeDatabaseById(int id);
 
     int saveJudgeDatabase(@Param("list") List<String> list);
+
+    List<JudgeDatabase> getAllJudgeDB();
 }

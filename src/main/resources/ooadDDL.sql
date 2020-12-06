@@ -66,8 +66,10 @@ create table if not exists problem
 create table if not exists "judge_database"
 (
     id           serial primary key,
+    keyword      text not null,
     database_url text not null default 'jdbc:postgresql://localhost:5432/postgres',
-    valid        bool not null default true
+    valid        bool not null default true,
+    unique (keyword)
 );
 create table if not exists "judge_point"
 (
@@ -98,9 +100,11 @@ create table if not exists "grade"
 );
 create table if not exists "judge_script"
 (
-    id     serial primary key,
-    script text not null,
-    valid  bool not null default true
+    id      serial primary key,
+    keyword text not null,
+    script  text not null,
+    valid   bool not null default true,
+    unique (keyword)
 );
 create table if not exists "assignment"
 (

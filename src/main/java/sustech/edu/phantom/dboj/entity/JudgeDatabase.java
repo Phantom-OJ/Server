@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class JudgeDatabase {
     private Integer id;
+    private String keyword;
     private String databaseUrl;
 }

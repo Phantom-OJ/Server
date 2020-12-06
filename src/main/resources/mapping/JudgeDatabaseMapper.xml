@@ -7,6 +7,10 @@
         where valid
           and id = #{id};
     </select>
+    <select id="getAllJudgeDB" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
+        select id, keyword
+        from "judge_database";
+    </select>
     <insert id="saveJudgeDatabase" parameterType="java.lang.String">
         insert into "judge_database" (database_url)
         values
