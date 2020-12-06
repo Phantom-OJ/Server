@@ -23,6 +23,11 @@ spring:
       filters: stat
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       use-global-data-source-stat: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
   mail:
     host: smtp.qq.com
     username: 695297502@qq.com
@@ -36,3 +41,7 @@ mybatis:
   type-aliases-package: sustech.edu.phantom.dboj.entity.*
   configuration:
     map-underscore-to-camel-case: true
+
+filerootpath:
+  windows: C:\Users\Lori\desktop\
+  linux: /home/phantom/ooadproject/backend/resources/
