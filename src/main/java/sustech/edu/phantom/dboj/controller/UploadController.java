@@ -17,6 +17,7 @@ import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
+import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 import sustech.edu.phantom.dboj.form.upload.UploadJudgePointForm;
@@ -41,6 +42,7 @@ public class UploadController {
 
     /**
      * 上传公告
+     *
      * @param form 公告表单
      * @return
      */
@@ -71,9 +73,9 @@ public class UploadController {
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> uploadAvatar(String path) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user.containSomePermission("modify personal information")){
+        if (user.containSomePermission("modify personal information")) {
 
-        } else{
+        } else {
             return null;
         }
         return null;
@@ -103,13 +105,14 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/judgedb", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<EntityVO<JudgeDatabase>>> getAllJudgeDB(HttpServletRequest request) {
+    public ResponseEntity<GlobalResponse<EntityVO<JudgeDatabase>>> getAllJudgeDB(HttpServletRequest request, Pagination pagination) {
+        ResponseMsg res;
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (!user.getPermissionList().contains("view judge database")) {
-                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeDatabase>>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+                res = ResponseMsg.FORBIDDEN;
             } else {
-                //TODO:插入judge database表 异常处理
+                //TODO: query judge database表 异常处理
                 return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeDatabase>>builder().msg("Success").data(null).build(), HttpStatus.OK);
             }
         } catch (ClassCastException e) {
@@ -117,6 +120,7 @@ public class UploadController {
             log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
             return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeDatabase>>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
         }
+        return null;
     }
 
     @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
@@ -137,8 +141,20 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/judgescript", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<EntityVO<JudgeScript>>> getJudgeScript(HttpServletRequest request) {
-        return null;
+    public ResponseEntity<GlobalResponse<EntityVO<JudgeScript>>> getJudgeScript(HttpServletRequest request, Pagination pagination) {
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!user.containSomePermission("view judge script")) {
+                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeScript>>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+            } else {
+                //TODO:查询judge script表
+                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeScript>>builder().build(), HttpStatus.OK);
+            }
+        } catch (ClassCastException e) {
+            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+            return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeScript>>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
