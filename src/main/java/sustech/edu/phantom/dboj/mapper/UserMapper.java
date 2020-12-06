@@ -60,4 +60,6 @@ public interface UserMapper {
     int modifyPassword(String username, String password);
 
     void saveState(String state, int id);
+
+    int addGroup();
 }

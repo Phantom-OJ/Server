@@ -89,4 +89,6 @@ public interface ProblemMapper {
     List<Problem> queryProblemsByName(Pagination pagination, String title);
 
     Integer queryProblemsByNameCounter(Pagination pagination, String title);
+
+    Integer saveProblem(Problem p);
 }

@@ -9,9 +9,17 @@
     <select id="getProblemTags" resultType="sustech.edu.phantom.dboj.entity.Tag">
         select id, keyword, description
         from tag
-        where valid and id in (
+        where valid
+          and id in (
             select distinct tag_id
             from "problem_tag"
-            where problem_id = #{pid} and valid);
+            where problem_id = #{pid}
+              and valid);
     </select>
+    <insert id="saveOneProblemTags">
+        insert into "problem_tag" (problem_id, tag_id) VALUES
+        <foreach collection="list" index="index" item="l" separator="," close=";">
+            (#{pid},#{l})
+        </foreach>
+    </insert>
 </mapper>

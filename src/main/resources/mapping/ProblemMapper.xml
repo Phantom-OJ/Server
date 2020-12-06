@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.ProblemMapper">
+    <insert id="saveProblem" useGeneratedKeys="true" keyProperty="id">
+        insert into "problem" (assignment_id, title, description, full_score, space_limit, time_limit,
+                               index_in_assignment, solution, type)
+        VALUES (#{assignmentId}, #{title}, #{description}, #{fullScore}, #{spaceLimit}, #{timeLimit},
+                #{indexInAssignment}, #{solution}, #{type});
+    </insert>
     <select id="queryProblemWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
                assignment_id,
@@ -87,7 +93,8 @@
     </select>
     <update id="updateProblemInfo">
         update "problem"
-        set number_submit = #{numberSubmit} , number_solve = #{numberSolve}
+        set number_submit = #{numberSubmit},
+            number_solve  = #{numberSolve}
         where id = #{id};
     </update>
     <select id="queryProblemsByTags" resultType="sustech.edu.phantom.dboj.entity.Problem">

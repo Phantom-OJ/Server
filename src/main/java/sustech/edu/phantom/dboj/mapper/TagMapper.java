@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.Tag;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface TagMapper {
      * @return
      */
     List<Tag> getProblemTags(int pid);
+
+    Integer saveOneProblemTags(@Param("list") List<Integer> list, int pid);
 }

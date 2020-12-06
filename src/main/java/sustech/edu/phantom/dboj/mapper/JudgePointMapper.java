@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.JudgePoint;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface JudgePointMapper {
      * @return a list of judge point of the problem
      */
     List<JudgePoint> getAllJudgePointsOfProblem(int id);
+
+    Integer saveOneProblemJudgePoints(@Param("list") List<JudgePoint> list);
 }

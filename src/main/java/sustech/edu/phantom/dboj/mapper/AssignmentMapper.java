@@ -51,5 +51,6 @@ public interface AssignmentMapper {
      * @return 影响的行数
      */
     int invalidateAssignment(int aid);
-//剩下来的修改作业的sql我都没加，暂时先搁置
+
+    int saveAssignment(Assignment a);
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.AssignmentMapper">
+
     <select id="queryAssignmentsWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
                title,
@@ -55,6 +56,10 @@
         from "assignment"
         where valid;
     </select>
+    <insert id="saveAssignment" useGeneratedKeys="true" keyProperty="id">
+        insert into "assignment" (title, description, start_time, end_time, full_score, sample_database_path)
+        VALUES (#{title}, #{description}, #{startTime}, #{endTime}, #{fullScore}, #{sampleDatabasePath});
+    </insert>
     <select id="getOneAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
                title,
