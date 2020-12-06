@@ -6,24 +6,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.JudgeDatabase;
-import sustech.edu.phantom.dboj.entity.JudgePoint;
 import sustech.edu.phantom.dboj.entity.JudgeScript;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
-import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
-import sustech.edu.phantom.dboj.form.upload.UploadJudgePointForm;
 import sustech.edu.phantom.dboj.service.UploadService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +30,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping(value = "/api")
+//TODO: sampledb judgedb script avatar 图片链接
 public class UploadController {
 
     @Autowired
@@ -81,140 +77,172 @@ public class UploadController {
         return null;
     }
 
-    @RequestMapping(value = "/judgepoint", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<EntityVO<JudgePoint>>> getAllJudgePoint(HttpServletRequest request) {
-        //这里需要管理员权限
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (user.getPermissionList().contains("View judge points")) {
-                //TODO: 获取所有的judge points
-                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgePoint>>builder().msg("success").build(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgePoint>>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
-            }
-        } catch (ClassCastException e) {
-            log.error("You have not logged in.");
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgePoint>>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @RequestMapping(value = "/upload/judgepoint", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadJudgePoint(HttpServletRequest request, @RequestBody UploadJudgePointForm form) {
-
-        return null;
-    }
-
     @RequestMapping(value = "/judgedb", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<EntityVO<JudgeDatabase>>> getAllJudgeDB(HttpServletRequest request, Pagination pagination) {
+    public ResponseEntity<GlobalResponse<List<JudgeDatabase>>> getAllJudgeDB(HttpServletRequest request) {
         ResponseMsg res;
+        List<JudgeDatabase> data = new ArrayList<>();
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (!user.getPermissionList().contains("view judge database")) {
                 res = ResponseMsg.FORBIDDEN;
             } else {
                 //TODO: query judge database表 异常处理
-                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeDatabase>>builder().msg("Success").data(null).build(), HttpStatus.OK);
-            }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeDatabase>>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-        }
-        return null;
-    }
-
-    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request, @RequestBody List<String> list) {
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("upload judge database")) {
-                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
-            } else {
-                //TODO:插入judge database表
-                return null;
-            }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @RequestMapping(value = "/judgescript", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<EntityVO<JudgeScript>>> getJudgeScript(HttpServletRequest request, Pagination pagination) {
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.containSomePermission("view judge script")) {
-                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeScript>>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
-            } else {
-                //TODO:查询judge script表
-                return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeScript>>builder().build(), HttpStatus.OK);
-            }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<JudgeScript>>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request, @RequestBody List<String> list) {
-        ResponseMsg res;
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("upload judge script")) {
-                res = ResponseMsg.FORBIDDEN;
-
-            } else {
-                //TODO:插入judge script表
-                res = ResponseMsg.OK;
-                if (true) {
-
+                List<JudgeDatabase> list = uploadService.getAllJudgeDB();
+                if (list == null) {
+                    res = ResponseMsg.NOT_FOUND;
                 } else {
-
+                    res = ResponseMsg.OK;
+                    data = list;
                 }
             }
         } catch (ClassCastException e) {
+            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
             res = ResponseMsg.UNAUTHORIZED;
-            log401(request);
         }
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+        return new ResponseEntity<>(GlobalResponse.<List<JudgeDatabase>>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
+    }
+
+    @RequestMapping(value = "/judgedb/{id}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<JudgeDatabase>> selOneJDB(HttpServletRequest request, @PathVariable Integer id) {
+        ResponseMsg res;
+        JudgeDatabase data = null;
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!user.getPermissionList().contains("view judge database")) {
+                res = ResponseMsg.FORBIDDEN;
+            } else {
+                //TODO: query judge database表 异常处理
+                JudgeDatabase j = uploadService.selOneDB(id);
+                if (j == null) {
+                    res = ResponseMsg.NOT_FOUND;
+                } else {
+                    res = ResponseMsg.OK;
+                    data = j;
+                }
+            }
+        } catch (ClassCastException e) {
+            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+            res = ResponseMsg.UNAUTHORIZED;
+        }
+        return new ResponseEntity<>(GlobalResponse.<JudgeDatabase>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
+    }
+
+//    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request, @RequestBody List<String> list) {
+//        try {
+//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            if (!user.getPermissionList().contains("upload judge database")) {
+//                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+//            } else {
+//                //TODO:插入judge database表
+//                return null;
+//            }
+//        } catch (ClassCastException e) {
+//            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+//            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+//            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
+//        }
+//    }
+
+    @RequestMapping(value = "/judgescript", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<List<JudgeScript>>> getJudgeScript(HttpServletRequest request, Pagination pagination) {
+        ResponseMsg res;
+        List<JudgeScript> data = new ArrayList<>();
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!user.containSomePermission("view judge script")) {
+                res = ResponseMsg.FORBIDDEN;
+            } else {
+                //TODO:查询judge script表
+                List<JudgeScript> list = uploadService.getAllJudgeScript();
+                if (list == null) {
+                    res = ResponseMsg.NOT_FOUND;
+                } else {
+                    res = ResponseMsg.OK;
+                    data = list;
+                }
+            }
+        } catch (ClassCastException e) {
+            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+            res = ResponseMsg.UNAUTHORIZED;
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<JudgeScript>>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
+    }
+
+//    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request, @RequestBody List<String> list) {
+//        ResponseMsg res;
+//        try {
+//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            if (!user.getPermissionList().contains("upload judge script")) {
+//                res = ResponseMsg.FORBIDDEN;
+//
+//            } else {
+//                //TODO:插入judge script表
+//                res = ResponseMsg.OK;
+//                if (true) {
+//
+//                } else {
+//
+//                }
+//            }
+//        } catch (ClassCastException e) {
+//            res = ResponseMsg.UNAUTHORIZED;
+//            log401(request);
+//        }
+//        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+//    }
+
+    @RequestMapping(value = "/judgescript/{id}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<JudgeScript>> selOneJs(HttpServletRequest request, @PathVariable Integer id) {
+        ResponseMsg res;
+        JudgeScript data = null;
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!user.getPermissionList().contains("view judge script")) {
+                res = ResponseMsg.FORBIDDEN;
+            } else {
+                //TODO: query judge database表 异常处理
+                JudgeScript j = uploadService.selOneJScript(id);
+                if (j == null) {
+                    res = ResponseMsg.NOT_FOUND;
+                } else {
+                    res = ResponseMsg.OK;
+                    data = j;
+                }
+            }
+        } catch (ClassCastException e) {
+            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+            res = ResponseMsg.UNAUTHORIZED;
+        }
+        return new ResponseEntity<>(GlobalResponse.<JudgeScript>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
     }
 
     @RequestMapping(value = "/upload/assignment", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadAssignment(HttpServletRequest request, @RequestBody UploadAssignmentForm form) {
-
+        ResponseMsg res;
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!user.containSomePermission("upload assignment")) {
+                log.error("The visit from " + request.getRemoteAddr() + " has low authorities.");
+                res = ResponseMsg.FORBIDDEN;
+            }else{
+                //TODO: 插入assignment, problem, judge_point表
+                if (uploadService.saveAssignment(form)) {
+                    res = ResponseMsg.OK;
+                } else{
+                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                }
+            }
         } catch (ClassCastException e) {
-            log.error("You have not logged in.");
-            return null;
+            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+            res = ResponseMsg.UNAUTHORIZED;
         }
-
-//        if (user == null) {
-//            log.error("you dont logged in.");
-//            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("you dont logged in.").build(), HttpStatus.UNAUTHORIZED);
-//        }
-//        if (!user.getPermissionList().contains("create assignment")) {
-//            log.error("authentication level low");
-//            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").build(), HttpStatus.FORBIDDEN);
-//        } else {
-//            String msg;
-//            try {
-//                // TODO: 插入assignment, problem, judge_point表 等等 要设计form
-//                msg = "success";
-//
-//            } catch (Exception e) {
-//                log.error(Arrays.toString(e.getStackTrace()));
-//                msg = "fail";
-//            }
-//            return new ResponseEntity<>
-//                    (GlobalResponse.<String>builder()
-//                            .msg(msg)
-//                            .build(),
-//                            "success".equals(msg) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-        return null;
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
 
     // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.*;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
@@ -16,7 +15,6 @@ import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 /**
@@ -52,16 +50,16 @@ public class UserController {
 //        return userService.register(registerForm);
 //    }
 
-    @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<User>> forwardInfo(HttpServletRequest request) {
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("User info").data(user).build(), HttpStatus.OK);
-        } catch (ClassCastException e) {
-            log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
-            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("You have not signed in.").data(null).build(), HttpStatus.NOT_FOUND);
-        }
-    }
+//    @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<User>> forwardInfo(HttpServletRequest request) {
+//        try {
+//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("User info").data(user).build(), HttpStatus.OK);
+//        } catch (ClassCastException e) {
+//            log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
+//            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("You have not signed in.").data(null).build(), HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     /**
      * 所有的公告，是可以对所有人public的，没有权限限制
