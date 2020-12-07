@@ -3,13 +3,10 @@ package sustech.edu.phantom.dboj.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
@@ -31,27 +28,22 @@ public class StatController {
 
     /**
      * 个人信息界面overview
+     * 这里不需要权限，因为别人也可以随时看
      * @param request http request
      * @param id string id
      * @return 结果集
      */
     @RequestMapping(value = "/user/{id}/statistics")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneUserStatistics(HttpServletRequest request, @PathVariable String id) {
         ResponseMsg res;
         ProblemStatSet p = null;
         try {
             int idx = Integer.parseInt(id);
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (user.getId() != idx) {
-                res = ResponseMsg.FORBIDDEN;
+            p = statService.getOneUserStat(idx);
+            if (p == null) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
             } else {
-                p = statService.getOneUserStat(idx);
-                if (p == null) {
-                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                } else {
-                    res = ResponseMsg.OK;
-                }
+                res = ResponseMsg.OK;
             }
         } catch (NumberFormatException e) {
             log.error("Wrong URL visiting from " + request.getRemoteAddr());
@@ -66,7 +58,7 @@ public class StatController {
 
     /**
      * 一个Problem的所有数据
-     *
+     * 这里也不需要权限
      * @param id Problem id
      * @return ProblemStatisticsSet对象，包含result结果和语言结果
      */

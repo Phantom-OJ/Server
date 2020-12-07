@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +21,7 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
  * @date
  */
 @Service
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class UserService implements UserDetailsService {
     @Autowired
@@ -60,6 +62,26 @@ public class UserService implements UserDetailsService {
 
     public User find(String username) {
         return userMapper.findUserByUsername(username);
+    }
+
+    /**
+     * find user by user id
+     *
+     * @param uid  the user id
+     * @param self check the authentication
+     * @return user
+     */
+    public User find(int uid, boolean self) {
+        User user = null;
+        try {
+            user = userMapper.findUserById(uid);
+            if (user != null && !self) {
+                user.hideInfo();
+            }
+        } catch (Exception e) {
+            log.error("Something wrong with searching the user of " + uid);
+        }
+        return user;
     }
 
     public Boolean resetPassword(RstPwdForm form) {

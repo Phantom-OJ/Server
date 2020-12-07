@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.Announcement;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
@@ -15,6 +12,8 @@ import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.service.AnnouncementService;
+import sustech.edu.phantom.dboj.service.BasicService;
+import sustech.edu.phantom.dboj.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,12 +25,19 @@ public class BasicController {
     @Autowired
     AnnouncementService announcementService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    BasicService basicService;
+
     @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<User>> checkState(HttpServletRequest request){
         User user = null;
         ResponseMsg res;
         try {
             user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user.setState(basicService.getLastState(user.getId()));
             res = ResponseMsg.OK;
         } catch (ClassCastException e) {
             log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
@@ -63,4 +69,52 @@ public class BasicController {
                 .data(list)
                 .build(), res.getStatus());
     }
+
+
+    /**
+     * 获取用户信息
+     * 这里包含查看自己的和查看别人的
+     * 查看别人的隐藏了重要信息
+     *
+     * @param id 用户的id
+     * @return
+     */
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<User>> userInfo(HttpServletRequest request, @PathVariable String id) {
+        ResponseMsg res;
+        User data = null;
+        int idx;
+        try {
+            idx = Integer.parseInt(id);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (idx == user.getId()) {
+                data = user;
+                res = ResponseMsg.OK;
+            } else {
+                log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());
+                data = userService.find(idx, false);
+                if (data == null) {
+                    log.error("Not exist user " + id + " from the request of " + request.getRemoteAddr());
+                    res = ResponseMsg.NOT_FOUND;
+                } else {
+                    log.info("Successfully view the basic information of " + id + " from the request of " + request.getRemoteAddr());
+                    res = ResponseMsg.OK;
+                }
+            }
+        } catch (NumberFormatException e) {
+            log.error("Wrong URL visiting from " + request.getRemoteAddr());
+            res = ResponseMsg.NOT_FOUND;
+        } catch (ClassCastException e) {
+            idx = Integer.parseInt(id);
+            log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());
+            data = userService.find(idx,false);
+            if (data == null) {
+                res = ResponseMsg.NOT_FOUND;
+            } else {
+                res = ResponseMsg.OK;
+            }
+        }
+        return new ResponseEntity<>(GlobalResponse.<User>builder().data(data).msg(res.getMsg()).build(), res.getStatus());
+    }
+
 }

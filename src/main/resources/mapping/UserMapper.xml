@@ -76,6 +76,11 @@
         set state = #{state}
         where id = #{id};
     </update>
+    <select id="getState">
+        select state
+        from "user"
+        where id = #{id};
+    </select>
     <update id="uploadAvatar">
         update "user"
         set avatar = #{filePath}

@@ -11,7 +11,6 @@ import sustech.edu.phantom.dboj.entity.JudgeScript;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
-import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 import sustech.edu.phantom.dboj.service.UploadService;
@@ -128,25 +127,8 @@ public class UploadController {
         return new ResponseEntity<>(GlobalResponse.<JudgeDatabase>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
     }
 
-//    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
-//    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request, @RequestBody List<String> list) {
-//        try {
-//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (!user.getPermissionList().contains("upload judge database")) {
-//                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
-//            } else {
-//                //TODO:插入judge database表
-//                return null;
-//            }
-//        } catch (ClassCastException e) {
-//            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-//            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-//            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-//        }
-//    }
-
     @RequestMapping(value = "/judgescript", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<List<JudgeScript>>> getJudgeScript(HttpServletRequest request, Pagination pagination) {
+    public ResponseEntity<GlobalResponse<List<JudgeScript>>> getJudgeScript(HttpServletRequest request) {
         ResponseMsg res;
         List<JudgeScript> data = new ArrayList<>();
         try {
@@ -154,7 +136,6 @@ public class UploadController {
             if (!user.containSomePermission("view judge script")) {
                 res = ResponseMsg.FORBIDDEN;
             } else {
-                //TODO:查询judge script表
                 List<JudgeScript> list = uploadService.getAllJudgeScript();
                 if (list == null) {
                     res = ResponseMsg.NOT_FOUND;
