@@ -63,4 +63,14 @@ public class User implements UserDetails {
     public boolean containSomePermission(String perm) {
         return this.permissionList.contains(perm);
     }
+
+    public void hideInfo(){
+        this.role = null;
+        this.state = null;
+        this.stateSave = null;
+        this.lang = null;
+        this.valid = null;
+        this.permissionList = null;
+        this.groupList = null;
+    }
 }
