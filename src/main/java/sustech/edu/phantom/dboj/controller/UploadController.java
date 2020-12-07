@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.JudgeDatabase;
@@ -63,19 +62,19 @@ public class UploadController {
             return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
         }
     }
-
-    //TODO:上传照片
-    @RequestMapping(value = "/upload/avatar", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<String>> uploadAvatar(String path) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user.containSomePermission("modify personal information")) {
-
-        } else {
-            return null;
-        }
-        return null;
-    }
+//
+//    //TODO:上传照片
+//    @RequestMapping(value = "/upload/avatar", method = RequestMethod.POST)
+//    @PreAuthorize("hasRole('ROLE_STUDENT')")
+//    public ResponseEntity<GlobalResponse<String>> uploadAvatar(String path) {
+//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if (user.containSomePermission("modify personal information")) {
+//
+//        } else {
+//            return null;
+//        }
+//        return null;
+//    }
 
     @RequestMapping(value = "/judgedb", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<List<JudgeDatabase>>> getAllJudgeDB(HttpServletRequest request) {
