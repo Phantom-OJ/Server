@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ModifyPasswdForm {
-    private String username;
     private String oldPassword;
     private String newPassword;
 }

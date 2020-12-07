@@ -13,6 +13,11 @@ public interface ProblemMapper {
      */
     List<Problem> queryProblemWithoutFilter(Pagination pagination);
 
+    /**
+     *
+     * @param pagination
+     * @return
+     */
     Integer queryProblemWithoutFilterCounter(Pagination pagination);
 
     /**

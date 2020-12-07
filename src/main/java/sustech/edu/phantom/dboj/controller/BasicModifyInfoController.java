@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.UserForm;
 import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
@@ -59,20 +60,16 @@ public class BasicModifyInfoController {
     }
 
     @RequestMapping(value = "/modifypasswd", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> modifyPassword(@AuthenticationPrincipal User user, @RequestBody ModifyPasswdForm form) {
-        if (!user.getUsername().equals(form.getUsername())) {
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").build(), HttpStatus.FORBIDDEN);
-        } else {
-            Object[] a = basicInfoModificationService.modifyPassword(form);
-            return new ResponseEntity<>(
-                    GlobalResponse
-                            .<String>builder()
-                            .msg((String) a[0])
-                            .build(), (HttpStatus) a[1]);
-        }
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody ModifyPasswdForm form) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseMsg res;
+        Object[] a = basicInfoModificationService.modifyPassword(form, user.getUsername());
+        //TODO: 更新现有user, 如果返回200则要强制退出
+        return new ResponseEntity<>(
+                GlobalResponse
+                        .<String>builder()
+                        .msg((String) a[0])
+                        .build(), (HttpStatus) a[1]);
     }
-
-
-
-
 }

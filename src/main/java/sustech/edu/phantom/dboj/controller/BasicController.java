@@ -31,6 +31,11 @@ public class BasicController {
     @Autowired
     BasicService basicService;
 
+    /**
+     * return the state of the user
+     * @param request http request
+     * @return 统一的包含user的回应
+     */
     @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<User>> checkState(HttpServletRequest request){
         User user = null;

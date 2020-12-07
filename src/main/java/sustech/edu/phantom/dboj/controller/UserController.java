@@ -4,12 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.entity.Code;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
@@ -17,7 +20,7 @@ import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.service.*;
 
-import java.util.Arrays;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Lori
@@ -51,7 +54,6 @@ public class UserController {
 //    public User signup(@RequestBody RegisterForm registerForm) throws Exception {
 //        return userService.register(registerForm);
 //    }
-
 
 
     /**
@@ -117,12 +119,27 @@ public class UserController {
      * @return assignment的对象
      */
     @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(@PathVariable int id) {
-        Assignment a = assignmentService.getOneAssignment(id);
-        if (a == null) {
-            return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg("No such assignment.").build(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(HttpServletRequest request, @PathVariable String id) {
+        int idx;
+        ResponseMsg res;
+        Assignment assignment = null;
+        try {
+            idx = Integer.parseInt(id);
+            Assignment a = assignmentService.getOneAssignment(idx);
+            if (a == null) {
+                res = ResponseMsg.NOT_FOUND;
+            } else {
+                res = ResponseMsg.OK;
+                assignment = a;
+            }
+        } catch (NumberFormatException e) {
+            res = ResponseMsg.BAD_REQUEST;
+            log.error("The visit from the " + request.getRemoteAddr() + " has wrong URL.");
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            log.error("The visit from the " + request.getRemoteAddr() + " has internal server error.");
         }
-        return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg("success").data(a).build(), HttpStatus.OK);
+        return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg(res.getMsg()).data(assignment).build(), res.getStatus());
     }
 
     /**
@@ -176,49 +193,66 @@ public class UserController {
      * @return 查询的record的类
      */
     @RequestMapping(value = "/record/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(@PathVariable int id, @AuthenticationPrincipal User user) {
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(HttpServletRequest request, @PathVariable String id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("User " + user.getUsername() + " from " + request.getRemoteAddr() + " wants to fetch the code " + id);
+        int idx;
+        ResponseMsg res;
         RecordDetail record = null;
         try {
-            record = recordService.getOneRecord(id, user.getId());
-            log.info("The permission is {}", user.getPermissionList());
-            return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder()
-                    .msg("success")
-                    .data(record)
-                    .build(),
-                    HttpStatus.OK);
-        } catch (NullPointerException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
-            log.error("Error: {}", (Object) e.getStackTrace());
-            return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder()
-                    .msg("you have not signed in.")
-                    .build(),
-                    HttpStatus.UNAUTHORIZED);
+            idx = Integer.parseInt(id);
+            record = recordService.getOneRecord(idx, user.getId());
+            if (record == null) {
+                res = ResponseMsg.NOT_FOUND;
+            } else {
+                res = ResponseMsg.OK;
+            }
+        } catch (NumberFormatException e) {
+            res = ResponseMsg.BAD_REQUEST;
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
+        return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder().msg(res.getMsg()).data(record).build(), res.getStatus());
     }
 
-
+    /**
+     * 针对某个code id 进行详细查询
+     * 最低需要student 的权限
+     * 是否是该student的代码在方法中实现
+     *
+     * @param id code id
+     * @return Code对象
+     */
     @RequestMapping(value = "/code/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Code>> getOneCode(@PathVariable int id, @AuthenticationPrincipal User user) {
-        log.info("user information is {}", user);
-        if (user == null) {
-            return new ResponseEntity<>(GlobalResponse.<Code>builder()
-                    .msg("you have not signed in.")
-                    .build(),
-                    HttpStatus.UNAUTHORIZED);
-        }
-        Code c = codeService.queryCode(id);
-        if (!user.getId().equals(recordService.getUserIdByCodeId(id))) {
-            return new ResponseEntity<>(GlobalResponse.<Code>builder()
-                    .msg("you have not such authorizations.")
-                    .build(),
-                    HttpStatus.FORBIDDEN);
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<Code>> getOneCode(@PathVariable String id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int idx;
+        ResponseMsg res;
+        Code code = null;
+        try {
+            idx = Integer.parseInt(id);
+            Code c = codeService.queryCode(idx);
+            if (c == null) {
+                res = ResponseMsg.NOT_FOUND;
+            } else {
+                if (!user.getId().equals(recordService.getUserIdByCodeId(idx))) {
+                    res = ResponseMsg.FORBIDDEN;
+                } else {
+                    code = c;
+                    res = ResponseMsg.OK;
+                }
+            }
+        } catch (NumberFormatException e) {
+            res = ResponseMsg.BAD_REQUEST;
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<>(GlobalResponse.<Code>builder()
-                .msg("success")
-                .data(c)
+                .msg(res.getMsg())
+                .data(code)
                 .build(),
-                HttpStatus.OK);
+                res.getStatus());
     }
-
-
 }

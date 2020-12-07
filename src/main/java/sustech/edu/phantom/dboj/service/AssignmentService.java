@@ -11,6 +11,7 @@ import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.AssignmentMapper;
 import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
+import sustech.edu.phantom.dboj.mapper.TagMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,15 +37,24 @@ public class AssignmentService {
     @Autowired
     GroupMapper groupMapper;
 
+    @Autowired
+    TagMapper tagMapper;
+
     /**
-     * @param id
-     * @return
+     * 返回一个作业
+     * 包含几个problem
+     * problem的tag
+     *
+     * @param id assignment id
+     * @return 一个 Assignment
      */
     public Assignment getOneAssignment(int id) {
-        System.err.println("assignment_id:"+id);
         Assignment a = assignmentMapper.getOneAssignment(id);
         List<Problem> problemList = problemMapper.oneAssignmentProblems(id);
         a.setProblemList(problemList);
+        for (Problem p : problemList) {
+            p.setTagList(tagMapper.getProblemTags(p.getId()));
+        }
         a.setGroupList(groupMapper.getAssignmentGroup(id));
         return a;
     }
