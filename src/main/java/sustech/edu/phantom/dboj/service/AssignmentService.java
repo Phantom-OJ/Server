@@ -51,10 +51,10 @@ public class AssignmentService {
     public Assignment getOneAssignment(int id) {
         Assignment a = assignmentMapper.getOneAssignment(id);
         List<Problem> problemList = problemMapper.oneAssignmentProblems(id);
-        a.setProblemList(problemList);
         for (Problem p : problemList) {
             p.setTagList(tagMapper.getProblemTags(p.getId()));
         }
+        a.setProblemList(problemList);
         a.setGroupList(groupMapper.getAssignmentGroup(id));
         return a;
     }
