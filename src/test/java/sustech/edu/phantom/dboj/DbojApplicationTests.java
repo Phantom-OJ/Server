@@ -161,7 +161,8 @@ public class DbojApplicationTests {
     @Test
     public void test1111() {
 //        System.out.println(fileController.getOfficeHome());
-        assert recordMapper.getProblemResultSet(5) != null;
+//        assert recordMapper.getProblemResultSet(5) != null;
+        assert userMapper.findUserById(66)== null;
 //        System.out.println(recordMapper.getProblemResultSet(5));
     }
 }
