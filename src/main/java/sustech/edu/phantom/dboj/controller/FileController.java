@@ -83,7 +83,6 @@ public class FileController {
                 }
                 break;
             }
-            //TODO: 上传图片
             if (uploadService.uploadAvatar(picturePath, user.getId())) {
                 //TODO: 更新图片
                 res = ResponseMsg.OK;

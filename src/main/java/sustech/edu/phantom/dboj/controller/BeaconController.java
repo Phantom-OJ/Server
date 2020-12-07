@@ -12,6 +12,13 @@ import sustech.edu.phantom.dboj.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+/**
+ * 非 rest controller
+ *
+ * @author Shilong Li (Lori)
+ * @version 1.0
+ * @date 2020/12/6 22:02
+ */
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
@@ -21,13 +28,14 @@ public class BeaconController {
 
     /**
      * 退出浏览器时发送当前状态
+     *
      * @param request http request 请求
      */
     @RequestMapping(value = "/beacon", method = RequestMethod.POST)
-    public void beacon(HttpServletRequest request){
+    public void beacon(HttpServletRequest request) {
         try {
             String state = new String(request.getInputStream().readAllBytes());
-            log.info("The current exiting state is " + state);
+            log.info("The current exiting state is " + state + " from " + request.getRemoteAddr());
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (user.getStateSave()) {
                 userService.saveState(state, user.getId());

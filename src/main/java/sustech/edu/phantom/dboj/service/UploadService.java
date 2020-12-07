@@ -49,6 +49,12 @@ public class UploadService {
     @Autowired
     TagMapper tagMapper;
 
+    /**
+     * 上传公告
+     *
+     * @param form 公告表单
+     * @return 是否成功
+     */
     public boolean saveAnnouncement(UploadAnnouncementForm form) {
         int flag = 0;
         try {
@@ -57,12 +63,18 @@ public class UploadService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
         } catch (Exception e) {
-            log.error("");
+            log.error("Something wrong with saving announcement.");
         }
 
         return flag != 0;
     }
 
+    /**
+     * 上传judge database
+     *
+     * @param judgeDatabase judge database
+     * @return 是否成功
+     */
     public boolean saveJudgeDB(JudgeDatabase judgeDatabase) {
         try {
             int a = judgeDatabaseMapper.saveJudgeDatabase(judgeDatabase);
@@ -80,6 +92,13 @@ public class UploadService {
         }
     }
 
+    /**
+     * 返回给前端的接口
+     * 根据id筛选具体的judge database
+     * 只有 id 和 keyword
+     * @param id judge database id
+     * @return judge database 对象
+     */
     public JudgeDatabase selOneDB(int id) {
         JudgeDatabase j = null;
         try {
@@ -90,10 +109,10 @@ public class UploadService {
         return j;
     }
 
-
     /**
+     * 返回给前端的接口
      * 获取所有的judge database信息
-     *
+     * 只有 id 和 keyword
      * @return 所有的judge database
      */
     public List<JudgeDatabase> getAllJudgeDB() {
@@ -106,6 +125,12 @@ public class UploadService {
         return list;
     }
 
+    /**
+     * 上传judge script
+     *
+     * @param judgeScript judge script 对象
+     * @return 是否成功
+     */
     public boolean saveJudgeScript(JudgeScript judgeScript) {
         try {
             int a = judgeScriptMapper.saveJudgeScript(judgeScript);
@@ -123,6 +148,13 @@ public class UploadService {
         }
     }
 
+    /**
+     * 返回给前端的接口
+     * 获取所有的judge script
+     * 只有 id 和 keyword
+     *
+     * @return judge scripts
+     */
     public List<JudgeScript> getAllJudgeScript() {
         List<JudgeScript> list = null;
         try {
@@ -133,6 +165,13 @@ public class UploadService {
         return list;
     }
 
+    /**
+     * 返回给前端的接口
+     * 获取具体的judge script
+     *
+     * @param id judge script id
+     * @return judge script 信息
+     */
     public JudgeScript selOneJScript(int id) {
         JudgeScript j = null;
         try {
@@ -211,6 +250,13 @@ public class UploadService {
         return true;
     }
 
+    /**
+     * 上传头像
+     *
+     * @param filePath 图片路径
+     * @param uid user id
+     * @return 是否成功
+     */
     public boolean uploadAvatar(String filePath, int uid) {
         try {
             int a = userMapper.uploadAvatar(filePath, uid);
