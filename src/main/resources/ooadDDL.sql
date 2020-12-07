@@ -62,7 +62,6 @@ create table if not exists problem
     status              varchar          default 'private'::character varying not null,
     type                varchar(45)
 );
-
 create table if not exists "judge_database"
 (
     id           serial primary key,
