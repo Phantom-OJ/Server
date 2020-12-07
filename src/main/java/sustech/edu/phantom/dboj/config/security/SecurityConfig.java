@@ -77,7 +77,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     String state = new String(httpServletRequest.getInputStream().readAllBytes());
                     User u = (User) authentication.getPrincipal();
                     if (u.getStateSave()){
-                        userService.saveState(state, u.getId());
+                        try {
+                            userService.saveState(state, u.getId());
+                        } catch (Exception ignored) {
+                            ;
+                        }
                         log.info("The state of "+ u.getUsername() +" has been saved into database.");
                     } else {
                         log.info("The state of "+ u.getUsername() +" has not been saved into database.");
@@ -108,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             User user = (User) authentication.getPrincipal();
             log.info(user.getState());
             log.info(Arrays.toString(httpServletRequest.getCookies()));
-            user.setPassword(null);
+            user.setPassword(null);// 使密码不可见
             map.put("msg", "success");
             map.put("data", user);
             out.write(new ObjectMapper().writeValueAsString(map));
