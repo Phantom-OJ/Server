@@ -49,6 +49,10 @@ public interface RecordMapper {
      */
     List<ProblemStat> getProblemDialectSet(int id);
 
+    List<ProblemStat> getUserDialectSet(int id);
+
+    List<ProblemStat> getUserResultSet(int id);
+
     /**
      * 查询单个record
      *

@@ -1,15 +1,14 @@
 package sustech.edu.phantom.dboj.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Record;
-import sustech.edu.phantom.dboj.entity.RecordProblemJudgePoint;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.Pagination;
-import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.RecordProblemMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
@@ -22,6 +21,7 @@ import java.util.List;
  * @author Lori
  */
 @Service
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class RecordService {
     private final static String ASSIGNMENT = "assignment";
@@ -106,17 +106,7 @@ public class RecordService {
         return r;
     }
 
-    /**
-     * @param id problem id
-     * @return
-     */
-    public ProblemStatSet getOneProblemStat(int id) {
-        return ProblemStatSet
-                .builder()
-                .resultSet(recordMapper.getProblemResultSet(id))
-                .dialectSet(recordMapper.getProblemDialectSet(id))
-                .build();
-    }
+
 
     public Integer getUserIdByCodeId(int cid) {
         return recordMapper.getUserIdByCodeId(cid);

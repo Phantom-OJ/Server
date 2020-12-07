@@ -66,6 +66,20 @@
           and problem_id = #{id}
         group by dialect;
     </select>
+    <select id="getUserDialectSet" resultType="sustech.edu.phantom.dboj.form.stat.ProblemStat">
+        select dialect as key, count(*) as count
+        from "record"
+        where valid
+          and user_id = #{id}
+        group by dialect;
+    </select>
+    <select id="getUserResultSet" resultType="sustech.edu.phantom.dboj.form.stat.ProblemStat">
+        select result as key, count(*) as count
+        from "record"
+        where valid
+          and user_id = #{id}
+        group by result;
+    </select>
     <select id="getOneRecord" resultType="sustech.edu.phantom.dboj.entity.vo.RecordDetail">
         select r.id,
                r.code_id,

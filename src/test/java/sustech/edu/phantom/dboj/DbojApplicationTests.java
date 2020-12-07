@@ -14,6 +14,7 @@ import sustech.edu.phantom.dboj.entity.Grade;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;
+import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 import sustech.edu.phantom.dboj.service.*;
 
@@ -50,6 +51,8 @@ public class DbojApplicationTests {
 
     @Autowired
     FileController fileController;
+    @Autowired
+    RecordMapper recordMapper;
 
     @Test
 
@@ -158,5 +161,7 @@ public class DbojApplicationTests {
     @Test
     public void test1111() {
 //        System.out.println(fileController.getOfficeHome());
+        assert recordMapper.getProblemResultSet(5) != null;
+//        System.out.println(recordMapper.getProblemResultSet(5));
     }
 }

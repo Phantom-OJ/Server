@@ -6,13 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import sustech.edu.phantom.dboj.entity.*;
+import sustech.edu.phantom.dboj.entity.Assignment;
+import sustech.edu.phantom.dboj.entity.Code;
+import sustech.edu.phantom.dboj.entity.Problem;
+import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.CodeForm;
 import sustech.edu.phantom.dboj.form.Pagination;
-import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.*;
 
 import java.util.Arrays;
@@ -50,31 +52,7 @@ public class UserController {
 //        return userService.register(registerForm);
 //    }
 
-//    @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
-//    public ResponseEntity<GlobalResponse<User>> forwardInfo(HttpServletRequest request) {
-//        try {
-//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("User info").data(user).build(), HttpStatus.OK);
-//        } catch (ClassCastException e) {
-//            log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
-//            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("You have not signed in.").data(null).build(), HttpStatus.NOT_FOUND);
-//        }
-//    }
 
-    /**
-     * 所有的公告，是可以对所有人public的，没有权限限制
-     *
-     * @param pagination 前端传回的分页筛选信息 这个类有待完善
-     * @return 公告list 这里就不设置 /announcement/{id} 这种api了，直接缓存
-     */
-    @RequestMapping(value = "/announcement", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<EntityVO<Announcement>>> getAnnouncement(@RequestBody Pagination pagination) {
-        log.info("进入公告页面");
-        return new ResponseEntity<>(GlobalResponse.<EntityVO<Announcement>>builder()
-                .msg("Success")
-                .data(announcementService.announcementEntityVO(pagination))
-                .build(), HttpStatus.OK);
-    }
 
     /**
      * 所有的problem，是public的，没有权限控制
@@ -218,20 +196,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 一个Problem的所有数据
-     *
-     * @param id Problem id
-     * @return ProblemStatisticsSet对象，包含result结果和语言结果
-     */
-    @RequestMapping(value = "/problem/{id}/statistics/", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneProblemStatistics(@PathVariable int id) {
-        try {
-            return new ResponseEntity<>(GlobalResponse.<ProblemStatSet>builder().msg("success").data(recordService.getOneProblemStat(id)).build(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(GlobalResponse.<ProblemStatSet>builder().msg("error").build(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
     @RequestMapping(value = "/code/{id}", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<Code>> getOneCode(@PathVariable int id, @AuthenticationPrincipal User user) {
@@ -260,8 +224,5 @@ public class UserController {
     public ResponseEntity<GlobalResponse<User>> userInfo(@PathVariable Integer id, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(GlobalResponse.<User>builder().data(user).msg("success").build(), HttpStatus.OK);
     }
-
-    //TODO: 个人信息界面overview 所有的数据
-
 
 }
