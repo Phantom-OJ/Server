@@ -23,6 +23,7 @@ import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,6 +106,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             PrintWriter out = httpServletResponse.getWriter();
             Map<String, Object> map = new HashMap<>(2);
             User user = (User) authentication.getPrincipal();
+            log.info(user.getState());
+            log.info(Arrays.toString(httpServletRequest.getCookies()));
             user.setPassword(null);
             map.put("msg", "success");
             map.put("data", user);
