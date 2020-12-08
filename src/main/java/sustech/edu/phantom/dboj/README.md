@@ -41,6 +41,8 @@
 
 - 登录、注册2020/12/02
 
+- 显示该题是否已经AC/WA/NO submission 2020/12/08
+
 
 ## TODO
    
@@ -54,17 +56,17 @@
 
 6. 查询record的时候，要控制好代码的显示
 
-7. 判题机独立出一个服务
+7. 判题机独立出一个服务 -- mzy
 
 8. 轮询
 
-9. 定期刷新数据库
+9. 定期刷新数据库 [resolved]
 
 10. nosql redis 部署
 
 11. 头像更改 存储路径
 
-12. 枚举类，permission 常量， response message
+12. 枚举类，permission 常量， response message [Solved]
 
 13. 用户界面返回用户自己的数据 [resolved]
 
@@ -80,8 +82,8 @@
 
 19. 单点登录 这里可能要用到redis
     
-20. 管理员单独的接口
+20. 管理员单独的接口 [没必要]
 
-21. problem和assignment的public private closed 权限
+21. problem和assignment的public private closed 权限[算是solved]
 
 22. profile 里面放得分

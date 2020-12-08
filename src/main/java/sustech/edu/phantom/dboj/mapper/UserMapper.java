@@ -1,7 +1,10 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.form.UserForm;
+
+import java.util.List;
 
 public interface UserMapper {
     /**
@@ -66,4 +69,6 @@ public interface UserMapper {
     int addGroup();
 
     int uploadAvatar(String filePath, int uid);
+
+    int grantUser(@Param("list") String role, List<Integer> list);
 }

@@ -39,7 +39,7 @@
         where nickname = #{name}
            or username = #{name};
     </select>
-    <update id="updateUserInfo" >
+    <update id="updateUserInfo">
         update "user"
         set nickname   = #{userForm.nickname},
             state_save = #{userForm.stateSave},
@@ -74,7 +74,7 @@
         set state = #{state}
         where id = #{id};
     </update>
-    <select id="getState">
+    <select id="getState" resultType="java.lang.String">
         select state
         from "user"
         where id = #{id};
@@ -83,5 +83,12 @@
         update "user"
         set avatar = #{filePath}
         where id = #{uid};
+    </update>
+    <update id="grantUser">
+        update "user" set role=#{role} where id in (
+        <foreach collection="list" index="index" item="l" separator="," close="">
+            #{l}
+        </foreach>
+        );
     </update>
 </mapper>

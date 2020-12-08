@@ -68,37 +68,22 @@ public class AdvancedModifyInfoController {
      * @return
      */
     @RequestMapping(value = "/grant", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> grantOthers(@RequestBody Map<String, Object> hm) {
+    public ResponseEntity<GlobalResponse<String>> grantOthers(HttpServletRequest request, @RequestBody Map<String, List<Integer>> hm) {
         ResponseMsg res;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!user.containPermission(PermissionEnum.GRANT)) {
+            log.error("The visit from " + request.getRemoteAddr() + " has not such privilege.");
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-
+                advancedInfoModificationService.grantUser(hm);
+                res = ResponseMsg.OK;
             } catch (Exception e) {
-
+                log.error("There are some errors of the visit from " + request.getRemoteAddr());
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
             }
         }
-        try {
-
-            if (!user.containPermission(PermissionEnum.GRANT)) {
-                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
-            } else {
-                String msg;
-                try {
-                    advancedInfoModificationService.grantUser(hm);
-                    msg = "success";
-                } catch (Exception e) {
-                    msg = "fail";
-                }
-                return new ResponseEntity<>(GlobalResponse.<String>builder().build(), "success".equals(msg) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } catch (ClassCastException e) {
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-        }
-
-
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
     //对题目进行修改
