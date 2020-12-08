@@ -24,47 +24,26 @@ Refer https://support.typora.io/About-Themes/ if you want to create / install ne
        ('announcement2', 'This is the basic formula for fibonacci $f(n)=f(n-1)+f(n-2)$');
 -- 以下是权限表
 insert into "permission" (role, allowance)
-VALUES ('ROLE_STUDENT', 'modify personal information'),
-       ('ROLE_STUDENT', 'check points'),
-       ('ROLE_STUDENT', 'submit codes'),
-       ('ROLE_STUDENT', 'review codes'),
-       ('ROLE_STUDENT', 'view results'),
-       ('ROLE_STUDENT', 'view ranking'),
-
-       ('ROLE_SA', 'modify personal information'),
-       ('ROLE_SA', 'check points'),
-       ('ROLE_SA', 'submit codes'),
-       ('ROLE_SA', 'review codes'),
-       ('ROLE_SA', 'view results'),
-       ('ROLE_SA', 'view ranking'),
+VALUES
        ('ROLE_SA', 'view all submissions'),
        ('ROLE_SA', 'provide the solution'),
+       ('ROLE_SA', 'publish the announcement'),
+       ('ROLE_SA', 'view all groups'),
+       ('ROLE_SA', 'view all assignments'),
 
-       ('ROLE_TEACHER', 'modify personal information'),
-       ('ROLE_TEACHER', 'check points'),
-       ('ROLE_TEACHER', 'submit codes'),
-       ('ROLE_TEACHER', 'review codes'),
-       ('ROLE_TEACHER', 'view results'),
-       ('ROLE_TEACHER', 'view ranking'),
+
        ('ROLE_TEACHER', 'view all submissions'),
        ('ROLE_TEACHER', 'provide the solution'),
-       ('ROLE_TEACHER', 'view all groups'),
-       ('ROLE_TEACHER', 'upload judge point'),
-       ('ROLE_TEACHER', 'upload judge database'),
-       ('ROLE_TEACHER', 'upload judge script'),
-       ('ROLE_TEACHER', 'view judge point'),
-       ('ROLE_TEACHER', 'view judge database'),
-       ('ROLE_TEACHER', 'view judge script'),
        ('ROLE_TEACHER', 'publish the announcement'),
+       ('ROLE_TEACHER', 'view all groups'),
+       ('ROLE_TEACHER', 'view all assignments'),
+       ('ROLE_TEACHER', 'create groups'),
        ('ROLE_TEACHER', 'create assignment'),
-       ('ROLE_TEACHER', 'create problem'),
-       ('ROLE_TEACHER', 'provide sample database'),
-       ('ROLE_TEACHER', 'provide description'),
-       ('ROLE_TEACHER', 'provide space and time limit'),
-       ('ROLE_TEACHER', 'provide sample output'),
        ('ROLE_TEACHER', 'modify assignment'),
-       ('ROLE_TEACHER', 'modify problem'),
-       ('ROLE_TEACHER', 'grant other users');
+       ('ROLE_TEACHER', 'view judge details'),
+       ('ROLE_TEACHER', 'grant other users'),
+       ('ROLE_TEACHER', 'view all permissions')
+       ;
 insert into "group" (description)
 values ('group1'),
        ('group2'),
@@ -147,34 +126,7 @@ VALUES (4, 1, 'test2', '# Computer Network hw1
 
 ### packet switch
 
-The transmission delay
-$$
-d_t =\frac{x}{p}\cdot \frac{p}{b} = \frac{x}{b}
-$$
-The store and forward delay
-$$
-d_{sf} = (k-1)\cdot \frac{p}{b}
-$$
-The propagation delay
-$$
-d_p = kd
-$$
-The total delay is
-$$
-d_{pw} = d_t+d_{sf}+d_p = \frac{x}{b}+kd+(k-1)\cdot \frac{p}{b}
-$$
-
 ### circuit switch
-
-The transmission delay
-$$
-d_t =\frac{x}{b}
-$$
-The propagation delay
-$$
-d_p = kd
-$$
-The setup delay is $s$.
 
 The total delay is
 $$
@@ -187,68 +139,15 @@ d_p<d_c\\ \text{i.e.}
 \\
 \frac{x}{b}+kd+(k-1)\cdot \frac{p}{b}<\frac{x}{b}+kd+s
 \\\implies s>\frac{p(k-1)}{b}
-$$
-
-## 2
-
-Since in the description it says that *The handshaking process costs 2RTT before transmitting the file.*, we don''t consider transmitting file during the handshaking.
-
-In my solution, I consider `Mb` as `10**6 bits`.
-
-And in my solution, `0.5RTT` means in the final transmission, I just send the file, regardless of the return message from the receiver.  ',
+$$',
         20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select');
 INSERT INTO public.assignment (id, title, description, start_time, end_time, status, full_score, sample_database_path,
                                valid)
 VALUES (1, 'title1', '# Computer Network hw1
 
 **Name**:黎诗龙
-
-**SID:**11811407
-
-## 1
-
-### packet switch
-
-The transmission delay
-$$
-d_t =\frac{x}{p}\cdot \frac{p}{b} = \frac{x}{b}
-$$
-The store and forward delay
-$$
-d_{sf} = (k-1)\cdot \frac{p}{b}
-$$
-The propagation delay
-$$
-d_p = kd
-$$
-The total delay is
 $$
 d_{pw} = d_t+d_{sf}+d_p = \frac{x}{b}+kd+(k-1)\cdot \frac{p}{b}
-$$
-
-### circuit switch
-
-The transmission delay
-$$
-d_t =\frac{x}{b}
-$$
-The propagation delay
-$$
-d_p = kd
-$$
-The setup delay is $s$.
-
-The total delay is
-$$
-d_{cs} = \frac{x}{b}+kd+s
-$$
-
-If packet switch is smaller:
-$$
-d_p<d_c\\ \text{i.e.}
-\\
-\frac{x}{b}+kd+(k-1)\cdot \frac{p}{b}<\frac{x}{b}+kd+s
-\\\implies s>\frac{p(k-1)}{b}
 $$
 
 ## 2
