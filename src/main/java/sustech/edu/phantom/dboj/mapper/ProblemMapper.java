@@ -8,23 +8,22 @@ import java.util.List;
 
 public interface ProblemMapper {
     /**
-     * @param pagination
-     * @return
-     */
-    List<Problem> queryProblemWithoutFilter(Pagination pagination);
-
-    /**
+     * 无过滤器找problem
      *
+     * @param pagination 分页过滤信息
+     * @param isAdmin    是否是管理员
+     * @return problem list
+     */
+    List<Problem> queryProblemWithoutFilter(Pagination pagination, boolean isAdmin);
+
+    /**
      * @param pagination
      * @return
      */
-    Integer queryProblemWithoutFilterCounter(Pagination pagination);
+    Integer queryProblemWithoutFilterCounter(Pagination pagination, boolean isAdmin);
 
-    /**
-     * @param id
-     * @return
-     */
-    Problem queryCurrentProblem(int id);
+
+    Problem queryCurrentProblem(int id, boolean isAdmin);
 
     /**
      * @param id
@@ -78,10 +77,10 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title);
+    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title, boolean isAdmin);
 
 
-    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title);
+    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title, boolean isAdmin);
 
 
     /**
@@ -91,9 +90,16 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByName(Pagination pagination, String title);
+    List<Problem> queryProblemsByName(Pagination pagination, String title, boolean isAdmin);
 
-    Integer queryProblemsByNameCounter(Pagination pagination, String title);
+    Integer queryProblemsByNameCounter(Pagination pagination, String title, boolean isAdmin);
 
     Integer saveProblem(Problem p);
+
+    /**
+     * 更新problem的状态
+     * @param list list of assignment id
+     * @return 更新的行数
+     */
+    int publishProblems(@Param("list") List<Integer> list);
 }

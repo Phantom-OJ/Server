@@ -9,39 +9,43 @@
     </insert>
     <select id="queryProblemWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
-               assignment_id,
-               title,
-               description,
-               full_score,
-               space_limit,
-               time_limit,
-               number_submit,
-               number_solve,
-               index_in_assignment,
-               solution
+        assignment_id,
+        title,
+        description,
+        full_score,
+        space_limit,
+        time_limit,
+        number_submit,
+        number_solve,
+        index_in_assignment,
+        solution
         from "problem"
         where valid
-          and status = 'public'
+        <if test="param2==false">
+            and status = 'public'
+        </if>
         order by id
         offset #{offset} limit #{limit};
     </select>
     <select id="queryCurrentProblem" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
-               assignment_id,
-               title,
-               description,
-               full_score,
-               space_limit,
-               time_limit,
-               number_submit,
-               number_solve,
-               index_in_assignment,
-               solution,
-               type
+        assignment_id,
+        title,
+        description,
+        full_score,
+        space_limit,
+        time_limit,
+        number_submit,
+        number_solve,
+        index_in_assignment,
+        solution,
+        type
         from "problem"
         where valid
-          and status = 'public'
-          and id = #{id};
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
+        and id = #{id};
     </select>
     <update id="invalidateProblem">
         update "problem"
@@ -97,6 +101,14 @@
             number_solve  = #{numberSolve}
         where id = #{id};
     </update>
+    <update id="publishProblems">
+        update "problem" set status='public' where assignment_id in
+        (
+        <foreach collection="list" item="l" separator="," index="index" close="">
+            #{l}
+        </foreach>
+        ) and valid;
+    </update>
     <select id="queryProblemsByTags" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
         assignment_id,
@@ -143,7 +155,9 @@
         solution
         from "problem"
         where valid
-        and status = 'public'
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
         and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
@@ -155,7 +169,9 @@
         select count(*)
         from "problem"
         where valid
-        and status = 'public'
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
         and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
@@ -165,20 +181,22 @@
     </select>
     <select id="queryProblemsByName" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,
-               assignment_id,
-               title,
-               description,
-               full_score,
-               space_limit,
-               time_limit,
-               number_submit,
-               number_solve,
-               index_in_assignment,
-               solution
+        assignment_id,
+        title,
+        description,
+        full_score,
+        space_limit,
+        time_limit,
+        number_submit,
+        number_solve,
+        index_in_assignment,
+        solution
         from "problem"
         where valid
-          and status = 'public'
-          and title like '%' || #{title} || '%'
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
+        and title like '%' || #{title} || '%'
         order by id
         offset #{param1.offset} limit #{param1.limit};
     </select>
@@ -186,15 +204,20 @@
         select count(*)
         from "problem"
         where valid
-          and status = 'public'
-          and title like '%' || #{title} || '%'
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
+        and title like '%' || #{title} || '%'
         offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="queryProblemWithoutFilterCounter" resultType="java.lang.Integer">
         select count(*)
         from "problem"
         where valid
-          and status = 'public'
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
         offset #{offset} limit #{limit};
     </select>
+
 </mapper>

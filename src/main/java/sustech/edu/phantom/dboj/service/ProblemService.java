@@ -4,17 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Problem;
-import sustech.edu.phantom.dboj.entity.Tag;
+import sustech.edu.phantom.dboj.entity.enumeration.ProblemSolved;
+import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.mapper.CodeMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
+import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.TagMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Lori
@@ -38,8 +39,11 @@ public class ProblemService {
     @Autowired
     CodeMapper codeMapper;
 
-    public Problem getOneProblem(int id) {
-        Problem problem = problemMapper.queryCurrentProblem(id);
+    @Autowired
+    RecordMapper recordMapper;
+
+    public Problem getOneProblem(int id, boolean isAdmin) {
+        Problem problem = problemMapper.queryCurrentProblem(id, isAdmin);
         problem.setTagList(tagMapper.getProblemTags(id));
         return problem;
     }
@@ -47,54 +51,54 @@ public class ProblemService {
     /**
      * 这里相对于上面的方法是多了一个用户的代码
      *
-     * @param id
-     * @param userId
-     * @return
+     * @param id     problem id
+     * @param userId user id
+     * @return problem 对象
      */
-    public Problem getOneProblem(int id, int userId) {
-        Problem problem = getOneProblem(id);
+    public Problem getOneProblem(int id, int userId,boolean isAdmin) {
+        Problem problem = getOneProblem(id, isAdmin);
         problem.setRecentCode(codeMapper.queryRecentCode(userId, id));
         return problem;
     }
+//
+//    /**
+//     * @param pagination
+//     * @return
+//     */
+//    public List<Problem> getProblemList(Pagination pagination) {
+//        pagination.setParameters();
+//        List<Problem> problemList = new ArrayList<>();
+//        HashMap<String, Object> hm = pagination.getFilter();
+//        String idString = (String) hm.get(ID);
+//        String name = (String) hm.get(NAME);
+//        String tagString = (String) hm.get(TAG);
+//        if ("".equals(idString.trim()) && "".equals(name.trim()) && "".equals(tagString.trim())){
+//            problemList = problemMapper.queryProblemWithoutFilter(pagination);
+//        } else{
+//            try {
+//                int id = Integer.parseInt(idString.trim());
+//                // 如果有id直接返回problemid=id的问题
+//                problemList.add(problemMapper.queryCurrentProblem(id));
+//            } catch (NumberFormatException e) {
+//                if ("".equals(name.trim()) && "".equals(tagString.trim())){
+//                    return null;
+//                } else if ("".equals(tagString.trim())) {
+//                    problemList = problemMapper.queryProblemsByName(pagination, name.trim());
+//                } else {
+//                    List<Integer> tags = getProblemTagsIdList(pagination);
+//                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim());
+//                }
+//            }
+//        }
+//        for (Problem p : problemList) {
+//            p.setTagList(tagMapper.getProblemTags(p.getId()));
+//        }
+//        return problemList;
+//    }
 
     /**
-     * @param pagination
-     * @return
-     */
-    public List<Problem> getProblemList(Pagination pagination) {
-        pagination.setParameters();
-        List<Problem> problemList = new ArrayList<>();
-        HashMap<String, Object> hm = pagination.getFilter();
-        String idString = (String) hm.get(ID);
-        String name = (String) hm.get(NAME);
-        String tagString = (String) hm.get(TAG);
-        if ("".equals(idString.trim()) && "".equals(name.trim()) && "".equals(tagString.trim())){
-            problemList = problemMapper.queryProblemWithoutFilter(pagination);
-        } else{
-            try {
-                int id = Integer.parseInt(idString.trim());
-                // 如果有id直接返回problemid=id的问题
-                problemList.add(problemMapper.queryCurrentProblem(id));
-            } catch (NumberFormatException e) {
-                if ("".equals(name.trim()) && "".equals(tagString.trim())){
-                    return null;
-                } else if ("".equals(tagString.trim())) {
-                    problemList = problemMapper.queryProblemsByName(pagination, name.trim());
-                } else {
-                    List<Integer> tags = getProblemTagsIdList(pagination);
-                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim());
-                }
-            }
-        }
-        for (Problem p : problemList) {
-            p.setTagList(tagMapper.getProblemTags(p.getId()));
-        }
-        return problemList;
-    }
-
-    /**
-     * @param pagination
-     * @return
+     * @param pagination 分页过滤信息
+     * @return group
      */
     private List<Integer> getProblemTagsIdList(Pagination pagination) {
         HashMap<String, Integer> hm = tagService.getTagMap();
@@ -109,7 +113,16 @@ public class ProblemService {
         return tags;
     }
 
-    public EntityVO<Problem> problemEntityVO(Pagination pagination) {
+    /**
+     * 获取problem列表
+     * <br></br>
+     * 如果有用户要额外显示是否已经AC
+     *
+     * @param pagination 分页筛选
+     * @param isUser     是否有用户登录
+     * @return 包装类
+     */
+    public EntityVO<Problem> problemEntityVO(Pagination pagination, boolean isUser, int userId, boolean isAdmin) {
         pagination.setParameters();
         List<Problem> problemList = new ArrayList<>();
         HashMap<String, Object> hm = pagination.getFilter();
@@ -117,34 +130,56 @@ public class ProblemService {
         String name = (String) hm.get(NAME);
         String tagString = (String) hm.get(TAG);
         Integer count = 0;
-        if ("".equals(idString.trim()) && "".equals(name.trim()) && "".equals(tagString.trim())){
-            problemList = problemMapper.queryProblemWithoutFilter(pagination);
-            count = problemMapper.queryProblemWithoutFilterCounter(pagination);
-        } else{
+        if ("".equals(idString.trim()) && "".equals(name.trim()) && "".equals(tagString.trim())) {
+            problemList = problemMapper.queryProblemWithoutFilter(pagination, isAdmin);
+            count = problemMapper.queryProblemWithoutFilterCounter(pagination, isAdmin);
+        } else {
             try {
                 int id = Integer.parseInt(idString.trim());
                 // 如果有id直接返回problemid=id的问题
-                Problem p = problemMapper.queryCurrentProblem(id);
+                Problem p = problemMapper.queryCurrentProblem(id, isAdmin);
                 if (p != null) {
                     problemList.add(p);
                     count = 1;
                 }
             } catch (NumberFormatException e) {
-                if ("".equals(name.trim()) && "".equals(tagString.trim())){
+                if ("".equals(name.trim()) && "".equals(tagString.trim())) {
+                    //TODO:更正
                     throw new RuntimeException("id format wrong");
                 } else if ("".equals(tagString.trim())) {
-                    problemList = problemMapper.queryProblemsByName(pagination, name.trim());
-                    count = problemMapper.queryProblemsByNameCounter(pagination, name.trim());
+                    problemList = problemMapper.queryProblemsByName(pagination, name.trim(), isAdmin);
+                    count = problemMapper.queryProblemsByNameCounter(pagination, name.trim(), isAdmin);
                 } else {
                     List<Integer> tags = getProblemTagsIdList(pagination);
-                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim());
-                    count = problemMapper.queryProblemsByTagAndNameCounter(pagination, tags, name.trim());
+                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim(), isAdmin);
+                    count = problemMapper.queryProblemsByTagAndNameCounter(pagination, tags, name.trim(), isAdmin);
                 }
             }
         }
+        setSolvedAndTags(problemList, isUser, userId);
+        return EntityVO.<Problem>builder().entities(problemList).count(count).build();
+    }
+
+    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId) {
         for (Problem p : problemList) {
             p.setTagList(tagMapper.getProblemTags(p.getId()));
+            if (isUser) {
+                List<ResultCnt> tmp = recordMapper.isSolvedByUser(userId, p.getId());
+                if (tmp.size() == 0) {
+                    p.setSolved(ProblemSolved.NO_SUBMISSION);
+                } else {
+                    for (ResultCnt c : tmp) {
+                        if ("AC".equalsIgnoreCase(c.getResult().trim())) {
+                            p.setSolved(ProblemSolved.AC);
+                            break;
+                        } else {
+                            p.setSolved(ProblemSolved.WA);
+                        }
+                    }
+                }
+            } else {
+                p.setSolved(ProblemSolved.NO_SUBMISSION);
+            }
         }
-        return EntityVO.<Problem>builder().entities(problemList).count(count).build();
     }
 }

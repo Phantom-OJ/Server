@@ -73,9 +73,28 @@
         where valid
           and id = #{id};
     </select>
+    <select id="get2BUpdatedId" resultType="java.lang.Integer">
+        select id
+        from "assignment"
+        where (floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= start_time
+            or end_time >= floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))))
+          and valid;
+    </select>
     <update id="invalidateAssignment">
         update "assignment"
         set valid = false
         where id = #{aid};
+    </update>
+    <update id="publishAssignment">
+        update "assignment"
+        set status='public'
+        where floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= start_time
+          and valid;
+    </update>
+    <update id="closeAssignment">
+        update "assignment"
+        set status='closed'
+        where floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= end_time
+          and valid;
     </update>
 </mapper>

@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.mapper;
 
 import sustech.edu.phantom.dboj.entity.Record;
+import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.form.stat.ProblemStat;
@@ -135,4 +136,12 @@ public interface RecordMapper {
     Integer getRecordsByAssignmentAndProblemCounter(Pagination pagination, String assignmentTitle, String problemTitle);
 
     Integer getUserIdByCodeId(int cid);
+
+    /**
+     * 判断一个用户是否解出某个题
+     * @param uid user id
+     * @param pid problem id
+     * @return count (*) of AC
+     */
+    List<ResultCnt> isSolvedByUser(int uid, int pid);
 }

@@ -53,4 +53,10 @@ public interface AssignmentMapper {
     int invalidateAssignment(int aid);
 
     int saveAssignment(Assignment a);
+
+    int publishAssignment();
+
+    int closeAssignment();
+
+    List<Integer> get2BUpdatedId();
 }

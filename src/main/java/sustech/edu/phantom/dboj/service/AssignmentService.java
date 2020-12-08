@@ -6,12 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.entity.Problem;
+import sustech.edu.phantom.dboj.entity.enumeration.ProblemSolved;
+import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
-import sustech.edu.phantom.dboj.mapper.AssignmentMapper;
-import sustech.edu.phantom.dboj.mapper.GroupMapper;
-import sustech.edu.phantom.dboj.mapper.ProblemMapper;
-import sustech.edu.phantom.dboj.mapper.TagMapper;
+import sustech.edu.phantom.dboj.mapper.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,22 +38,25 @@ public class AssignmentService {
     @Autowired
     TagMapper tagMapper;
 
+    @Autowired
+    RecordMapper recordMapper;
+
     /**
      * 返回一个作业
      * 包含几个problem
      * problem的tag
      *
-     * @param id assignment id
+     * @param aid assignment id
+     * @param isUser 是否登陆
+     * @param userId user id
      * @return 一个 Assignment
      */
-    public Assignment getOneAssignment(int id) {
-        Assignment a = assignmentMapper.getOneAssignment(id);
-        List<Problem> problemList = problemMapper.oneAssignmentProblems(id);
-        for (Problem p : problemList) {
-            p.setTagList(tagMapper.getProblemTags(p.getId()));
-        }
+    public Assignment getOneAssignment(int aid, boolean isUser, int userId) {
+        Assignment a = assignmentMapper.getOneAssignment(aid);
+        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid);
+        setSolvedAndTags(problemList, isUser, userId);
         a.setProblemList(problemList);
-        a.setGroupList(groupMapper.getAssignmentGroup(id));
+        a.setGroupList(groupMapper.getAssignmentGroup(aid));
         return a;
     }
 
@@ -114,5 +116,28 @@ public class AssignmentService {
             a.setProblemList(problemMapper.oneAssignmentProblems(a.getId()));
         }
         return EntityVO.<Assignment>builder().entities(assignmentList).count(count).build();
+    }
+
+    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId) {
+        for (Problem p : problemList) {
+            p.setTagList(tagMapper.getProblemTags(p.getId()));
+            if (isUser) {
+                List<ResultCnt> tmp = recordMapper.isSolvedByUser(userId, p.getId());
+                if (tmp.size() == 0) {
+                    p.setSolved(ProblemSolved.NO_SUBMISSION);
+                } else {
+                    for (ResultCnt c : tmp) {
+                        if ("AC".equalsIgnoreCase(c.getResult().trim())) {
+                            p.setSolved(ProblemSolved.AC);
+                            break;
+                        } else {
+                            p.setSolved(ProblemSolved.WA);
+                        }
+                    }
+                }
+            } else {
+                p.setSolved(ProblemSolved.NO_SUBMISSION);
+            }
+        }
     }
 }

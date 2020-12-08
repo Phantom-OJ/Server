@@ -21,9 +21,10 @@
         offset #{offset} limit #{limit};
     </select>
     <insert id="saveRecord" keyProperty="id" useGeneratedKeys="true">
-        insert into "record" (code_id, user_id, problem_id, result, score, space, time, dialect, code_length,submit_time)
+        insert into "record" (code_id, user_id, problem_id, result, score, space, time, dialect, code_length,
+                              submit_time)
         VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{score}, #{space}, #{time}, #{dialect},
-                #{codeLength},#{submitTime});
+                #{codeLength}, #{submitTime});
     </insert>
     <update id="invalidateRecord">
         update "record"
@@ -208,8 +209,7 @@
                       on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
                  join "user" u on r.user_id = u.id and u.valid
         where r.valid
-          and r.user_id = #{userId}
-        offset #{param1.offset} limit #{param1.limit};
+          and r.user_id = #{userId};
     </select>
     <select id="getRecordsByAssignment" resultType="sustech.edu.phantom.dboj.entity.Record">
         select r.id,
@@ -288,13 +288,20 @@
                  join "assignment" a
                       on p.assignment_id = a.id and a.valid and a.title like '%' || #{assignmentTitle} || '%'
                  join "user" u on r.user_id = u.id and u.valid
-        where r.valid
-        offset #{param1.offset} limit #{param1.limit};
+        where r.valid;
     </select>
     <select id="getUserIdByCodeId" resultType="java.lang.Integer">
         select user_id
         from "record"
         where valid
           and code_id = #{cid};
+    </select>
+    <select id="isSolvedByUser" resultType="sustech.edu.phantom.dboj.entity.po.ResultCnt">
+        select result, count(*) as count
+        from "record"
+        where user_id = #{uid}
+          and problem_id = #{pid}
+          and valid
+        group by result;
     </select>
 </mapper>

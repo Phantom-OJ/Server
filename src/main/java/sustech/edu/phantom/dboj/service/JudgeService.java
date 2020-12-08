@@ -103,7 +103,7 @@ public class JudgeService {
      */
     public void judgeCode(int id, CodeForm codeForm, int userId) throws IOException {
         System.err.println(codeForm.getSubmitTime());
-        long start=System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         //FastLinux.createDatabase("12002");
         /*插入code表*/
         Code c = Code.builder()
@@ -113,11 +113,11 @@ public class JudgeService {
                 .build();
         codeMapper.saveCode(c);
         System.out.println(c.getId());
-        Problem problem = problemMapper.queryCurrentProblem(id);
+        Problem problem = problemMapper.queryCurrentProblem(id, false);
         System.out.println(problem);
         List<JudgeInput> judgeInputList = new ArrayList<>();
-        HashMap<String,Object> map=new HashMap<>();
-        map.put("type",problem.getType());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("type", problem.getType());
 
         List<JudgePoint> judgePointList = judgePointMapper.getAllJudgePointsOfProblem(id);
         for (JudgePoint j : judgePointList) {
@@ -188,16 +188,16 @@ public class JudgeService {
         /*3.更新grade表*/
         Grade oldGrade = gradeMapper.getOneGrade(userId, problem.getId());
         /*4.新增一张表*/
-        ArrayList<RecordProblemJudgePoint> recordProblemJudgePoints=new ArrayList<>();
-        for (int i=0;i<judgeResults.size();i++
-             ) {
-            JudgeResult judgeResult=judgeResults.get(i);
+        ArrayList<RecordProblemJudgePoint> recordProblemJudgePoints = new ArrayList<>();
+        for (int i = 0; i < judgeResults.size(); i++
+        ) {
+            JudgeResult judgeResult = judgeResults.get(i);
 
-            RecordProblemJudgePoint recordProblemJudgePoint=
+            RecordProblemJudgePoint recordProblemJudgePoint =
                     RecordProblemJudgePoint.builder()
                             .recordId(record.getId())
                             .problemId(problem.getId())
-                            .judgePointIndex(i+1)
+                            .judgePointIndex(i + 1)
                             .time(judgeResult.getRunTime())
                             .space(100L).
                             result(codeToString(judgeResult.getCode()))
@@ -221,40 +221,40 @@ public class JudgeService {
                 gradeMapper.updateOneGrade(userId, problem.getId(), score);
             }
         }
-        long end=System.currentTimeMillis();
-        System.out.println("判一次题时间:"+(end-start));
+        long end = System.currentTimeMillis();
+        System.out.println("判一次题时间:" + (end - start));
 
         FastLinux.executeDockerCmd("docker stop `docker ps -aq`");
         FastLinux.createDatabase("12002");
 
     }
 
-    public static String codeToString(Integer code){
-        String s="";
-        switch (code){
+    public static String codeToString(Integer code) {
+        String s = "";
+        switch (code) {
             case AC:
-                s="AC";
+                s = "AC";
                 break;
             case SE:
-                s="SE";
+                s = "SE";
                 break;
             case TLE:
-                s="TLE";
+                s = "TLE";
                 break;
             case WA:
-                s="WA";
+                s = "WA";
                 break;
             case RE:
-                s="RE";
+                s = "RE";
                 break;
             case 5:
-                s="CNE";
+                s = "CNE";
                 break;//连接错误
             case 6:
-                s="UE";
+                s = "UE";
                 break;
             default:
-                s="UE";
+                s = "UE";
                 break;
         }
         return s;

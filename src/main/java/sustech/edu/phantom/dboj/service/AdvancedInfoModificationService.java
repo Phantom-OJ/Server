@@ -17,10 +17,13 @@ import java.util.Map;
 @Transactional(rollbackFor = Exception.class)
 @Slf4j
 public class AdvancedInfoModificationService {
+    private final static String[] ROLE_LIST = {"ROLE_STUDENT", "ROLE_SA", "ROLE_TEACHER"};
     @Autowired
     UserMapper userMapper;
 
     public void grantUser(Map<String,Object> hm) {
+        for (Map.Entry<String, Object> entry : hm.entrySet()) {
 
+        }
     }
 }
