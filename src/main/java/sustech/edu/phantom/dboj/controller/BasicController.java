@@ -12,6 +12,7 @@ import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
+import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.Pagination;
 import sustech.edu.phantom.dboj.service.*;
 
@@ -36,6 +37,9 @@ public class BasicController {
 
     @Autowired
     AssignmentService assignmentService;
+
+    @Autowired
+    RecordService recordService;
 
     /**
      * return the state of the user
@@ -104,6 +108,31 @@ public class BasicController {
         return new ResponseEntity<>(GlobalResponse.<EntityVO<Problem>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());
     }
 
+
+    /**
+     * 所有record记录
+     * assignment, problem title, username/nickname
+     *
+     * @param pagination 分页筛选
+     * @return list of records
+     */
+    @RequestMapping(value = "/record", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<EntityVO<RecordDetail>>> getRecords(@RequestBody Pagination pagination) {
+        ResponseMsg res;
+        EntityVO<RecordDetail> recordDetail = null;
+        try {
+            recordDetail = recordService.getRecordDetailList(pagination);
+            res = ResponseMsg.OK;
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            log.error("There are something happening in the internal server.");
+        }
+        return new ResponseEntity<>(GlobalResponse.<EntityVO<RecordDetail>>builder()
+                .data(recordDetail)
+                .msg(res.getMsg())
+                .build(),
+                res.getStatus());
+    }
 
     /**
      * 所有的assignment
