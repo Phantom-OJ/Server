@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.form;
+package sustech.edu.phantom.dboj.form.home;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -27,16 +27,23 @@ import javax.servlet.http.HttpServletRequest;
  * @author Lori
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/modify")
 @Slf4j
 public class BasicModifyInfoController {
 
     @Autowired
     BasicInfoModificationService basicInfoModificationService;
 
-    @RequestMapping(value = "/modifyInfo",method = RequestMethod.POST)
+    /**
+     * 修改个人信息
+     * 修改nickname, state save 和  language
+     * @param form 修改信息的表单
+     * @param request http request
+     * @return 修改过后的个人信息
+     */
+    @RequestMapping(value = "/basic",method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<User>> user(@RequestBody UserForm form, HttpServletRequest request) throws Exception {
+    public ResponseEntity<GlobalResponse<User>> user(@RequestBody UserForm form, HttpServletRequest request){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info(user.toString());
         ResponseMsg res;
@@ -47,8 +54,7 @@ public class BasicModifyInfoController {
             } else {
                 SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
                 Authentication authentication = securityContextImpl.getAuthentication();
-                //TODO:初始化UsernamePasswordAuthenticationToken实例 ，这里的参数user就是我们要更新的用户信息
-                user.modifyInfo(form);//这里不知道对不对
+                user.modifyInfo(form);
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
                 auth.setDetails(authentication.getDetails());
                 securityContextImpl.setAuthentication(auth);
@@ -61,29 +67,9 @@ public class BasicModifyInfoController {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<>(GlobalResponse.<User>builder().msg(res.getMsg()).data(user).build(), res.getStatus());
-//        try {
-//            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (user.getUsername().equals(form.getUsername())) {
-//                //TODO:user1 是更改过的用户信息
-//                User user1 = basicInfoModificationService.modifyPersonalInfo(form, user.getId());
-//                SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
-//                Authentication authentication = securityContextImpl.getAuthentication();
-//                //TODO:初始化UsernamePasswordAuthenticationToken实例 ，这里的参数user就是我们要更新的用户信息
-//                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
-//                auth.setDetails(authentication.getDetails());
-//                securityContextImpl.setAuthentication(auth);
-//                //TODO: return
-//                return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Forbidden").data(user1).build(), HttpStatus.OK);
-//            } else {
-//                return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
-//            }
-//        } catch (ClassCastException e) {
-//            log.error("You have not signed in.");
-//            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
-//        }
     }
 
-    @RequestMapping(value = "/modifypasswd", method = RequestMethod.POST)
+    @RequestMapping(value = "/password", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody ModifyPasswdForm form) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

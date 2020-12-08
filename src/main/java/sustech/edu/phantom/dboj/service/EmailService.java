@@ -7,6 +7,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 
 /**
  * @author Lori
@@ -20,7 +23,10 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendVerifyCode(String toMail, int verificationCode) throws Exception {
+    private final static int codeLength = 6;
+
+    public String sendVerifyCode(String toMail) {
+        String verificationCode = null;
         try {
             String title = "Verification Code for Phantom DBOJ";
             String text = "Your verification code is ";
@@ -29,15 +35,23 @@ public class EmailService {
             message.setFrom(from);
             message.setTo(toMail);
             message.setSubject(title);
+            verificationCode = generateCode();
             message.setText(text + verificationCode + tail);
             mailSender.send(message);
             log.info("Verification code {} is sent to {} successfully.", verificationCode, toMail);
         } catch (Exception e) {
-            throw new Exception("send error," + e.getMessage());
+            log.error("send error," + e.getMessage());
         }
+        return verificationCode;
     }
 
-    public boolean verifyCode(String inputCode, String verificationCode) {
-        return verificationCode.equals(inputCode);
+    private String generateCode() {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new SecureRandom();
+        StringBuilder a = new StringBuilder();
+        for (int i = 0; i < codeLength; i++) {
+            a.append(str.charAt(random.nextInt(str.length())));
+        }
+        return a.toString();
     }
 }
