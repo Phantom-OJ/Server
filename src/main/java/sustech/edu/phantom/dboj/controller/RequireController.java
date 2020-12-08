@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.Group;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.GroupService;
@@ -29,7 +30,7 @@ public class RequireController {
         List<Group> data = null;
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (user.containSomePermission("view all groups")) {
+            if (user.containPermission(PermissionEnum.VIEW_GROUPS)) {
                 try {
                     data = groupService.getAllGroups();
                     msg = ResponseMsg.OK;

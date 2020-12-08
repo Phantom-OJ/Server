@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.JudgeDatabase;
 import sustech.edu.phantom.dboj.entity.JudgeScript;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
@@ -133,7 +134,7 @@ public class UploadController {
         List<JudgeScript> data = new ArrayList<>();
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.containSomePermission("view judge script")) {
+            if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
                 res = ResponseMsg.FORBIDDEN;
             } else {
                 List<JudgeScript> list = uploadService.getAllJudgeScript();
@@ -207,7 +208,7 @@ public class UploadController {
         ResponseMsg res;
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.containSomePermission("upload assignment")) {
+            if (!user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
                 log.error("The visit from " + request.getRemoteAddr() + " has low authorities.");
                 res = ResponseMsg.FORBIDDEN;
             }else{

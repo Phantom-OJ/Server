@@ -2,16 +2,14 @@ package sustech.edu.phantom.dboj.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.entity.Code;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.CodeForm;
@@ -59,46 +57,46 @@ public class UserController {
      * @return 查询的problem的对象
      */
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Problem>> getOneProblem(@PathVariable int id, @AuthenticationPrincipal User user) {
-        try {
-            Problem p = problemService.getOneProblem(id, user.getId());
-            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
-        } catch (NullPointerException e) {
-            Problem p = problemService.getOneProblem(id);
-            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
-        }
-    }
-
-
-    /**
-     * 得到具体的assignment
-     *
-     * @param id assignment id
-     * @return assignment的对象
-     */
-    @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(HttpServletRequest request, @PathVariable String id) {
-        int idx;
+    public ResponseEntity<GlobalResponse<Problem>> getOneProblem(HttpServletRequest request, @PathVariable String id) {
+        User user;
+        Problem p = null;
         ResponseMsg res;
-        Assignment assignment = null;
+        int idx;
+        boolean isAdmin = false;
         try {
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             idx = Integer.parseInt(id);
-            Assignment a = assignmentService.getOneAssignment(idx);
-            if (a == null) {
-                res = ResponseMsg.NOT_FOUND;
-            } else {
+            isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
+            p = problemService.getOneProblem(idx, user.getId(), isAdmin);
+            res = ResponseMsg.OK;
+        } catch (ClassCastException e) {
+            try {
+                idx = Integer.parseInt(id);
+                p = problemService.getOneProblem(idx, false);
                 res = ResponseMsg.OK;
-                assignment = a;
+            } catch (NumberFormatException e1) {
+                log.error("No user signed in and occurs number format exception from " + request.getRemoteAddr());
+                res = ResponseMsg.BAD_REQUEST;
+            } catch (Exception e2) {
+                log.error("No user signed in and occurs internal server error to " + request.getRemoteAddr());
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
             }
+
         } catch (NumberFormatException e) {
             res = ResponseMsg.BAD_REQUEST;
-            log.error("The visit from the " + request.getRemoteAddr() + " has wrong URL.");
-        } catch (Exception e) {
-            res = ResponseMsg.INTERNAL_SERVER_ERROR;
-            log.error("The visit from the " + request.getRemoteAddr() + " has internal server error.");
+            log.error("Bad request from the " + request.getRemoteAddr());
         }
-        return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg(res.getMsg()).data(assignment).build(), res.getStatus());
+
+        return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg(res.getMsg()).data(p).build(), res.getStatus());
+//        try {
+//            Problem p = problemService.getOneProblem(id, user.getId());
+//            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
+//        } catch (NullPointerException e) {
+//            Problem p = problemService.getOneProblem(id);
+//            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
+//        }
     }
+
 
     /**
      * 提交代码api，这里需要权限认证
@@ -119,8 +117,6 @@ public class UserController {
 ////            throw new Exception("You have not signed in.");
 //        }
     }
-
-
 
 
     /**

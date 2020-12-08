@@ -62,7 +62,7 @@ public class StatController {
      * @param id Problem id
      * @return ProblemStatisticsSet对象，包含result结果和语言结果
      */
-    @RequestMapping(value = "/problem/{id}/statistics/", method = RequestMethod.GET)
+    @RequestMapping(value = "/problem/{id}/statistics", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneProblemStatistics(HttpServletRequest request, @PathVariable String id) {
         ResponseMsg res;
         ProblemStatSet p = null;

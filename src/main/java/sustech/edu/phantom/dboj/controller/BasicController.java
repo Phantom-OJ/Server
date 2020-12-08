@@ -4,11 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.Announcement;
 import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
@@ -98,12 +102,25 @@ public class BasicController {
     public ResponseEntity<GlobalResponse<EntityVO<Problem>>> getProblemList(HttpServletRequest request, @RequestBody Pagination pagination) {
         ResponseMsg res;
         EntityVO<Problem> entityVO = null;
+        boolean isUser = false, isAdmin = false;
         try {
-            entityVO = problemService.problemEntityVO(pagination);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
+            isUser = true;
+            entityVO = problemService.problemEntityVO(pagination, isUser, user.getId(), isAdmin);
             res = ResponseMsg.OK;
+        } catch (ClassCastException e) {
+            try {
+                log.info("Checking problem without logging in from " + request.getRemoteAddr());
+                entityVO = problemService.problemEntityVO(pagination, isUser, 0, isAdmin);
+                res = ResponseMsg.OK;
+            } catch (Exception exception) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("There are some errors happening from the visiting " + request.getRemoteAddr() + " and the exception is " + exception.getMessage());
+            }
         } catch (Exception e) {
             res = ResponseMsg.NOT_FOUND;
-            log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
+            log.error("There are some errors happening when checking problems from the visiting " + request.getRemoteAddr());
         }
         return new ResponseEntity<>(GlobalResponse.<EntityVO<Problem>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());
     }
@@ -138,11 +155,14 @@ public class BasicController {
      * 所有的assignment
      * 是public的
      * 没有权限控制
+     *
      * @param pagination 分页过滤信息
      * @return list of assignments
      */
     @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<EntityVO<Assignment>>> getAllAssignments(HttpServletRequest request, @RequestBody Pagination pagination) {
+    public ResponseEntity<GlobalResponse<EntityVO<Assignment>>> getAllAssignments(
+            HttpServletRequest request,
+            @RequestBody Pagination pagination) {
         ResponseMsg res;
         EntityVO<Assignment> entityVO = null;
         try {
@@ -155,51 +175,4 @@ public class BasicController {
         }
         return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());
     }
-
-    /**
-     * 获取用户信息
-     * 这里包含查看自己的和查看别人的
-     * 查看别人的隐藏了重要信息
-     *
-     * @param id 用户的id
-     * @return
-     */
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<User>> userInfo(HttpServletRequest request, @PathVariable String id) {
-        ResponseMsg res;
-        User data = null;
-        int idx;
-        try {
-            idx = Integer.parseInt(id);
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (idx == user.getId()) {
-                data = user;
-                res = ResponseMsg.OK;
-            } else {
-                log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());
-                data = userService.find(idx, false);
-                if (data == null) {
-                    log.error("Not exist user " + id + " from the request of " + request.getRemoteAddr());
-                    res = ResponseMsg.NOT_FOUND;
-                } else {
-                    log.info("Successfully view the basic information of " + id + " from the request of " + request.getRemoteAddr());
-                    res = ResponseMsg.OK;
-                }
-            }
-        } catch (NumberFormatException e) {
-            log.error("Wrong URL visiting from " + request.getRemoteAddr());
-            res = ResponseMsg.NOT_FOUND;
-        } catch (ClassCastException e) {
-            idx = Integer.parseInt(id);
-            log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());
-            data = userService.find(idx, false);
-            if (data == null) {
-                res = ResponseMsg.NOT_FOUND;
-            } else {
-                res = ResponseMsg.OK;
-            }
-        }
-        return new ResponseEntity<>(GlobalResponse.<User>builder().data(data).msg(res.getMsg()).build(), res.getStatus());
-    }
-
 }
