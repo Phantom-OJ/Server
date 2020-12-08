@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.Announcement;
+import sustech.edu.phantom.dboj.entity.Assignment;
+import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.Pagination;
-import sustech.edu.phantom.dboj.service.AnnouncementService;
-import sustech.edu.phantom.dboj.service.BasicService;
-import sustech.edu.phantom.dboj.service.UserService;
+import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,13 +31,20 @@ public class BasicController {
     @Autowired
     BasicService basicService;
 
+    @Autowired
+    ProblemService problemService;
+
+    @Autowired
+    AssignmentService assignmentService;
+
     /**
      * return the state of the user
+     *
      * @param request http request
      * @return 统一的包含user的回应
      */
     @RequestMapping(value = "/checkstate", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<User>> checkState(HttpServletRequest request){
+    public ResponseEntity<GlobalResponse<User>> checkState(HttpServletRequest request) {
         User user = null;
         ResponseMsg res;
         try {
@@ -75,6 +82,50 @@ public class BasicController {
                 .build(), res.getStatus());
     }
 
+    /**
+     * 所有的problem
+     * 是public的
+     * 没有权限控制
+     *
+     * @param pagination 前端传回的分页筛选信息 这个类有待完善
+     * @return list of problems
+     */
+    @RequestMapping(value = "/problem", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<EntityVO<Problem>>> getProblemList(HttpServletRequest request, @RequestBody Pagination pagination) {
+        ResponseMsg res;
+        EntityVO<Problem> entityVO = null;
+        try {
+            entityVO = problemService.problemEntityVO(pagination);
+            res = ResponseMsg.OK;
+        } catch (Exception e) {
+            res = ResponseMsg.NOT_FOUND;
+            log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
+        }
+        return new ResponseEntity<>(GlobalResponse.<EntityVO<Problem>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());
+    }
+
+
+    /**
+     * 所有的assignment
+     * 是public的
+     * 没有权限控制
+     * @param pagination 分页过滤信息
+     * @return list of assignments
+     */
+    @RequestMapping(value = "/assignment", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<EntityVO<Assignment>>> getAllAssignments(HttpServletRequest request, @RequestBody Pagination pagination) {
+        ResponseMsg res;
+        EntityVO<Assignment> entityVO = null;
+        try {
+            entityVO = assignmentService.assignmentEntityVO(pagination);
+            res = ResponseMsg.OK;
+            log.info("Successfully view all the assignment");
+        } catch (Exception e) {
+            log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
+            res = ResponseMsg.NOT_FOUND;
+        }
+        return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());
+    }
 
     /**
      * 获取用户信息
@@ -112,7 +163,7 @@ public class BasicController {
         } catch (ClassCastException e) {
             idx = Integer.parseInt(id);
             log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());
-            data = userService.find(idx,false);
+            data = userService.find(idx, false);
             if (data == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {

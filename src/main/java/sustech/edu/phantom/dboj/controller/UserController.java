@@ -55,30 +55,6 @@ public class UserController {
 //        return userService.register(registerForm);
 //    }
 
-
-    /**
-     * 所有的problem，是public的，没有权限控制
-     * problem id, problem name, problem tag
-     *
-     * @param pagination 前端传回的分页筛选信息 这个类有待完善
-     * @return list of problems
-     */
-    @RequestMapping(value = "/problem", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<EntityVO<Problem>>> getProblemList(@RequestBody Pagination pagination) {
-        try {
-            EntityVO<Problem> entityVO = problemService.problemEntityVO(pagination);
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<Problem>>builder()
-                    .msg("sucess")
-                    .data(problemService.problemEntityVO(pagination))
-                    .build(), HttpStatus.OK);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<>
-                    (GlobalResponse.<EntityVO<Problem>>builder()
-                            .msg("Number format exception.")
-                            .build(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     /**
      * 根据id查询具体的problem，这里存在权限控制，因为有recentCode
      *
@@ -96,21 +72,6 @@ public class UserController {
         }
     }
 
-    /**
-     * 得到assignment的list
-     *
-     * @param pagination 前端传回的分页筛选信息 这个类有待完善
-     * @return list of assignments
-     */
-    @RequestMapping(value = "/assignment", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<EntityVO<Assignment>>> getAllAssignments(@RequestBody Pagination pagination) {
-        try {
-            EntityVO<Assignment> a = assignmentService.assignmentEntityVO(pagination);
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg("success").data(a).build(), HttpStatus.OK);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg("Number Format error.").build(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     /**
      * 得到具体的assignment
