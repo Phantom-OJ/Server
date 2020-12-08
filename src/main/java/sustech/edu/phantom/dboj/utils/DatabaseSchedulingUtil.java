@@ -1,21 +1,23 @@
 package sustech.edu.phantom.dboj.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import sustech.edu.phantom.dboj.mapper.AssignmentMapper;
+import org.springframework.stereotype.Component;
+import sustech.edu.phantom.dboj.service.SchedulingService;
 
 /**
  * 这个类是springboot定时任务
  */
+@Component
+@Slf4j
 public class DatabaseSchedulingUtil {
-    /**
-     * 每隔三十分钟更新一遍assignment表
-     */
     @Autowired
-    AssignmentMapper assignmentMapper;
+    SchedulingService schedulingService;
 
-    @Scheduled(cron = "0 */30 * * * ?")
+    @Scheduled(cron = "* */15 * * * ?")
     public void updateAssignmentInfo() {
-
+        log.info("Updating the assignment and problem table every 15 minutes.");
+        schedulingService.updateAssignmentInfo();
     }
 }
