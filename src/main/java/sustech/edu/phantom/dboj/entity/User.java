@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.form.UserForm;
 
 import java.util.ArrayList;
@@ -63,11 +64,11 @@ public class User implements UserDetails {
 
     /**
      * 判断是否有该权限
-     * @param perm permission字符串
+     * @param permission permissionEnum字符串
      * @return 是否有权限
      */
-    public boolean containSomePermission(String perm) {
-        return this.permissionList.contains(perm);
+    public boolean containPermission(PermissionEnum permission) {
+        return this.permissionList.contains(permission.getDetail());
     }
 
     /**
