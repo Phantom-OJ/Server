@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.form.UserForm;
 import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
@@ -25,18 +26,21 @@ public class BasicInfoModificationService {
     /**
      * 修改个人信息
      *
-     * @param userForm 传进来的user对象，这里可能要改，重新弄个user form 出来
+     * @param userForm 传进来的userForm对象
      * @return 修改过的个人信息
      */
-    public User modifyPersonalInfo(UserForm userForm, int userId) throws Exception {
-        boolean flag = userMapper.updateUserInfo(userForm, userId);
-        log.info("update state is {}", flag);
-        if (flag) {
-            return userMapper.findUserById(userId);
-        } else {
-            log.error("error updating");
+    public boolean modifyPersonalInfo(UserForm userForm, int userId) {
+        int flag;
+        try {
+            flag = userMapper.updateUserInfo(userForm, userId);
+            log.info("update state is {}", flag);
+            log.info("update information is " + userForm);
+        } catch (Exception e) {
+            flag = 0;
+            log.error("Error updating information of the user " + userId);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
-        return userMapper.findUserById(userId);
+        return flag!=0;
     }
 
     public Object[] modifyPassword(ModifyPasswdForm form, String username) {

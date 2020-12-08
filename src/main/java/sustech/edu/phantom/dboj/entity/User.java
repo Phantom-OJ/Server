@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import sustech.edu.phantom.dboj.form.UserForm;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,17 +61,35 @@ public class User implements UserDetails {
         return valid;
     }
 
+    /**
+     * 判断是否有该权限
+     * @param perm permission字符串
+     * @return 是否有权限
+     */
     public boolean containSomePermission(String perm) {
         return this.permissionList.contains(perm);
     }
 
+    /**
+     * 将关键信息隐藏
+     */
     public void hideInfo(){
-        this.role = null;
-        this.state = null;
-        this.stateSave = null;
-        this.lang = null;
-        this.valid = null;
-        this.permissionList = null;
-        this.groupList = null;
+        setRole(null);
+        setState(null);
+        setStateSave(null);
+        setLang(null);
+        setValid(null);
+        setPermissionList(null);
+        setGroupList(null);
+    }
+
+    /**
+     * 更改信息
+     * @param userForm user变更表单
+     */
+    public void modifyInfo(UserForm userForm) {
+        setNickname(userForm.getNickname());
+        setLang(userForm.getLang());
+        setStateSave(userForm.getStateSave());
     }
 }

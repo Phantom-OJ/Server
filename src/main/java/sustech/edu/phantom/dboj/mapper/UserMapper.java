@@ -46,7 +46,7 @@ public interface UserMapper {
      * @param userId user id
      * @return boolean
      */
-    boolean updateUserInfo(UserForm userForm, int userId);
+    int updateUserInfo(UserForm userForm, int userId);
 
     /**
      * 通过id找user

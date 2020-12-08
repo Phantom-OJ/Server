@@ -26,7 +26,6 @@ import java.util.List;
 public class AssignmentService {
     private final static String ID = "id";
     private final static String NAME = "name";
-    //可能还会有一个group
 
     @Autowired
     AssignmentMapper assignmentMapper;

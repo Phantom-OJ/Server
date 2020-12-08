@@ -18,14 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @ApiModel(description = "User form for modifications")
 public class UserForm {
-    private String username;
     @ApiModelProperty(value = "nickname")
     private String nickname;
-    @ApiModelProperty(value = "password")
-    private String password;
-    private String newPassword;
-    @ApiModelProperty(value = "avatar")
-    private String avatar;
     @ApiModelProperty(value = "whether to save the state")
     private Boolean stateSave;
     @ApiModelProperty(value = "default language that the user use")

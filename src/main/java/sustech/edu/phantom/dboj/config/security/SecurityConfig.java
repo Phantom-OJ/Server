@@ -98,6 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .deleteCookies("JSESSIONID")
                 .permitAll();
+//        http.sessionManagement().maximumSessions(1).sessionRegistry()/
     }
 
     private MyAuthenticationFilter myAuthenticationFilter() throws Exception {

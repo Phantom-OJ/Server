@@ -34,36 +34,59 @@ public class BasicModifyInfoController {
     @Autowired
     BasicInfoModificationService basicInfoModificationService;
 
-    @RequestMapping(value = "/modifyInfo")
+    @RequestMapping(value = "/modifyInfo",method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<User>> user(@RequestBody UserForm form, HttpServletRequest request) throws Exception {
-        User user;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info(user.toString());
+        ResponseMsg res;
         try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (user.getUsername().equals(form.getUsername())) {
-                //TODO:user1 是更改过的用户信息
-                User user1 = basicInfoModificationService.modifyPersonalInfo(form, user.getId());
+            boolean flag = basicInfoModificationService.modifyPersonalInfo(form, user.getId());
+            if (!flag) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            } else {
                 SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
                 Authentication authentication = securityContextImpl.getAuthentication();
                 //TODO:初始化UsernamePasswordAuthenticationToken实例 ，这里的参数user就是我们要更新的用户信息
+                user.modifyInfo(form);//这里不知道对不对
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
                 auth.setDetails(authentication.getDetails());
                 securityContextImpl.setAuthentication(auth);
-                //TODO: return
-                return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Forbidden").data(user1).build(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+                User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                log.info(user1.toString());
+                res = ResponseMsg.OK;
             }
-        } catch (ClassCastException e) {
-            log.error("You have not signed in.");
-            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            log.error("Some errors happen in the internal server.");
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
+        return new ResponseEntity<>(GlobalResponse.<User>builder().msg(res.getMsg()).data(user).build(), res.getStatus());
+//        try {
+//            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            if (user.getUsername().equals(form.getUsername())) {
+//                //TODO:user1 是更改过的用户信息
+//                User user1 = basicInfoModificationService.modifyPersonalInfo(form, user.getId());
+//                SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
+//                Authentication authentication = securityContextImpl.getAuthentication();
+//                //TODO:初始化UsernamePasswordAuthenticationToken实例 ，这里的参数user就是我们要更新的用户信息
+//                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
+//                auth.setDetails(authentication.getDetails());
+//                securityContextImpl.setAuthentication(auth);
+//                //TODO: return
+//                return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Forbidden").data(user1).build(), HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+//            }
+//        } catch (ClassCastException e) {
+//            log.error("You have not signed in.");
+//            return new ResponseEntity<>(GlobalResponse.<User>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
+//        }
     }
 
     @RequestMapping(value = "/modifypasswd", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody ModifyPasswdForm form) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ResponseMsg res;
         Object[] a = basicInfoModificationService.modifyPassword(form, user.getUsername());
         //TODO: 更新现有user, 如果返回200则要强制退出
         return new ResponseEntity<>(
