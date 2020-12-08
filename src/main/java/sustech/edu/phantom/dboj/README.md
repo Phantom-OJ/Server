@@ -66,7 +66,7 @@
 
 12. 枚举类，permission 常量， response message
 
-13. 用户界面返回用户自己的数据
+13. 用户界面返回用户自己的数据 [resolved]
 
 14. 针对老师，要显示所有的内容，包含private的内容
 
@@ -78,6 +78,10 @@
 
 18. group
 
-19. 单点登录
+19. 单点登录 这里可能要用到redis
+    
+20. 管理员单独的接口
 
-20. 
+21. problem和assignment的public private closed 权限
+
+22. profile 里面放得分

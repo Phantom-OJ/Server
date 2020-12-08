@@ -26,8 +26,8 @@ import java.util.Map;
 @SpringBootTest
 @MapperScan("sustech.edu.phantom.dboj")
 public class DbojApplicationTests {
-    @Autowired
-    TestService testService;
+//    @Autowired
+//    TestService testService;
     @Autowired
     GradeMapper gradeMapper;
     @Autowired
