@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
-import sustech.edu.phantom.dboj.form.CodeForm;
+import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
+@Api(tags = "user basic operations")
 public class UserController {
     @Autowired
     UserService userService;

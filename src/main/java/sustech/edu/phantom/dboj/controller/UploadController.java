@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping(value = "/api")
+@Api(tags = "upload functions, may be discarded in the future")
 //TODO: sampledb judgedb script avatar 图片链接
 public class UploadController {
 

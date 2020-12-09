@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
+@Api(tags = "Query functions")
 public class QueryController {
     @Autowired
     RecordService recordService;

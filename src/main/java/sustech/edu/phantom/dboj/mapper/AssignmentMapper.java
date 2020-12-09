@@ -2,7 +2,7 @@ package sustech.edu.phantom.dboj.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.Assignment;
-import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.home.Pagination;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
+@Api(tags = "Verification functions")
 public class VerificationController {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
@@ -99,7 +101,7 @@ public class VerificationController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
-    @RequestMapping(value = "/rstpwd")
+    @RequestMapping(value = "/rstpwd", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> resetPassword(HttpServletRequest request, @RequestBody RstPwdForm form) {
         ResponseMsg res;
         try {
@@ -130,7 +132,6 @@ public class VerificationController {
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
-
 
     @RequestMapping(value = "/rstusr", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_STUDENT')")

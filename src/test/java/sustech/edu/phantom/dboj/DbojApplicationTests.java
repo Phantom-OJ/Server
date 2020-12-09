@@ -11,8 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import sustech.edu.phantom.dboj.controller.FileController;
 import sustech.edu.phantom.dboj.entity.Grade;
-import sustech.edu.phantom.dboj.form.CodeForm;
-import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.home.CodeForm;
+import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
@@ -81,8 +81,8 @@ public class DbojApplicationTests {
         pagination.setEnd(2);
         pagination.setParameters();
         Gson gson = new Gson();
-        String json = gson.toJson(assignmentService.getAssignmentList(pagination));
-        System.out.println(json);
+//        String json = gson.toJson(assignmentService.getAssignmentList(pagination));
+//        System.out.println(json);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class DbojApplicationTests {
         pagination.setStart(1);
         pagination.setEnd(4);
         pagination.setParameters();
-        System.out.println(assignmentService.getAssignmentList(pagination));
+//        System.out.println(assignmentService.getAssignmentList(pagination));
     }
 
     @Test

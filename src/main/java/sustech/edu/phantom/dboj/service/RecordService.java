@@ -8,7 +8,7 @@ import sustech.edu.phantom.dboj.entity.Record;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
-import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.RecordProblemMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;

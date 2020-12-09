@@ -7,7 +7,7 @@ import sustech.edu.phantom.dboj.entity.Problem;
 import sustech.edu.phantom.dboj.entity.enumeration.ProblemSolved;
 import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
-import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.mapper.CodeMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;

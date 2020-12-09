@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Announcement;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
-import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.mapper.AnnouncementMapper;
 
 import java.util.List;

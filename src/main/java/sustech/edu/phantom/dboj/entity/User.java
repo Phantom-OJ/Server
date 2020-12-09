@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
-import sustech.edu.phantom.dboj.form.UserForm;
+import sustech.edu.phantom.dboj.form.modification.UserForm;
 
 import java.util.ArrayList;
 import java.util.Collection;

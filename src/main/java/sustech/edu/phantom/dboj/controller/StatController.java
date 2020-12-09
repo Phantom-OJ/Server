@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
+@Api(tags = "All statistics fetch")
 public class StatController {
     @Autowired
     StatService statService;
@@ -29,11 +31,12 @@ public class StatController {
     /**
      * 个人信息界面overview
      * 这里不需要权限，因为别人也可以随时看
+     *
      * @param request http request
-     * @param id string id
+     * @param id      string id
      * @return 结果集
      */
-    @RequestMapping(value = "/user/{id}/statistics")
+    @RequestMapping(value = "/user/{id}/statistics", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneUserStatistics(HttpServletRequest request, @PathVariable String id) {
         ResponseMsg res;
         ProblemStatSet p = null;

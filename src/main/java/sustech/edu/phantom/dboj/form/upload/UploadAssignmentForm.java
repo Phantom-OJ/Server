@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.form.upload;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ApiModel(description = "Upload assignment form")
 public class UploadAssignmentForm {
     private String title;
     private String description;

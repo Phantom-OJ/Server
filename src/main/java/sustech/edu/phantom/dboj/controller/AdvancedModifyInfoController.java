@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
+@Api(tags = "<admin> Advanced info modification")
 @RequestMapping(value = "/api/v1/modify/")
 @PreAuthorize("hasRole('ROLE_STUDENT')")
 public class AdvancedModifyInfoController {

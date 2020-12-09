@@ -3,7 +3,7 @@ package sustech.edu.phantom.dboj.mapper;
 import sustech.edu.phantom.dboj.entity.Record;
 import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
-import sustech.edu.phantom.dboj.form.Pagination;
+import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.form.stat.ProblemStat;
 
 import java.util.List;

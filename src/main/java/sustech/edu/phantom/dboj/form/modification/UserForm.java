@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.form;
+package sustech.edu.phantom.dboj.form.modification;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,12 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Lori
  */
-@Slf4j
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

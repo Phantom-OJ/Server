@@ -7,7 +7,7 @@ import sustech.edu.phantom.dboj.basicJudge.FastLinux;
 import sustech.edu.phantom.dboj.basicJudge.JudgeInput;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResult;
 import sustech.edu.phantom.dboj.entity.*;
-import sustech.edu.phantom.dboj.form.CodeForm;
+import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.mapper.*;
 
 import java.io.IOException;

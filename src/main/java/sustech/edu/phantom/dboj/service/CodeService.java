@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.Code;
-import sustech.edu.phantom.dboj.form.CodeForm;
+import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.mapper.CodeMapper;
 
 import java.nio.charset.StandardCharsets;

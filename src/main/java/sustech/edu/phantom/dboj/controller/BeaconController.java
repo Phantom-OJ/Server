@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import java.io.IOException;
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
+@Api(tags = "Save state when signing out")
 public class BeaconController {
     @Autowired
     UserService userService;

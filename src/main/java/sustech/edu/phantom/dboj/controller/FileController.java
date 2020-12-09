@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
+@Api(tags = "File uploading functions")
 public class FileController {
 
     @Value("${filerootpath.windows}")

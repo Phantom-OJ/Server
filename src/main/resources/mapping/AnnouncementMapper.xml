@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.AnnouncementMapper">
-    <select id="queryAnnouncement" parameterType="sustech.edu.phantom.dboj.form.Pagination"
+    <select id="queryAnnouncement" parameterType="sustech.edu.phantom.dboj.form.home.Pagination"
             resultType="sustech.edu.phantom.dboj.entity.Announcement">
         select id, title, description, create_date, last_modified
         from "announcement"

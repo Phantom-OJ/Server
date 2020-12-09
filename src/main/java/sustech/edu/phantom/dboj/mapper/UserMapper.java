@@ -2,7 +2,7 @@ package sustech.edu.phantom.dboj.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.User;
-import sustech.edu.phantom.dboj.form.UserForm;
+import sustech.edu.phantom.dboj.form.modification.UserForm;
 
 import java.util.List;
 
