@@ -97,9 +97,16 @@ public interface ProblemMapper {
     Integer saveProblem(Problem p);
 
     /**
-     * 更新problem的状态
+     * 更新problem的状态公开可见
      * @param list list of assignment id
      * @return 更新的行数
      */
     int publishProblems(@Param("list") List<Integer> list);
+
+    /**
+     * 更新problem的状态关闭
+     * @param list list of assignment id
+     * @return 更新的行数
+     */
+    int closedProblems(@Param("list") List<Integer> list);
 }

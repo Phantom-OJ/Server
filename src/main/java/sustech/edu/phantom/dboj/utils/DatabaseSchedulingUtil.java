@@ -15,9 +15,9 @@ public class DatabaseSchedulingUtil {
     @Autowired
     SchedulingService schedulingService;
 
-    @Scheduled(cron = "* */15 * * * ?")
+    @Scheduled(cron = "* */30 * * * ?")
     public void updateAssignmentInfo() {
-        log.info("Updating the assignment and problem table every 15 minutes.");
+        log.info("Updating the assignment and problem table every 30 minutes.");
         schedulingService.updateAssignmentInfo();
     }
 }

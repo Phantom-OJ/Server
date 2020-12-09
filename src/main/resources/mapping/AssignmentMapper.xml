@@ -4,15 +4,18 @@
 
     <select id="queryAssignmentsWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
-               title,
-               description,
-               start_time,
-               end_time,
-               status,
-               full_score,
-               sample_database_path
+        title,
+        description,
+        start_time,
+        end_time,
+        status,
+        full_score,
+        sample_database_path
         from "assignment"
         where valid
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
         order by start_time desc
         offset #{offset} limit #{limit};
     </select>
@@ -20,20 +23,26 @@
         select count(*)
         from "assignment"
         where valid
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
         offset #{offset} limit #{limit};
     </select>
     <select id="queryAssignmentByName" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
-               title,
-               description,
-               start_time,
-               end_time,
-               status,
-               full_score,
-               sample_database_path
+        title,
+        description,
+        start_time,
+        end_time,
+        status,
+        full_score,
+        sample_database_path
         from "assignment"
         where valid
-          and title like '%' || #{name} || '%'
+        <if test="param3==false">
+            and (status = 'public' or status = 'closed')
+        </if>
+        and title like '%' || #{name} || '%'
         order by start_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
@@ -41,20 +50,26 @@
         select count(*)
         from "assignment"
         where valid
-          and title like '%' || #{name} || '%'
+        <if test="param3==false">
+            and (status = 'public' or status = 'closed')
+        </if>
+        and title like '%' || #{name} || '%'
         offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="getAllAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
-               title,
-               description,
-               start_time,
-               end_time,
-               status,
-               full_score,
-               sample_database_path
+        title,
+        description,
+        start_time,
+        end_time,
+        status,
+        full_score,
+        sample_database_path
         from "assignment"
-        where valid;
+        where valid
+        <if test="param1==false">
+            and (status = 'public' or status = 'closed')
+        </if>;
     </select>
     <insert id="saveAssignment" useGeneratedKeys="true" keyProperty="id">
         insert into "assignment" (title, description, start_time, end_time, full_score, sample_database_path)
@@ -62,23 +77,33 @@
     </insert>
     <select id="getOneAssignment" resultType="sustech.edu.phantom.dboj.entity.Assignment">
         select id,
-               title,
-               description,
-               start_time,
-               end_time,
-               status,
-               full_score,
-               sample_database_path
+        title,
+        description,
+        start_time,
+        end_time,
+        status,
+        full_score,
+        sample_database_path
         from "assignment"
-        where valid
-          and id = #{id};
+        where id = #{id}
+        <if test="param2==false">
+            and (status = 'public' or status = 'closed')
+        </if>
+        and valid;
     </select>
-    <select id="get2BUpdatedId" resultType="java.lang.Integer">
+    <select id="get2BPublicId" resultType="java.lang.Integer">
         select id
         from "assignment"
-        where (floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= start_time
-            or end_time >= floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))))
-          and valid;
+        where floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= start_time
+          and valid
+          and status = 'private';
+    </select>
+    <select id="get2BClosedId" resultType="java.lang.Integer">
+        select id
+        from "assignment"
+        where floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= end_time
+          and valid
+          and status = 'public';
     </select>
     <update id="invalidateAssignment">
         update "assignment"
@@ -87,14 +112,25 @@
     </update>
     <update id="publishAssignment">
         update "assignment"
-        set status='public'
-        where floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= start_time
-          and valid;
+        set status = 'public'
+        where valid
+        <if test="list.size()!=0">
+            and
+            id in (
+            <foreach collection="list" index="index" separator="," item="l" close="">
+                #{l}
+            </foreach>);
+        </if>
     </update>
     <update id="closeAssignment">
         update "assignment"
-        set status='closed'
-        where floor(extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))) >= end_time
-          and valid;
+        set status = 'closed'
+        where valid
+        <if test="list.size()!=0">
+            and id in(
+            <foreach collection="list" index="index" separator="," item="l" close="">
+                #{l}
+            </foreach>);
+        </if>
     </update>
 </mapper>

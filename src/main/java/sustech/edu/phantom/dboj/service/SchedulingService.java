@@ -29,10 +29,12 @@ public class SchedulingService {
     public void updateAssignmentInfo() {
         try {
             log.info("update the state of the assignment and problem");
-            List<Integer> list = assignmentMapper.get2BUpdatedId();
-            assignmentMapper.publishAssignment();
-            assignmentMapper.closeAssignment();
-            problemMapper.publishProblems(list);
+            List<Integer> pubicList = assignmentMapper.get2BPublicId();
+            List<Integer> closedList = assignmentMapper.get2BClosedId();
+            assignmentMapper.publishAssignment(pubicList);
+            assignmentMapper.closeAssignment(closedList);
+            problemMapper.publishProblems(pubicList);
+            problemMapper.closedProblems(closedList);
         } catch (Exception e) {
             log.error("Internal server error when updating the status of the assignment and problem.");
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

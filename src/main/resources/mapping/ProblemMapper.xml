@@ -22,7 +22,7 @@
         from "problem"
         where valid
         <if test="param2==false">
-            and status = 'public'
+            and (status = 'public' or status = 'closed')
         </if>
         order by id
         offset #{offset} limit #{limit};
@@ -102,12 +102,24 @@
         where id = #{id};
     </update>
     <update id="publishProblems">
-        update "problem" set status='public' where assignment_id in
-        (
-        <foreach collection="list" item="l" separator="," index="index" close="">
-            #{l}
-        </foreach>
-        ) and valid;
+        update "problem" set status = 'public' where valid and status = 'private'
+        <if test="list.size()!=0">
+            and assignment_id in
+            (
+            <foreach collection="list" item="l" separator="," index="index" close="">
+                #{l}
+            </foreach>);
+        </if>
+    </update>
+    <update id="closedProblems">
+        update "problem" set status = 'closed' where valid and status = 'public'
+        <if test="list.size()!=0">
+            and assignment_id in
+            (
+            <foreach collection="list" item="l" separator="," index="index" close="">
+                #{l}
+            </foreach>);
+        </if>
     </update>
     <select id="queryProblemsByTags" resultType="sustech.edu.phantom.dboj.entity.Problem">
         select id,

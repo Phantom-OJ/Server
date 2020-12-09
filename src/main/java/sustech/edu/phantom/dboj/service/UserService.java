@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.form.home.LoginForm;
 import sustech.edu.phantom.dboj.form.home.RegisterForm;
@@ -33,7 +34,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     GroupMapper groupMapper;
 
-    public User register(RegisterForm registerForm) throws Exception {
+    public void register(RegisterForm registerForm) throws RuntimeException {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User user = User.builder().
                 username(registerForm.getUsername()).
@@ -41,16 +42,16 @@ public class UserService implements UserDetailsService {
                 password(encoder.encode(registerForm.getPassword())).build();
         User flag = userMapper.findUserByUsername(user.getUsername());
         if (flag != null) {
-            throw new Exception("The username has been registered.");
+            throw new RuntimeException("The username has been registered.");
         } else {
-            boolean flg = userMapper.register(user);
-            if (!flg) {
-                throw new Exception("Your registration has been declined.");
+            if (!userMapper.register(user)) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new RuntimeException("Your registration has been declined.");
             } else {
-                User usr = userMapper.login(user);
-                usr.setPermissionList(permissionMapper.getUserPermission(usr.getRole()));
-                usr.setGroupList(groupMapper.getStudentGroup(usr.getId()));
-                return usr;
+                log.info("Registration successfully");
+//                User usr = userMapper.login(user);
+//                usr.setPermissionList(permissionMapper.getUserPermission(usr.getRole()));
+//                usr.setGroupList(groupMapper.getStudentGroup(usr.getId()));
             }
         }
     }

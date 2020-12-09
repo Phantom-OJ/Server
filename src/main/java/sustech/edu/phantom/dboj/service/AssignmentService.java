@@ -46,15 +46,15 @@ public class AssignmentService {
      * 包含几个problem
      * problem的tag
      *
-     * @param aid assignment id
+     * @param aid    assignment id
      * @param isUser 是否登陆
      * @param userId user id
      * @return 一个 Assignment
      */
-    public Assignment getOneAssignment(int aid, boolean isUser, int userId) {
-        Assignment a = assignmentMapper.getOneAssignment(aid);
+    public Assignment getOneAssignment(int aid, boolean isUser, int userId, boolean isAdmin) {
+        Assignment a = assignmentMapper.getOneAssignment(aid, isAdmin);
         List<Problem> problemList = problemMapper.oneAssignmentProblems(aid);
-        setSolvedAndTags(problemList, isUser, userId);
+        setSolvedAndTags(problemList, isUser, userId, isAdmin);
         a.setProblemList(problemList);
         a.setGroupList(groupMapper.getAssignmentGroup(aid));
         return a;
@@ -64,7 +64,7 @@ public class AssignmentService {
      * @param pagination 分页信息
      * @return list of assignments
      */
-    public List<Assignment> getAssignmentList(Pagination pagination) {
+    public List<Assignment> getAssignmentList(Pagination pagination,boolean isAdmin) {
         pagination.setParameters();
 
         List<Assignment> assignmentList = new ArrayList<>();
@@ -72,14 +72,14 @@ public class AssignmentService {
         String idString = (String) hm.get(ID);
         String name = (String) hm.get(NAME);
         if ("".equals(idString.trim()) && "".equals(name.trim())) {
-            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination);
+            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination,isAdmin);
         } else {
             try {
                 int id = Integer.parseInt(idString.trim());
                 // 如果有id直接返回assignmentid=id的作业
-                assignmentList.add(assignmentMapper.getOneAssignment(id));
+                assignmentList.add(assignmentMapper.getOneAssignment(id,isAdmin));
             } catch (NumberFormatException e) {
-                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim());
+                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
             }
         }
         for (Assignment a : assignmentList) {
@@ -88,7 +88,7 @@ public class AssignmentService {
         return assignmentList;
     }
 
-    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination) {
+    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination,boolean isAdmin) {
         pagination.setParameters();
         List<Assignment> assignmentList = new ArrayList<>();
         HashMap<String, Object> hm = pagination.getFilter();
@@ -96,19 +96,19 @@ public class AssignmentService {
         String name = (String) hm.get(NAME);
         Integer count = 0;
         if ("".equals(idString.trim()) && "".equals(name.trim())) {
-            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination);
-            count = assignmentMapper.queryAssignmentsWithoutFilterCounter(pagination);
+            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination,isAdmin);
+            count = assignmentMapper.queryAssignmentsWithoutFilterCounter(pagination, isAdmin);
         } else {
             try {
                 int id = Integer.parseInt(idString.trim());
-                Assignment a = assignmentMapper.getOneAssignment(id);
+                Assignment a = assignmentMapper.getOneAssignment(id, isAdmin);
                 if (a != null) {
                     assignmentList.add(a);
                     count = 1;
                 }
             } catch (NumberFormatException e) {
-                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim());
-                count = assignmentMapper.queryAssignmentByNameCounter(pagination, name.trim());
+                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
+                count = assignmentMapper.queryAssignmentByNameCounter(pagination, name.trim(), isAdmin);
             }
         }
         for (Assignment a : assignmentList) {
@@ -118,9 +118,12 @@ public class AssignmentService {
         return EntityVO.<Assignment>builder().entities(assignmentList).count(count).build();
     }
 
-    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId) {
+    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId, boolean isAdmin) {
         for (Problem p : problemList) {
             p.setTagList(tagMapper.getProblemTags(p.getId()));
+            if (!isAdmin){
+                p.setSolution(null);
+            }
             if (isUser) {
                 List<ResultCnt> tmp = recordMapper.isSolvedByUser(userId, p.getId());
                 if (tmp.size() == 0) {

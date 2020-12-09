@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author Lori
+ * json登录重写类
+ * @author Shilong Li (Lori)
+ * @version 1.0
+ *
  */
 public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override

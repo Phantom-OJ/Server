@@ -10,11 +10,13 @@ public enum ResponseMsg {
     BAD_REQUEST("Bad request", HttpStatus.BAD_REQUEST),
 
     //关于用户注册，变更信息
+    REGISTER_FAIL("Register fails", HttpStatus.BAD_REQUEST),
     USER_ALREADY_EXIST("The account already exists", HttpStatus.BAD_REQUEST),
     USER_NOT_EXIST("The account does not exist", HttpStatus.NOT_FOUND),
     USERNAME_OR_PASSWORD_ERROR("Username or password error", HttpStatus.BAD_REQUEST),
     VERIFICATION_CODE_NOT_MATCHED("Verification code is not matched", HttpStatus.BAD_REQUEST),
     PASSWORD_WRONG("The password is wrong", HttpStatus.BAD_REQUEST),
+    RESET_PASSWORD_WRONG("Fail to reset the password", HttpStatus.BAD_REQUEST),
 
     //权限
     UNAUTHORIZED("Not authorized", HttpStatus.UNAUTHORIZED),

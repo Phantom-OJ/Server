@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.Assignment;
 import sustech.edu.phantom.dboj.form.Pagination;
 
@@ -15,26 +16,27 @@ public interface AssignmentMapper {
      * @param pagination 分页信息
      * @return 作业 list
      */
-    List<Assignment> queryAssignmentsWithoutFilter(Pagination pagination);
+    List<Assignment> queryAssignmentsWithoutFilter(Pagination pagination,boolean isAdmin);
 
-    Integer queryAssignmentsWithoutFilterCounter(Pagination pagination);
+    Integer queryAssignmentsWithoutFilterCounter(Pagination pagination, boolean isAdmin);
 
     /**
      * 返回分页的作业信息，过滤器为assignment title
+     *
      * @param pagination 分页信息
-     * @param name assignment title
+     * @param name       assignment title
      * @return list of assignment
      */
-    List<Assignment> queryAssignmentByName(Pagination pagination, String name);
+    List<Assignment> queryAssignmentByName(Pagination pagination, String name, boolean isAdmin);
 
-    Integer queryAssignmentByNameCounter(Pagination pagination, String name);
+    Integer queryAssignmentByNameCounter(Pagination pagination, String name, boolean isAdmin);
 
     /**
      * 返回所有的作业
      *
      * @return 作业 list
      */
-    List<Assignment> getAllAssignment();
+    List<Assignment> getAllAssignment(boolean isAdmin);
 
     /**
      * 返回一个assignment的信息
@@ -42,7 +44,8 @@ public interface AssignmentMapper {
      * @param aid assignment id
      * @return assignment对象
      */
-    Assignment getOneAssignment(int aid);
+    Assignment getOneAssignment(int aid, boolean isAdmin);
+
 
     /**
      * 使一个assignment失效
@@ -54,9 +57,21 @@ public interface AssignmentMapper {
 
     int saveAssignment(Assignment a);
 
-    int publishAssignment();
+    int publishAssignment(@Param("list") List<Integer> list);
 
-    int closeAssignment();
+    int closeAssignment(@Param("list") List<Integer> list);
 
-    List<Integer> get2BUpdatedId();
+    /**
+     * 找到要更新成public的题目
+     *
+     * @return assignment id list
+     */
+    List<Integer> get2BPublicId();
+
+    /**
+     * 找到要更新成closed的题目
+     *
+     * @return assignment id list
+     */
+    List<Integer> get2BClosedId();
 }

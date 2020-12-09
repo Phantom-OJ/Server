@@ -156,13 +156,16 @@ public class ProblemService {
                 }
             }
         }
-        setSolvedAndTags(problemList, isUser, userId);
+        setSolvedAndTags(problemList, isUser, userId,isAdmin);
         return EntityVO.<Problem>builder().entities(problemList).count(count).build();
     }
 
-    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId) {
+    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId, boolean isAdmin) {
         for (Problem p : problemList) {
             p.setTagList(tagMapper.getProblemTags(p.getId()));
+            if (!isAdmin) {
+                p.setSolution(null);
+            }
             if (isUser) {
                 List<ResultCnt> tmp = recordMapper.isSolvedByUser(userId, p.getId());
                 if (tmp.size() == 0) {

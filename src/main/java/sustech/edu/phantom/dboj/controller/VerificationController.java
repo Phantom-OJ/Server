@@ -20,6 +20,7 @@ import sustech.edu.phantom.dboj.form.modification.ModifyUsernameForm;
 import sustech.edu.phantom.dboj.service.EmailService;
 import sustech.edu.phantom.dboj.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +49,7 @@ public class VerificationController {
      * @return 是否成功信息
      */
     @RequestMapping(value = "/sendvcode", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> sendVCode(@RequestBody Map<String, Object> map){
+    public ResponseEntity<GlobalResponse<String>> sendVCode(@RequestBody Map<String, Object> map) {
         ResponseMsg res;
         String username = (String) map.get("username");
         int mode = (int) map.get("mode");
@@ -75,37 +76,59 @@ public class VerificationController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<Object>> signup(@RequestBody RegisterForm registerForm) throws Exception {
-        User user = userService.find(registerForm.getUsername());
-        ValueOperations<String, String> forValue = redisTemplate.opsForValue();
-        String validateCodeInRedis = forValue.get(registerForm.getUsername());
-        log.info(registerForm.toString());
-        if (user != null || !registerForm.getVerifyCode().equals(validateCodeInRedis)) {
-            return new ResponseEntity<>(GlobalResponse.builder().msg("Register Fails").build(), HttpStatus.BAD_REQUEST);
-        } else {
-            userService.register(registerForm);
-            return new ResponseEntity<>(GlobalResponse.builder().msg("Register success").build(), HttpStatus.OK);
+    public ResponseEntity<GlobalResponse<String>> signup(HttpServletRequest request, @RequestBody RegisterForm registerForm) {
+        ResponseMsg res;
+        try {
+            User user = userService.find(registerForm.getUsername());
+            ValueOperations<String, String> forValue = redisTemplate.opsForValue();
+            String validateCodeInRedis = forValue.get(registerForm.getUsername());
+            log.info(registerForm.toString());
+            if (user != null || !registerForm.getVerifyCode().equals(validateCodeInRedis)) {
+                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Register Fails").build(), HttpStatus.BAD_REQUEST);
+            } else {
+                userService.register(registerForm);
+                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Register success").build(), HttpStatus.OK);
+            }
+        } catch (RuntimeException e) {
+            log.error(e.getMessage() + " from the request of " + request.getRemoteAddr());
+            res = ResponseMsg.REGISTER_FAIL;
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            log.error("Some errors happen in the request of " + request.getRemoteAddr());
         }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
     @RequestMapping(value = "/rstpwd")
-    public ResponseEntity<GlobalResponse<String>> resetPassword(@RequestBody RstPwdForm form) {
-        GlobalResponse<String> g = GlobalResponse.<String>builder().build();
-        User user = userService.find(form.getUsername());
-        ValueOperations<String, String> forValue = redisTemplate.opsForValue();
-        String validateCodeInRedis = forValue.get(form.getUsername());
-        if (!form.getVCode().equals(validateCodeInRedis) || user != null) {
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Register Fails").build(), HttpStatus.BAD_REQUEST);
-        } else {
-            boolean a = userService.resetPassword(form);
-            if (a) {
-                g.setMsg("Modify successfully.");
-                return new ResponseEntity<>(g, HttpStatus.OK);
+    public ResponseEntity<GlobalResponse<String>> resetPassword(HttpServletRequest request, @RequestBody RstPwdForm form) {
+        ResponseMsg res;
+        try {
+            User user = userService.find(form.getUsername());
+            ValueOperations<String, String> forValue = redisTemplate.opsForValue();
+            String validateCodeInRedis = forValue.get(form.getUsername());
+
+            if (!form.getVCode().equals(validateCodeInRedis)) {
+                res = ResponseMsg.VERIFICATION_CODE_NOT_MATCHED;
+                log.error("Reset password: verification code not matched from " + request.getRemoteAddr());
             } else {
-                g.setMsg("Failure modification");
-                return new ResponseEntity<>(g, HttpStatus.BAD_REQUEST);
+                if (user == null) {
+                    res = ResponseMsg.USER_NOT_EXIST;
+                    log.error("User not exists from " + request.getRemoteAddr());
+                } else {
+                    if (userService.resetPassword(form)) {
+                        log.info("Modify password from " + request.getRemoteAddr());
+                        res = ResponseMsg.OK;
+                    } else {
+                        res = ResponseMsg.FAIL;
+                        log.error("Fail to modify password from " + request.getRemoteAddr());
+                    }
+                }
             }
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            log.error("Some errors happen in the request of " + request.getRemoteAddr());
         }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
 

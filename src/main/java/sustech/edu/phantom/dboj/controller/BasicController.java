@@ -125,7 +125,7 @@ public class BasicController {
         return new ResponseEntity<>(GlobalResponse.<EntityVO<Problem>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());
     }
 
-
+//TODO:Record记录这里可能要改，包括查询具体的record，管理员权限没有设置
     /**
      * 所有record记录
      * assignment, problem title, username/nickname
@@ -166,9 +166,21 @@ public class BasicController {
         ResponseMsg res;
         EntityVO<Assignment> entityVO = null;
         try {
-            entityVO = assignmentService.assignmentEntityVO(pagination);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            boolean isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
+            entityVO = assignmentService.assignmentEntityVO(pagination, isAdmin);
             res = ResponseMsg.OK;
             log.info("Successfully view all the assignment");
+        } catch (ClassCastException e) {
+            log.info("Visiting assignments from the request " + request.getRemoteAddr());
+            try {
+                entityVO = assignmentService.assignmentEntityVO(pagination, false);
+                res = ResponseMsg.OK;
+                log.info("Successfully view all the assignment");
+            } catch (Exception e1) {
+                log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
+                res = ResponseMsg.NOT_FOUND;
+            }
         } catch (Exception e) {
             log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
             res = ResponseMsg.NOT_FOUND;

@@ -116,6 +116,7 @@ public class QueryController {
      * 得到具体的assignment<br></br>
      * 包含problem, tags<br></br>
      * 如果有登录用户, 则显示是否AC
+     *
      * @param id assignment id
      * @return assignment的对象
      */
@@ -127,7 +128,8 @@ public class QueryController {
         try {
             idx = Integer.parseInt(id);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Assignment a = assignmentService.getOneAssignment(idx, true, user.getId());
+            boolean isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
+            Assignment a = assignmentService.getOneAssignment(idx, true, user.getId(), isAdmin);
             if (a == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
@@ -140,7 +142,7 @@ public class QueryController {
         } catch (ClassCastException e) {
             idx = Integer.parseInt(id);
             try {
-                Assignment a = assignmentService.getOneAssignment(idx, false, 0);
+                Assignment a = assignmentService.getOneAssignment(idx, false, 0, false);
                 if (a == null) {
                     res = ResponseMsg.NOT_FOUND;
                 } else {
