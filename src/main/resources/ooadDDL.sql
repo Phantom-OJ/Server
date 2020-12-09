@@ -60,27 +60,31 @@ create table if not exists problem
     solution            text    not null,
     valid               boolean          default true not null,
     status              varchar          default 'private'::character varying not null,
-    type                varchar(45)
+    type                varchar(45),
+    judge_script_id     int
 );
 create table if not exists "judge_database"
 (
     id           serial primary key,
-    keyword      text not null,
-    database_url text not null default 'jdbc:postgresql://localhost:5432/postgres',
-    valid        bool not null default true,
+    keyword      text     not null,
+    database_url text     not null default '{"host":"localhost","start_port":12000,"end_port":12010,"image_id":12345}',
+    valid        bool     not null default true,
+    dialect      char(10) not null default 'pgsql',
     unique (keyword)
 );
 create table if not exists "judge_point"
 (
     id                serial primary key,
-    problem_id        int  not null,
+    problem_id        int      not null,
     before_sql        text,
     after_sql         text,
-    judge_script_id   int  not null,
-    answer            text not null,
-    judge_database_id int  not null,
-    valid             bool not null default true
+    answer            text     not null,
+    judge_database_id int      not null,
+    valid             bool     not null default true,
+    dialect           char(10) not null default 'pgsql',
+    judge_script_id     int
 );
+
 create table if not exists "permission"
 (
     id        serial primary key,
@@ -121,10 +125,11 @@ create table if not exists "code"
 (
     id          serial primary key,
     code        text,
-    code_length int    not null,
-    submit_time bigint not null default floor(
+    code_length int      not null,
+    submit_time bigint   not null default floor(
             extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))),
-    valid       bool   not null default true
+    valid       bool     not null default true,
+    dialect     char(10) not null default 'pgsql'
 );
 create table if not exists "tag"
 (
