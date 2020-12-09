@@ -31,6 +31,7 @@ VALUES ('ROLE_SA', 'view all submissions'),
        ('ROLE_SA', 'view all assignments'),
        ('ROLE_SA', 'view all codes'),
 
+
        ('ROLE_TEACHER', 'view all submissions'),
        ('ROLE_TEACHER', 'provide the solution'),
        ('ROLE_TEACHER', 'publish the announcement'),
@@ -158,4 +159,16 @@ In my solution, I consider `Mb` as `10**6 bits`.
 
 And in my solution, `0.5RTT` means in the final transmission, I just send the file, regardless of the return message from the receiver.  ',
         1605546219888, 1605546251315, 'Running', 100, '/home/adoj/a1/s1.sql', true);
+
+insert into public.assignment (id, title, description, start_time, end_time, full_score, sample_database_path)
+VALUES (2, 'title2', 'description2', 1, 2, 100, '/home/adoj/a1/s2.sql');
+
+insert into public.problem(id, assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
+                           number_solve, index_in_assignment, solution, type)
+VALUES (8, 2, 'p2.1', 'd2.1', 20, 256, 3000, 0, 0, 1, 'no solution', 'select'),
+       (9, 2, 'p2.2', 'd2.2', 20, 256, 3000, 0, 0, 2, 'no solution', 'select'),
+       (10, 2, 'p2.3', 'd2.3', 20, 256, 3000, 0, 0, 3, 'no solution', 'select'),
+       (11, 2, 'p2.4', 'd2.4', 20, 256, 3000, 0, 0, 4, 'no solution', 'select'),
+       (12, 2, 'p2.5', 'd2.5', 20, 256, 3000, 0, 0, 5, 'no solution', 'select');
+
 commit;

@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
+import sustech.edu.phantom.dboj.entity.vo.UserGrade;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.StatService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author Shilong Li (Lori)
@@ -96,4 +98,28 @@ public class StatController {
         return new ResponseEntity<>(GlobalResponse.<ProblemStatSet>builder().msg(res.getMsg()).data(p).build(), res.getStatus());
     }
 
+    @ApiOperation("获取用户得分")
+    @RequestMapping(value = "/user/{id}/grade", method = RequestMethod.GET)
+//    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<List<UserGrade>>> getUserGrade(
+            HttpServletRequest request,
+            @PathVariable
+            @ApiParam(name = "用户id", required = true, type = "int") String id) {
+//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int idx;
+        ResponseMsg res;
+        List<UserGrade> userGrades = null;
+        try {
+            idx = Integer.parseInt(id);
+            userGrades = statService.getUserGrade(idx);
+            res = ResponseMsg.OK;
+        } catch (NumberFormatException e) {
+            res = ResponseMsg.BAD_REQUEST;
+            log.error("Wrong URL from request " + request.getRemoteAddr());
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            log.error("Some errors happens in the internal server to the request " + request.getRemoteAddr());
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<UserGrade>>builder().msg(res.getMsg()).data(userGrades).build(), res.getStatus());
+    }
 }

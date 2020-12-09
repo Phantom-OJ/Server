@@ -13,6 +13,7 @@ public enum PermissionEnum {
     VIEW_GROUPS("view all groups"),
     VIEW_ASSIGNMENTS("view all assignments"),
     VIEW_CODES("view all codes"),
+    CHECK_GRADES("check grades"),
     //teacher
     CREATE_GROUPS("create groups"),
     CREATE_ASSIGNMENT("create assignment"),//这里包含了创建问题, 判题点, 判题数据库, 判题脚本, 示例数据库

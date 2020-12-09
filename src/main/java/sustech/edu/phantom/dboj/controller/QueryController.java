@@ -96,13 +96,16 @@ public class QueryController {
         int idx;
         try {
             idx = Integer.parseInt(id);
+            log.debug("请求的user id是" + id);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            log.debug("user的id是" + id);
             if (idx == user.getId() || user.containPermission(PermissionEnum.GRANT)) {
                 data = user;
                 res = ResponseMsg.OK;
             } else {
                 log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());
                 data = userService.find(idx, false);
+                log.debug("这里的user是" + data);
                 if (data == null) {
                     log.error("Not exist user " + id + " from the request of " + request.getRemoteAddr());
                     res = ResponseMsg.NOT_FOUND;

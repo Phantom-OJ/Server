@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sustech.edu.phantom.dboj.entity.vo.UserGrade;
 import sustech.edu.phantom.dboj.form.stat.ProblemStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
+import sustech.edu.phantom.dboj.mapper.GradeMapper;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 
 import java.util.List;
@@ -22,10 +24,13 @@ public class StatService {
     @Autowired
     RecordMapper recordMapper;
 
+    @Autowired
+    GradeMapper gradeMapper;
+
 
     /**
      * @param id problem id
-     * @return
+     * @return 问题结果集合
      */
     public ProblemStatSet getOneProblemStat(int id) {
         List<ProblemStat> reSet = null;
@@ -43,6 +48,11 @@ public class StatService {
                 .build();
     }
 
+    /**
+     * 获取一个用户的所有提交记录
+     * @param id 用户 id
+     * @return 结果数据集
+     */
     public ProblemStatSet getOneUserStat(int id) {
         List<ProblemStat> reSet = null;
         List<ProblemStat> diSet = null;
@@ -59,4 +69,7 @@ public class StatService {
                 .build();
     }
 
+    public List<UserGrade> getUserGrade(int uid) {
+        return gradeMapper.getUserGrade(uid);
+    }
 }

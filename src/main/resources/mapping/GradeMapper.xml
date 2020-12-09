@@ -8,9 +8,17 @@
           and user_id = #{userId}
           and problem_id = #{problemId};
     </select>
+    <select id="getUserGrade" resultType="sustech.edu.phantom.dboj.entity.vo.UserGrade">
+        select id, title, case when grade is null then 0 else grade end as score, full_score
+        from (
+                 select distinct a.id, a.title, sum(g.score) over (partition by a.id) as grade, a.full_score
+                 from assignment a
+                          join problem p on a.id = p.assignment_id and a.valid and p.valid
+                          left join grade g on p.id = g.problem_id and g.user_id = #{uid} and g.valid) as apg;
+    </select>
     <update id="updateOneGrade">
         update "grade"
-        set score=#{score}
+        set score = #{score}
         where user_id = #{userId}
           and problem_id = #{problemId};
     </update>
