@@ -98,7 +98,7 @@ public class AssignmentService {
         Integer count = 0;
         if ("".equals(idString.trim()) && "".equals(name.trim())) {
             assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination, isAdmin);
-            count = assignmentMapper.queryAssignmentsWithoutFilterCounter(pagination, isAdmin);
+            count = assignmentMapper.queryAssignmentsWithoutFilterCounter(isAdmin);
         } else {
             try {
                 int id = Integer.parseInt(idString.trim());
@@ -109,7 +109,7 @@ public class AssignmentService {
                 }
             } catch (NumberFormatException e) {
                 assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
-                count = assignmentMapper.queryAssignmentByNameCounter(pagination, name.trim(), isAdmin);
+                count = assignmentMapper.queryAssignmentByNameCounter(name.trim(), isAdmin);
             }
         }
         for (Assignment a : assignmentList) {

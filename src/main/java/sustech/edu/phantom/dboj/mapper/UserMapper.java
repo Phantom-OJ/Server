@@ -66,7 +66,7 @@ public interface UserMapper {
 
     String getState(int id);
 
-    int addGroup();
+    List<User> findUserByGroup(@Param("list") List<Integer> list);
 
     int uploadAvatar(String filePath, int uid);
 

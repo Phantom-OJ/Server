@@ -79,6 +79,13 @@
         from "user"
         where id = #{id};
     </select>
+    <select id="findUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        select * from "user_group" where group_id in (
+            <foreach collection="list" item="l" separator="," index="index" close="">
+                #{l}
+            </foreach>
+            )
+    </select>
     <update id="uploadAvatar">
         update "user"
         set avatar = #{filePath}

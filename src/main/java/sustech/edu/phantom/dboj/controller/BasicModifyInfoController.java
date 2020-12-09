@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,15 +60,22 @@ public class BasicModifyInfoController {
             if (!flag) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
             } else {
-                SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
-                Authentication authentication = securityContextImpl.getAuthentication();
+
+//                SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
+//                log.info("securitycontext impl is " + securityContextImpl.toString());
+//                Authentication authentication = securityContextImpl.getAuthentication();
+//                log.info("authentication is" + authentication.toString());
+
+//                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
+//                auth.setDetails(authentication.getDetails());
+//                log.info("authentication details are " + authentication.getDetails().toString());
+//                log.info("cookie is " + Arrays.toString(request.getCookies()));
+//                securityContextImpl.setAuthentication(auth);
+//                User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//                log.info(user1.toString());
                 user.modifyInfo(form);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
-                auth.setDetails(authentication.getDetails());
-                securityContextImpl.setAuthentication(auth);
-                User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                log.info(user1.toString());
                 res = ResponseMsg.OK;
+                log.info("Modification of user " + user.getUsername() + " from " + request.getRemoteAddr() + " successfully");
             }
         } catch (Exception e) {
             log.error("Some errors happen in the internal server.");

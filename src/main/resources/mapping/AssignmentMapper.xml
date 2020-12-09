@@ -25,8 +25,7 @@
         where valid
         <if test="!flag">
             and (status = 'public' or status = 'closed')
-        </if>
-        offset #{param1.offset} limit #{param1.limit};
+        </if>;
     </select>
     <select id="queryAssignmentByName" resultType="sustech.edu.phantom.dboj.entity.po.Assignment">
         select id,
@@ -53,8 +52,7 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and title like '%' || #{name} || '%'
-        offset #{param1.offset} limit #{param1.limit};
+        and title like '%' || #{name} || '%';
     </select>
     <select id="getAllAssignment" resultType="sustech.edu.phantom.dboj.entity.po.Assignment">
         select id,
@@ -85,7 +83,7 @@
         full_score,
         sample_database_path
         from "assignment"
-        where id = #{id}
+        where id = #{aid}
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>

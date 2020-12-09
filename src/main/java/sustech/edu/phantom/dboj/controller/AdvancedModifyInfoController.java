@@ -29,7 +29,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@Api(tags = {"<admin> Advanced info modification"})
+@Api(tags = {"<admin>高级修改信息"})
 @RequestMapping(value = "/api/v1/modify/")
 @PreAuthorize("hasRole('ROLE_STUDENT')")
 public class AdvancedModifyInfoController {

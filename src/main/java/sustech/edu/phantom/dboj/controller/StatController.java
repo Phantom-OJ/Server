@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -100,6 +101,7 @@ public class StatController {
 
     @ApiOperation("获取用户得分")
     @RequestMapping(value = "/user/{id}/grade", method = RequestMethod.GET)
+    //TODO:要根据group来分, 这里差
 //    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<List<UserGrade>>> getUserGrade(
             HttpServletRequest request,
@@ -121,5 +123,13 @@ public class StatController {
             log.error("Some errors happens in the internal server to the request " + request.getRemoteAddr());
         }
         return new ResponseEntity<>(GlobalResponse.<List<UserGrade>>builder().msg(res.getMsg()).data(userGrades).build(), res.getStatus());
+    }
+
+    @ApiOperation("作业的数据")
+    @RequestMapping(value = "/assignment/{id}/statistics", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<Object>> getAssignmentStat(HttpServletRequest request, @PathVariable String id) {
+        ResponseMsg res;
+        return null;
     }
 }
