@@ -52,6 +52,20 @@ values ('group1'),
        ('group4'),
        ('group5'),
        ('group6');
+insert into user_group (user_id, group_id)
+VALUES (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 1),
+       (1, 2),
+       (1, 3),
+       (1, 4);
+
+insert into assignment_group (assignment_id, group_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (1, 4);
 
 -- SELECT setval('problem_id_seq',0,true) FROM public.problem;
 INSERT INTO public.judge_point (id, problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id,
