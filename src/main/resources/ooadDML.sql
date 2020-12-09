@@ -24,26 +24,26 @@ Refer https://support.typora.io/About-Themes/ if you want to create / install ne
        ('announcement2', 'This is the basic formula for fibonacci $f(n)=f(n-1)+f(n-2)$');
 -- 以下是权限表
 insert into "permission" (role, allowance)
-VALUES
-       ('ROLE_SA', 'view all submissions'),
+VALUES ('ROLE_SA', 'view all submissions'),
        ('ROLE_SA', 'provide the solution'),
        ('ROLE_SA', 'publish the announcement'),
        ('ROLE_SA', 'view all groups'),
        ('ROLE_SA', 'view all assignments'),
-
+       ('ROLE_SA', 'view all codes'),
 
        ('ROLE_TEACHER', 'view all submissions'),
        ('ROLE_TEACHER', 'provide the solution'),
        ('ROLE_TEACHER', 'publish the announcement'),
        ('ROLE_TEACHER', 'view all groups'),
        ('ROLE_TEACHER', 'view all assignments'),
+       ('ROLE_TEACHER', 'view all codes'),
        ('ROLE_TEACHER', 'create groups'),
        ('ROLE_TEACHER', 'create assignment'),
        ('ROLE_TEACHER', 'modify assignment'),
        ('ROLE_TEACHER', 'view judge details'),
        ('ROLE_TEACHER', 'grant other users'),
        ('ROLE_TEACHER', 'view all permissions')
-       ;
+;
 insert into "group" (description)
 values ('group1'),
        ('group2'),
@@ -90,13 +90,13 @@ INSERT INTO people VALUES (''130631190002140071'',''张三'');INSERT INTO people
 "320206199809230041|杨过|江苏省,无锡市,惠山区|19980923"
 "320206299907051985|杨逍|江苏省,无锡市,惠山区|29990705"
 "421122321011121976|韦一笑|湖北省,黄冈市,红安县|32101112"', 2, true);
-INSERT INTO public.judge_database (id, database_url, valid,keyword)
+INSERT INTO public.judge_database (id, database_url, valid, keyword)
 VALUES (1, 'jdbc:postgresql://47.102.221.90:12002/postgres?allowMultiQueries=true&currentSchema=public&reWriteBatchedInserts=true
-', true,'k1');
-INSERT INTO public.judge_database (id, database_url, valid,keyword)
+', true, 'k1');
+INSERT INTO public.judge_database (id, database_url, valid, keyword)
 VALUES (2,
         'jdbc:postgresql://47.102.221.90:12002/postgres?allowMultiQueries=true&currentSchema=trigger_db&reWriteBatchedInserts=true',
-        true,'k2');
+        true, 'k2');
 INSERT INTO public.problem (id, assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                             number_solve, index_in_assignment, solution, valid, status, type)
 VALUES (1, 1, 'select_test', 'select_test_description', 100, 46, 10000, 14, 5, 1, 'no solution', true, 'public',

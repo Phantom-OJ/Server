@@ -43,15 +43,18 @@ public class BasicModifyInfoController {
     /**
      * 修改个人信息
      * 修改nickname, state save 和  language
-     * @param form 修改信息的表单
+     *
+     * @param form    修改信息的表单
      * @param request http request
      * @return 修改过后的个人信息
      */
     @ApiOperation("修改个人信息")
-    @RequestMapping(value = "/basic",method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<User>> user(@RequestBody @ApiParam(name = "修改个人信息的表单", value = "json", required = true)
-                                                                 UserForm form,
-                                                     HttpServletRequest request){
+    @RequestMapping(value = "/basic", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<User>> user(
+            @RequestBody
+            @ApiParam(name = "修改个人信息的表单", value = "json", required = true)
+                    UserForm form,
+            HttpServletRequest request) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info(user.toString());
         ResponseMsg res;
@@ -79,14 +82,15 @@ public class BasicModifyInfoController {
 
     /**
      * 更改密码
+     *
      * @param form 修改密码的表单
      * @return 成功与否的信息
      */
     @ApiOperation("修改密码")
     @RequestMapping(value = "/password", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody
-                                                                     @ApiParam(name = "修改密码的表单", value = "json", required = true)
-                                                                             ModifyPasswdForm form) {
+                                                                 @ApiParam(name = "修改密码的表单", value = "json", required = true)
+                                                                         ModifyPasswdForm form) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Object[] a = basicInfoModificationService.modifyPassword(form, user.getUsername());
         return new ResponseEntity<>(

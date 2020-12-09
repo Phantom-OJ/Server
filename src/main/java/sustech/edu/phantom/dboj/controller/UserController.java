@@ -137,9 +137,14 @@ public class UserController {
      * @param id code id
      * @return Code对象
      */
+    @ApiOperation("对具体的code进行查询")
     @RequestMapping(value = "/code/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<Code>> getOneCode(@PathVariable String id) {
+    public ResponseEntity<GlobalResponse<Code>> getOneCode(
+            HttpServletRequest request,
+            @PathVariable
+            @ApiParam(name = "代码id", required = true)
+                    String id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int idx;
         ResponseMsg res;
@@ -150,14 +155,16 @@ public class UserController {
             if (c == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
-                if (!user.getId().equals(recordService.getUserIdByCodeId(idx))) {
-                    res = ResponseMsg.FORBIDDEN;
-                } else {
+                if (user.getId().equals(recordService.getUserIdByCodeId(idx))
+                        && user.containPermission(PermissionEnum.VIEW_CODES)) {
                     code = c;
                     res = ResponseMsg.OK;
+                } else {
+                    res = ResponseMsg.FORBIDDEN;
                 }
             }
         } catch (NumberFormatException e) {
+            log.error("Errors in request URL from " + request.getRemoteAddr());
             res = ResponseMsg.BAD_REQUEST;
         } catch (Exception e) {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
