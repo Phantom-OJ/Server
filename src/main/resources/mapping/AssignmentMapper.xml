@@ -13,20 +13,20 @@
         sample_database_path
         from "assignment"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         order by start_time desc
-        offset #{offset} limit #{limit};
+        offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="queryAssignmentsWithoutFilterCounter" resultType="java.lang.Integer">
         select count(*)
         from "assignment"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        offset #{offset} limit #{limit};
+        offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="queryAssignmentByName" resultType="sustech.edu.phantom.dboj.entity.po.Assignment">
         select id,
@@ -39,7 +39,7 @@
         sample_database_path
         from "assignment"
         where valid
-        <if test="param3==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and title like '%' || #{name} || '%'
@@ -50,7 +50,7 @@
         select count(*)
         from "assignment"
         where valid
-        <if test="param3==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and title like '%' || #{name} || '%'
@@ -67,7 +67,7 @@
         sample_database_path
         from "assignment"
         where valid
-        <if test="param1==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>;
     </select>
@@ -86,7 +86,7 @@
         sample_database_path
         from "assignment"
         where id = #{id}
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and valid;

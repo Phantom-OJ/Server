@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 @RequestMapping(value = "/api")
 @Slf4j
 @Api(tags = "File uploading functions")
+@PreAuthorize("hasRole('ROLE_STUDENT')")
 public class FileController {
 
     @Value("${filerootpath.windows}")
@@ -48,8 +50,8 @@ public class FileController {
     @Autowired
     UploadService uploadService;
 
+    @ApiOperation("上传头像")
     @RequestMapping(value = "/upload/avatar", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> uploadAvatar(HttpServletRequest request) {
         String resPath = getResourcesPath(null, true);
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
@@ -101,8 +103,10 @@ public class FileController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
 
+    @ApiOperation("上传判题数据库")
     @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request) {
+        //TODO:判断是不是管理员
         String resPath = getResourcesPath("judge_database", false);
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = params.getFiles("file");
@@ -170,6 +174,7 @@ public class FileController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
 
+    @ApiOperation("上传判题脚本")
     @RequestMapping(value = "/upload/judgescript", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request) {
         String resPath = getResourcesPath("judge_script", false);

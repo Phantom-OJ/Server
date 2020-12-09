@@ -21,11 +21,11 @@
         solution
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         order by id
-        offset #{offset} limit #{limit};
+        offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="queryCurrentProblem" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
@@ -42,7 +42,7 @@
         type
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and id = #{id};
@@ -71,7 +71,7 @@
                solution
         from "problem"
         where assignment_id = #{id}
-          and status = 'public'
+          and (status = 'public' or status = 'closed')
         order by index_in_assignment;
     </select>
     <select id="oneTagProblems" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
@@ -93,7 +93,7 @@
             from "problem_tag"
             where valid
               and tag_id = #{id})
-          and status = 'public';
+          and (status = 'public' or status = 'closed');
     </select>
     <update id="updateProblemInfo">
         update "problem"
@@ -135,7 +135,7 @@
         solution
         from "problem"
         where valid
-        and status = 'public'
+        and (status = 'public' or status = 'closed')
         and id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
@@ -146,7 +146,7 @@
         select count(*) over ()
         from "problem"
         where valid
-        and status = 'public'
+        and (status = 'public' or status = 'closed')
         and id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
@@ -167,7 +167,7 @@
         solution
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
@@ -181,7 +181,7 @@
         select count(*)
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
@@ -205,7 +205,7 @@
         solution
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and title like '%' || #{title} || '%'
@@ -216,7 +216,7 @@
         select count(*)
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
         and title like '%' || #{title} || '%'
@@ -226,10 +226,10 @@
         select count(*)
         from "problem"
         where valid
-        <if test="param2==false">
+        <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        offset #{offset} limit #{limit};
+        offset #{param1.offset} limit #{param1.limit};
     </select>
 
 </mapper>

@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@Api(tags = "<admin> Advanced info modification")
+@Api(tags = {"<admin> Advanced info modification"})
 @RequestMapping(value = "/api/v1/modify/")
 @PreAuthorize("hasRole('ROLE_STUDENT')")
 public class AdvancedModifyInfoController {
@@ -37,10 +38,11 @@ public class AdvancedModifyInfoController {
     AdvancedInfoModificationService advancedInfoModificationService;
 
     /**
-     * 返回对应身份的权限信息
+     * 管理员在添加修改权限的时候获取权限信息
      *
-     * @return
+     * @return 权限信息
      */
+    @ApiOperation("获取权限信息")
     @RequestMapping(value = "/permission", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<List<Permission>>> getPermission() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -56,6 +58,7 @@ public class AdvancedModifyInfoController {
         return new ResponseEntity<>(GlobalResponse.<List<Permission>>builder().msg(res.getMsg()).data(permissionList).build(), res.getStatus());
     }
 
+    @ApiOperation("修改权限信息")
     @RequestMapping(value = "/permission", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> modifyPermission(HttpServletRequest request) {
 
@@ -66,9 +69,10 @@ public class AdvancedModifyInfoController {
      * 修改用户权限信息<br></br>
      * 管理员才有权限
      *
-     * @param hm
-     * @return
+     * @param hm {"ROLE_xxx":[1,2,3],"ROLE_XXX":[4,5,6]}
+     * @return 是否成功信息
      */
+    @ApiOperation("修改用户的角色")
     @RequestMapping(value = "/grant", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> grantOthers(HttpServletRequest request, @RequestBody Map<String, List<Integer>> hm) {
         ResponseMsg res;
@@ -88,7 +92,7 @@ public class AdvancedModifyInfoController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
-    //对题目进行修改
+    @ApiOperation("修改题目")
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> modifyProblem(@PathVariable String id, @RequestBody Problem p) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -114,6 +118,7 @@ public class AdvancedModifyInfoController {
     }
 
     //对作业进行修改
+    @ApiOperation("修改作业")
     @RequestMapping(value = "/assignment/{id}", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> modifyAssign(@PathVariable String id, @RequestBody Assignment a) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -138,6 +143,7 @@ public class AdvancedModifyInfoController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
+    @ApiOperation("修改公告")
     @RequestMapping(value = "/announcement", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> modifyAnnouncement() {
         ResponseMsg res;

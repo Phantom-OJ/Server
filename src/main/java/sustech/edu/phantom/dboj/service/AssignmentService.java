@@ -60,35 +60,35 @@ public class AssignmentService {
         return a;
     }
 
-    /**
-     * @param pagination 分页信息
-     * @return list of assignments
-     */
-    public List<Assignment> getAssignmentList(Pagination pagination,boolean isAdmin) {
-        pagination.setParameters();
+//    /**
+//     * @param pagination 分页信息
+//     * @return list of assignments
+//     */
+//    public List<Assignment> getAssignmentList(Pagination pagination, boolean isAdmin) {
+//        pagination.setParameters();
+//
+//        List<Assignment> assignmentList = new ArrayList<>();
+//        HashMap<String, Object> hm = pagination.getFilter();
+//        String idString = (String) hm.get(ID);
+//        String name = (String) hm.get(NAME);
+//        if ("".equals(idString.trim()) && "".equals(name.trim())) {
+//            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination, isAdmin);
+//        } else {
+//            try {
+//                int id = Integer.parseInt(idString.trim());
+//                // 如果有id直接返回assignmentid=id的作业
+//                assignmentList.add(assignmentMapper.getOneAssignment(id, isAdmin));
+//            } catch (NumberFormatException e) {
+//                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
+//            }
+//        }
+//        for (Assignment a : assignmentList) {
+//            a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
+//        }
+//        return assignmentList;
+//    }
 
-        List<Assignment> assignmentList = new ArrayList<>();
-        HashMap<String, Object> hm = pagination.getFilter();
-        String idString = (String) hm.get(ID);
-        String name = (String) hm.get(NAME);
-        if ("".equals(idString.trim()) && "".equals(name.trim())) {
-            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination,isAdmin);
-        } else {
-            try {
-                int id = Integer.parseInt(idString.trim());
-                // 如果有id直接返回assignmentid=id的作业
-                assignmentList.add(assignmentMapper.getOneAssignment(id,isAdmin));
-            } catch (NumberFormatException e) {
-                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
-            }
-        }
-        for (Assignment a : assignmentList) {
-            a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
-        }
-        return assignmentList;
-    }
-
-    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination,boolean isAdmin) {
+    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination, boolean isAdmin) {
         pagination.setParameters();
         List<Assignment> assignmentList = new ArrayList<>();
         HashMap<String, Object> hm = pagination.getFilter();
@@ -96,7 +96,7 @@ public class AssignmentService {
         String name = (String) hm.get(NAME);
         Integer count = 0;
         if ("".equals(idString.trim()) && "".equals(name.trim())) {
-            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination,isAdmin);
+            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination, isAdmin);
             count = assignmentMapper.queryAssignmentsWithoutFilterCounter(pagination, isAdmin);
         } else {
             try {
@@ -121,7 +121,7 @@ public class AssignmentService {
     private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId, boolean isAdmin) {
         for (Problem p : problemList) {
             p.setTagList(tagMapper.getProblemTags(p.getId()));
-            if (!isAdmin){
+            if (!isAdmin) {
                 p.setSolution(null);
             }
             if (isUser) {

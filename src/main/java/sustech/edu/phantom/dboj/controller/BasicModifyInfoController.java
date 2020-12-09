@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api/modify")
 @Slf4j
-@Api(tags = "Basic info modification")
+@Api(tags = {"Basic info modification"})
+@PreAuthorize("hasRole('ROLE_STUDENT')")
 public class BasicModifyInfoController {
 
     @Autowired
@@ -43,9 +46,11 @@ public class BasicModifyInfoController {
      * @param request http request
      * @return 修改过后的个人信息
      */
+    @ApiOperation("修改个人信息")
     @RequestMapping(value = "/basic",method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<User>> user(@RequestBody UserForm form, HttpServletRequest request){
+    public ResponseEntity<GlobalResponse<User>> user(@RequestBody @ApiParam(name = "修改个人信息的表单", value = "json", required = true)
+                                                                 UserForm form,
+                                                     HttpServletRequest request){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info(user.toString());
         ResponseMsg res;
@@ -71,12 +76,18 @@ public class BasicModifyInfoController {
         return new ResponseEntity<>(GlobalResponse.<User>builder().msg(res.getMsg()).data(user).build(), res.getStatus());
     }
 
+    /**
+     * 更改密码
+     * @param form 修改密码的表单
+     * @return 成功与否的信息
+     */
+    @ApiOperation("修改密码")
     @RequestMapping(value = "/password", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody ModifyPasswdForm form) {
+    public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody
+                                                                     @ApiParam(name = "修改密码的表单", value = "json", required = true)
+                                                                             ModifyPasswdForm form) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Object[] a = basicInfoModificationService.modifyPassword(form, user.getUsername());
-        //TODO: 更新现有user, 如果返回200则要强制退出
         return new ResponseEntity<>(
                 GlobalResponse
                         .<String>builder()

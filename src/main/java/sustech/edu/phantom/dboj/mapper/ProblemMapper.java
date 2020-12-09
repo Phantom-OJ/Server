@@ -14,16 +14,16 @@ public interface ProblemMapper {
      * @param isAdmin    是否是管理员
      * @return problem list
      */
-    List<Problem> queryProblemWithoutFilter(Pagination pagination, boolean isAdmin);
+    List<Problem> queryProblemWithoutFilter(Pagination pagination, @Param("flag") boolean isAdmin);
 
     /**
      * @param pagination
      * @return
      */
-    Integer queryProblemWithoutFilterCounter(Pagination pagination, boolean isAdmin);
+    Integer queryProblemWithoutFilterCounter(Pagination pagination, @Param("flag") boolean isAdmin);
 
 
-    Problem queryCurrentProblem(int id, boolean isAdmin);
+    Problem queryCurrentProblem(int id, @Param("flag") boolean isAdmin);
 
     /**
      * @param id
@@ -44,11 +44,10 @@ public interface ProblemMapper {
     List<Problem> oneAssignmentProblems(int id);
 
     /**
-     * @param pagination 分页过滤信息
      * @param id         tag id
      * @return list of problems
      */
-    List<Problem> oneTagProblems(Pagination pagination, int id);
+    List<Problem> oneTagProblems(int id);
 
     /**
      * 对提交的问题进行更新，提交次数和通过次数
@@ -77,10 +76,10 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title, boolean isAdmin);
+    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag") boolean isAdmin);
 
 
-    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title, boolean isAdmin);
+    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag") boolean isAdmin);
 
 
     /**
@@ -90,14 +89,15 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByName(Pagination pagination, String title, boolean isAdmin);
+    List<Problem> queryProblemsByName(Pagination pagination, String title, @Param("flag") boolean isAdmin);
 
-    Integer queryProblemsByNameCounter(Pagination pagination, String title, boolean isAdmin);
+    Integer queryProblemsByNameCounter(Pagination pagination, String title, @Param("flag") boolean isAdmin);
 
     Integer saveProblem(Problem p);
 
     /**
      * 更新problem的状态公开可见
+     *
      * @param list list of assignment id
      * @return 更新的行数
      */
@@ -105,6 +105,7 @@ public interface ProblemMapper {
 
     /**
      * 更新problem的状态关闭
+     *
      * @param list list of assignment id
      * @return 更新的行数
      */

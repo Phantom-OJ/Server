@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,9 +31,9 @@ public class BeaconController {
 
     /**
      * 退出浏览器时发送当前状态
-     *
      * @param request http request 请求
      */
+    @ApiOperation("退出浏览器时发送当前状态")
     @RequestMapping(value = "/beacon", method = RequestMethod.POST)
     public void beacon(HttpServletRequest request) {
         try {

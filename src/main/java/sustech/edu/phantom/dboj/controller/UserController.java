@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +60,11 @@ public class UserController {
      * @param id problem id
      * @return 查询的problem的对象
      */
+    @ApiOperation("获取具体问题")
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Problem>> getOneProblem(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<Problem>> getOneProblem(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "问题id", required = true, type = "int") String id) {
         User user;
         Problem p = null;
         ResponseMsg res;
@@ -108,6 +113,7 @@ public class UserController {
      * @return 这份代码提交的record, 还未实现
      */
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
+    @ApiOperation("提交代码")
     public Boolean submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
         //这个方法要用到消息队列
 
@@ -124,7 +130,7 @@ public class UserController {
     /**
      * 针对某个code id 进行详细查询
      * 最低需要student 的权限
-     * 是否是该student的代码在方法中实现
+     * 是否是该student的代码在方法中实现//TODO:老师权限
      *
      * @param id code id
      * @return Code对象

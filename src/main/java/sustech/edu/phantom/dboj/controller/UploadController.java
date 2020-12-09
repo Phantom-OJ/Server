@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping(value = "/api")
-@Api(tags = "upload functions, may be discarded in the future")
+@Api(tags = {"upload functions, may be discarded in the future"})
 //TODO: sampledb judgedb script avatar 图片链接
 public class UploadController {
 
@@ -41,8 +42,9 @@ public class UploadController {
      * 上传公告
      *
      * @param form 公告表单
-     * @return
+     * @return 成功与否信息
      */
+    @ApiOperation("上传公告")
     @RequestMapping(value = "/upload/announcement", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadAnnouncement(@RequestBody UploadAnnouncementForm form) {
         try {

@@ -16,9 +16,9 @@ public interface AssignmentMapper {
      * @param pagination 分页信息
      * @return 作业 list
      */
-    List<Assignment> queryAssignmentsWithoutFilter(Pagination pagination,boolean isAdmin);
+    List<Assignment> queryAssignmentsWithoutFilter(Pagination pagination,@Param("flag") boolean isAdmin);
 
-    Integer queryAssignmentsWithoutFilterCounter(Pagination pagination, boolean isAdmin);
+    Integer queryAssignmentsWithoutFilterCounter(Pagination pagination,@Param("flag") boolean isAdmin);
 
     /**
      * 返回分页的作业信息，过滤器为assignment title
@@ -27,16 +27,16 @@ public interface AssignmentMapper {
      * @param name       assignment title
      * @return list of assignment
      */
-    List<Assignment> queryAssignmentByName(Pagination pagination, String name, boolean isAdmin);
+    List<Assignment> queryAssignmentByName(Pagination pagination, String name, @Param("flag")boolean isAdmin);
 
-    Integer queryAssignmentByNameCounter(Pagination pagination, String name, boolean isAdmin);
+    Integer queryAssignmentByNameCounter(Pagination pagination, String name, @Param("flag") boolean isAdmin);
 
     /**
      * 返回所有的作业
      *
      * @return 作业 list
      */
-    List<Assignment> getAllAssignment(boolean isAdmin);
+    List<Assignment> getAllAssignment(@Param("flag") boolean isAdmin);
 
     /**
      * 返回一个assignment的信息
@@ -44,7 +44,7 @@ public interface AssignmentMapper {
      * @param aid assignment id
      * @return assignment对象
      */
-    Assignment getOneAssignment(int aid, boolean isAdmin);
+    Assignment getOneAssignment(int aid, @Param("flag") boolean isAdmin);
 
 
     /**

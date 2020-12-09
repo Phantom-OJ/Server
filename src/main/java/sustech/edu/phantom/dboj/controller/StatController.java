@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
-@Api(tags = "All statistics fetch")
+@Api(tags = {"All statistics fetch"})
 public class StatController {
     @Autowired
     StatService statService;
@@ -36,8 +38,11 @@ public class StatController {
      * @param id      string id
      * @return 结果集
      */
+    @ApiOperation("获取用户数据信息")
     @RequestMapping(value = "/user/{id}/statistics", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneUserStatistics(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneUserStatistics(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "问题id", required = true, type = "int") String id) {
         ResponseMsg res;
         ProblemStatSet p = null;
         try {
@@ -62,11 +67,15 @@ public class StatController {
     /**
      * 一个Problem的所有数据
      * 这里也不需要权限
+     *
      * @param id Problem id
      * @return ProblemStatisticsSet对象，包含result结果和语言结果
      */
+    @ApiOperation("获取问题数据信息")
     @RequestMapping(value = "/problem/{id}/statistics", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneProblemStatistics(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<ProblemStatSet>> getOneProblemStatistics(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "问题id", required = true, type = "int") String id) {
         ResponseMsg res;
         ProblemStatSet p = null;
         try {

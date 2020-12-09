@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
-@Api(tags = "Query functions")
+@Api(tags = {"Query functions"})
 public class QueryController {
     @Autowired
     RecordService recordService;
@@ -43,9 +45,13 @@ public class QueryController {
      * @param id record id
      * @return 查询的record的类
      */
+    @ApiOperation("获取具体的record记录")
     @RequestMapping(value = "/record/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "记录id", required = true, type = "int") String id) {
+        //TODO:Record记录这里可能要改，包括查询具体的record，管理员权限没有设置
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("User " + user.getUsername() + " from " + request.getRemoteAddr() + " wants to fetch the code " + id);
         int idx;
@@ -76,8 +82,11 @@ public class QueryController {
      * @param id 用户的id
      * @return 返回用户信息
      */
+    @ApiOperation("获取用户信息")
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<User>> userInfo(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<User>> userInfo(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "作业id", required = true, type = "int") String id) {
         ResponseMsg res;
         User data = null;
         int idx;
@@ -122,8 +131,11 @@ public class QueryController {
      * @param id assignment id
      * @return assignment的对象
      */
+    @ApiOperation("获取具体的作业信息")
     @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "作业id", required = true, type = "int") String id) {
         int idx;
         ResponseMsg res;
         Assignment assignment = null;
