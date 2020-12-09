@@ -10,7 +10,7 @@ spring:
       driver-class-name: org.postgresql.Driver
       initial-size: 8
       min-idle: 1
-      max-active: 20
+      max-active: 50
       max-wait: 60000
       time-between-eviction-runs-millis: 60000
       min-evictable-idle-time-millis: 300000
@@ -23,6 +23,15 @@ spring:
       filters: stat
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
       use-global-data-source-stat: true
+#      filter:
+#        log4j:
+#          enabled: true
+#          statement-create-after-log-enabled: false
+#          statement-close-after-log-enabled: false
+#          result-set-open-after-log-enabled: false
+#          result-set-close-after-log-enabled: false
+
+
   servlet:
     multipart:
       enabled: true
@@ -45,3 +54,5 @@ mybatis:
 filerootpath:
   windows: C:\Users\Lori\desktop\resources\
   linux: /home/phantom/ooadproject/backend/resources/
+#logging:
+#  config: classpath:log4j2.yml
