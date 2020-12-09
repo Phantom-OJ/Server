@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.JudgeScriptMapper">
-    <select id="getOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
+    <select id="getOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.po.JudgeScript">
         select id, script
         from judge_script
         where id = #{id}
           and valid;
     </select>
-    <select id="getAllJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
+    <select id="getAllJudgeScript" resultType="sustech.edu.phantom.dboj.entity.po.JudgeScript">
         select id, keyword
         from judge_script where valid;
     </select>
-    <select id="selOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.JudgeScript">
+    <select id="selOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.po.JudgeScript">
         select id, keyword, script
         from "judge_script"
         where id = #{id} and valid;

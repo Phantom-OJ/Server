@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,7 +1,7 @@
 package sustech.edu.phantom.dboj.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import sustech.edu.phantom.dboj.entity.JudgePoint;
+import sustech.edu.phantom.dboj.entity.po.JudgePoint;
 
 import java.util.List;
 

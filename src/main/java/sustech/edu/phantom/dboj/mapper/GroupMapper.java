@@ -1,7 +1,7 @@
 package sustech.edu.phantom.dboj.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import sustech.edu.phantom.dboj.entity.Group;
+import sustech.edu.phantom.dboj.entity.po.Group;
 
 import java.util.ArrayList;
 import java.util.List;

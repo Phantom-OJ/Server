@@ -1,16 +1,19 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Lori
+ */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class JudgeScript {
+public class JudgeDatabase {
     private Integer id;
     private String keyword;
-    private String script;
+    private String databaseUrl;
 }

@@ -10,7 +10,7 @@
         </foreach>
     </insert>
 
-    <select id="getOneRecordDetails" resultType="sustech.edu.phantom.dboj.entity.RecordProblemJudgePoint">
+    <select id="getOneRecordDetails" resultType="sustech.edu.phantom.dboj.entity.po.RecordProblemJudgePoint">
         select record_id,
                problem_id,
                judge_point_index,

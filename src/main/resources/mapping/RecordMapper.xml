@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.RecordMapper">
 
-    <select id="queryRecord" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="queryRecord" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select id,
                code_id,
                id,
@@ -31,7 +31,7 @@
         set valid = false
         where id = #{id};
     </update>
-    <select id="getAllRecords" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getAllRecords" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,
                r.user_id,
@@ -105,7 +105,7 @@
           and r.user_id = #{userId}
           and r.id = #{id};
     </select>
-    <select id="getRecordsOfOnePerson" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsOfOnePerson" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,
                r.user_id,
@@ -128,7 +128,7 @@
         order by submit_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
-    <select id="getRecordsOfPersonByAssignment" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsOfPersonByAssignment" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,
                r.user_id,
@@ -153,7 +153,7 @@
         order by submit_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
-    <select id="getRecordsOfPersonByProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsOfPersonByProblem" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,
                r.user_id,
@@ -211,7 +211,7 @@
         where r.valid
           and r.user_id = #{userId};
     </select>
-    <select id="getRecordsByAssignment" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsByAssignment" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,
                r.user_id,
@@ -235,7 +235,7 @@
         order by submit_time desc
         offset #{param1.offset} limit #{param1.limit};
     </select>
-    <select id="getRecordsByProblem" resultType="sustech.edu.phantom.dboj.entity.Record">
+    <select id="getRecordsByProblem" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,
                r.user_id,

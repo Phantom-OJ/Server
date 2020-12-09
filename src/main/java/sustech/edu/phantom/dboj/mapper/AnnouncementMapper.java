@@ -1,6 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 import org.apache.ibatis.annotations.Param;
-import sustech.edu.phantom.dboj.entity.Announcement;
+import sustech.edu.phantom.dboj.entity.po.Announcement;
 import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 

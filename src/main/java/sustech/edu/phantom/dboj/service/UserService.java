@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import sustech.edu.phantom.dboj.entity.User;
+import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.form.home.LoginForm;
 import sustech.edu.phantom.dboj.form.home.RegisterForm;
 import sustech.edu.phantom.dboj.form.home.RstPwdForm;

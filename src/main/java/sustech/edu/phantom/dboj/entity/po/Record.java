@@ -1,11 +1,9 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 /**
  * @author Lori

@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.po;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**

@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import sustech.edu.phantom.dboj.entity.JudgeDatabase;
-import sustech.edu.phantom.dboj.entity.JudgeScript;
-import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
+import sustech.edu.phantom.dboj.entity.po.JudgeDatabase;
+import sustech.edu.phantom.dboj.entity.po.JudgeScript;
+import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.UploadService;
 

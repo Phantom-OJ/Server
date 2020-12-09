@@ -5,7 +5,7 @@
         insert into "code" (code, code_length, submit_time)
         values (#{code}, #{codeLength}, #{submitTime});
     </insert>
-    <select id="queryCode" resultType="sustech.edu.phantom.dboj.entity.Code">
+    <select id="queryCode" resultType="sustech.edu.phantom.dboj.entity.po.Code">
         select id, code, code_length, submit_time
         from "code"
         where valid

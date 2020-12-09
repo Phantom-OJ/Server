@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Permission {
-    private String role;
-    private String allowance;
+public class Tag {
+    private Integer id;
+    private String keyword;
+    private String description;
 }

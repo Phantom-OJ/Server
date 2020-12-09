@@ -1,4 +1,4 @@
-package sustech.edu.phantom.dboj.entity;
+package sustech.edu.phantom.dboj.entity.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

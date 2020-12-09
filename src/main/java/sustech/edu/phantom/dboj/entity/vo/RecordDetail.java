@@ -1,13 +1,12 @@
 package sustech.edu.phantom.dboj.entity.vo;
 
-import sustech.edu.phantom.dboj.entity.RecordProblemJudgePoint;
-
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sustech.edu.phantom.dboj.entity.po.RecordProblemJudgePoint;
+
+import java.util.List;
 
 /**
  * @author Lori

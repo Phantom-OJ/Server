@@ -1,6 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
-import sustech.edu.phantom.dboj.entity.Code;
+import sustech.edu.phantom.dboj.entity.po.Code;
 
 public interface CodeMapper {
     /**

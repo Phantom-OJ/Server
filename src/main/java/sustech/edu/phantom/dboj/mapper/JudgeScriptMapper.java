@@ -1,6 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
-import sustech.edu.phantom.dboj.entity.JudgeScript;
+import sustech.edu.phantom.dboj.entity.po.JudgeScript;
 
 import java.util.List;
 

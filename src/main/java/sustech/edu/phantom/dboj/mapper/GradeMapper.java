@@ -1,6 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
-import sustech.edu.phantom.dboj.entity.Grade;
+import sustech.edu.phantom.dboj.entity.po.Grade;
 
 public interface GradeMapper {
 

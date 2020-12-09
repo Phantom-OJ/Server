@@ -8,10 +8,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import sustech.edu.phantom.dboj.entity.Group;
-import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
+import sustech.edu.phantom.dboj.entity.po.Group;
+import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.GroupService;
 

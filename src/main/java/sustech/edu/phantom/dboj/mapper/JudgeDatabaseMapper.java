@@ -1,6 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
-import sustech.edu.phantom.dboj.entity.JudgeDatabase;
+import sustech.edu.phantom.dboj.entity.po.JudgeDatabase;
 
 import java.util.List;
 

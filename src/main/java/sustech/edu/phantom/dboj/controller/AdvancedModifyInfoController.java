@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sustech.edu.phantom.dboj.entity.Assignment;
-import sustech.edu.phantom.dboj.entity.Permission;
-import sustech.edu.phantom.dboj.entity.Problem;
-import sustech.edu.phantom.dboj.entity.User;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
+import sustech.edu.phantom.dboj.entity.po.Assignment;
+import sustech.edu.phantom.dboj.entity.po.Permission;
+import sustech.edu.phantom.dboj.entity.po.Problem;
+import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.AdvancedInfoModificationService;
 

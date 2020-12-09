@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import sustech.edu.phantom.dboj.controller.FileController;
-import sustech.edu.phantom.dboj.entity.Grade;
+import sustech.edu.phantom.dboj.entity.po.Grade;
 import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;

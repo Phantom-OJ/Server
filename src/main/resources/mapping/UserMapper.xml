@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.UserMapper">
-    <select id="login" parameterType="sustech.edu.phantom.dboj.entity.User"
-            resultType="sustech.edu.phantom.dboj.entity.User">
+    <select id="login" parameterType="sustech.edu.phantom.dboj.entity.po.User"
+            resultType="sustech.edu.phantom.dboj.entity.po.User">
         select id,
                username,
                nickname,
@@ -17,13 +17,13 @@
           and password = #{password,jdbcType=VARCHAR};
     </select>
 
-    <insert id="register" parameterType="sustech.edu.phantom.dboj.entity.User" useGeneratedKeys="true">
+    <insert id="register" parameterType="sustech.edu.phantom.dboj.entity.po.User" useGeneratedKeys="true">
         insert into "user" (username, password, nickname)
         values (#{username,jdbcType=VARCHAR},
                 #{password,jdbcType=VARCHAR},
                 #{nickname,jdbcType=VARCHAR})
     </insert>
-    <select id="findUserByUsername" resultType="sustech.edu.phantom.dboj.entity.User">
+    <select id="findUserByUsername" resultType="sustech.edu.phantom.dboj.entity.po.User">
         select *
         from "user"
         where username = #{param1};
@@ -33,7 +33,7 @@
         set role = #{param2}
         where id = #{param1};
     </update>
-    <select id="findUserByName" resultType="sustech.edu.phantom.dboj.entity.User">
+    <select id="findUserByName" resultType="sustech.edu.phantom.dboj.entity.po.User">
         select *
         from "user"
         where nickname = #{name}
@@ -46,7 +46,7 @@
             lang       = #{userForm.lang}
         where id = #{userId}
     </update>
-    <select id="findUserById" resultType="sustech.edu.phantom.dboj.entity.User">
+    <select id="findUserById" resultType="sustech.edu.phantom.dboj.entity.po.User">
         select id,
                username,
                nickname,

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import sustech.edu.phantom.dboj.entity.*;
+import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 import sustech.edu.phantom.dboj.form.upload.UploadJudgePointForm;

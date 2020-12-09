@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.JudgeDatabaseMapper">
-    <select id="getJudgeDatabaseById" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
+    <select id="getJudgeDatabaseById" resultType="sustech.edu.phantom.dboj.entity.po.JudgeDatabase">
         select id, database_url
         from "judge_database"
         where valid
           and id = #{id};
     </select>
-    <select id="getAllJudgeDB" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
+    <select id="getAllJudgeDB" resultType="sustech.edu.phantom.dboj.entity.po.JudgeDatabase">
         select id, keyword
         from "judge_database"
         where valid;
     </select>
-    <select id="selJudgeDatabaseById" resultType="sustech.edu.phantom.dboj.entity.JudgeDatabase">
+    <select id="selJudgeDatabaseById" resultType="sustech.edu.phantom.dboj.entity.po.JudgeDatabase">
         select id, keyword, database_url
         from "judge_database"
         where id = #{id}
