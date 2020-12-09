@@ -18,8 +18,8 @@ import sustech.edu.phantom.dboj.mapper.PermissionMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 /**
- * @author Lori
- * @date
+ * @author Shilong Li (Lori)
+ * @version 1.0
  */
 @Service
 @Slf4j

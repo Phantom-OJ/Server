@@ -13,7 +13,8 @@ import sustech.edu.phantom.dboj.form.modification.UserForm;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
  */
 @Service
 @Transactional(rollbackFor = Exception.class)

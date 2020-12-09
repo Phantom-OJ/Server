@@ -1,6 +1,8 @@
 package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,12 +28,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
+ * @date 2020/11/26 20:05
  */
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
-@Api(tags = "Verification functions")
+@Api(tags = {"需要验证码的方法"})
 public class VerificationController {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
@@ -50,8 +54,12 @@ public class VerificationController {
      * @param map json对象
      * @return 是否成功信息
      */
+    @ApiOperation("发送验证码")
     @RequestMapping(value = "/sendvcode", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> sendVCode(@RequestBody Map<String, Object> map) {
+    public ResponseEntity<GlobalResponse<String>> sendVCode(
+            @RequestBody
+            @ApiParam(name = "用户名", value = "json", required = true)
+                    Map<String, Object> map) {
         ResponseMsg res;
         String username = (String) map.get("username");
         int mode = (int) map.get("mode");
@@ -77,8 +85,13 @@ public class VerificationController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
+    @ApiOperation("注册")
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> signup(HttpServletRequest request, @RequestBody RegisterForm registerForm) {
+    public ResponseEntity<GlobalResponse<String>> signup(
+            HttpServletRequest request,
+            @RequestBody
+            @ApiParam(name = "注册表单", value = "json", required = true)
+                    RegisterForm registerForm) {
         ResponseMsg res;
         try {
             User user = userService.find(registerForm.getUsername());
@@ -101,8 +114,13 @@ public class VerificationController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
+    @ApiOperation("重置密码")
     @RequestMapping(value = "/rstpwd", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> resetPassword(HttpServletRequest request, @RequestBody RstPwdForm form) {
+    public ResponseEntity<GlobalResponse<String>> resetPassword(
+            HttpServletRequest request,
+            @RequestBody
+            @ApiParam(name = "重置密码表单", value = "json", required = true)
+                    RstPwdForm form) {
         ResponseMsg res;
         try {
             User user = userService.find(form.getUsername());
@@ -133,9 +151,13 @@ public class VerificationController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
+    @ApiOperation("重置用户邮箱//todo")
     @RequestMapping(value = "/rstusr", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<String>> modifyUsername(@RequestBody ModifyUsernameForm form) {
+    public ResponseEntity<GlobalResponse<String>> modifyUsername(
+            @RequestBody
+            @ApiParam(name = "重置用户名表单", value = "json", required = true)
+                    ModifyUsernameForm form) {
         ResponseMsg res;
         User user = userService.find(form.getUsername());
         ValueOperations<String, String> forValue = redisTemplate.opsForValue();

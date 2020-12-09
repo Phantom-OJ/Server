@@ -24,7 +24,11 @@ import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+/**
+ * @author Shilong Li (Lori)
+ * @version 1.0
+ * @date 2020/11/26 20:05
+ */
 @RestController
 @Slf4j
 @RequestMapping(value = "/api")

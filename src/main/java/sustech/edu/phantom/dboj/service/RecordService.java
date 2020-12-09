@@ -16,9 +16,9 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
  */
 @Service
 @Slf4j

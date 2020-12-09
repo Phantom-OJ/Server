@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
  */
 @Service
 @Transactional(rollbackFor = Exception.class)

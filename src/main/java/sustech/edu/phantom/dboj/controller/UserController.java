@@ -21,7 +21,9 @@ import sustech.edu.phantom.dboj.service.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
+ * @date 2020/11/26 20:05
  */
 @RestController
 @RequestMapping(value = "/api")

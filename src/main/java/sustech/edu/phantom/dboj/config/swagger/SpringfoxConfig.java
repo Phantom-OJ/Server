@@ -12,7 +12,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * @author Lori
+ * @author Shilong Li (Lori)
+ * @version 1.0
  */
 @Configuration
 @EnableSwagger2
