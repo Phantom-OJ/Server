@@ -47,12 +47,12 @@ VALUES ('ROLE_SA', 'view all submissions'),
        ('ROLE_TEACHER', 'view all permissions')
 ;
 insert into "group" (description)
-values ('group1'),
-       ('group2'),
-       ('group3'),
-       ('group4'),
-       ('group5'),
-       ('group6');
+values ('lab1'),
+       ('lab2'),
+       ('lab3'),
+       ('lab4'),
+       ('lab5'),
+       ('lab6');
 insert into user_group (user_id, group_id)
 VALUES (1, 1),
        (2, 1),
