@@ -116,3 +116,12 @@ order by director;
            'select',
            null
        );
+
+insert into problem_tag (problem_id, tag_id) values (5, 7);
+insert into problem_tag (problem_id, tag_id) values (5, 5);
+insert into problem_tag (problem_id, tag_id) values (6, 5);
+insert into problem_tag (problem_id, tag_id) values (6, 8);
+insert into problem_tag (problem_id, tag_id) values (7, 5);
+insert into problem_tag (problem_id, tag_id) values (7, 8);
+insert into problem_tag (problem_id, tag_id) values (8, 6);
+insert into problem_tag (problem_id, tag_id) values (8, 9);
