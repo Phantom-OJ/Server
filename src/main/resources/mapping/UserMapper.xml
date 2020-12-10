@@ -80,11 +80,10 @@
         where id = #{id};
     </select>
     <select id="findUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
-        select * from "user_group" where group_id in (
-            <foreach collection="list" item="l" separator="," index="index" close="">
-                #{l}
-            </foreach>
-            )
+        select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+                 join user_group ug on u.id = ug.user_id and u.valid and ug.valid
+        where ug.group_id = #{gid};
     </select>
     <update id="uploadAvatar">
         update "user"
@@ -98,4 +97,11 @@
         </foreach>
         );
     </update>
+    <select id="findUserByFilter" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        select id, username, nickname, role, avatar
+        from "user"
+        where valid
+          and (username like '%' || #{filter} || '%' or cast(id as varchar) like '%' || #{filter} || '%' or
+               role like '%' || #{filter} || '%')
+    </select>
 </mapper>

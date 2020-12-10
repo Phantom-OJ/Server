@@ -26,7 +26,6 @@ public class GroupService {
     }
 
     public List<Group> getAllGroups() {
-
         return groupMapper.getAllGroups();
     }
 }

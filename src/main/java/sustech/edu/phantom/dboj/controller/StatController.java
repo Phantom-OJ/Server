@@ -7,13 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
+import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
+import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.StatService;
 
@@ -102,18 +106,14 @@ public class StatController {
     @ApiOperation("获取用户得分")
     @RequestMapping(value = "/user/{id}/grade", method = RequestMethod.GET)
     //TODO:要根据group来分, 这里差
-//    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<List<UserGrade>>> getUserGrade(
             HttpServletRequest request,
             @PathVariable
-            @ApiParam(name = "用户id", required = true, type = "int") String id) {
-//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int idx;
+            @ApiParam(name = "用户id", required = true, type = "java.lang.Integer") Integer id) {
         ResponseMsg res;
         List<UserGrade> userGrades = null;
         try {
-            idx = Integer.parseInt(id);
-            userGrades = statService.getUserGrade(idx);
+            userGrades = statService.getUserGrade(id);
             res = ResponseMsg.OK;
         } catch (NumberFormatException e) {
             res = ResponseMsg.BAD_REQUEST;
@@ -128,8 +128,25 @@ public class StatController {
     @ApiOperation("作业的数据")
     @RequestMapping(value = "/assignment/{id}/statistics", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ResponseEntity<GlobalResponse<Object>> getAssignmentStat(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<GlobalResponse<List<AssignmentStat>>> getAssignmentStat(
+            HttpServletRequest request,
+            @PathVariable
+            @ApiParam(name = "作业id", required = true, type = "java.lang.Integer") Integer id) {
         ResponseMsg res;
-        return null;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<AssignmentStat> assignmentStats = null;
+        if (!user.containPermission(PermissionEnum.VIEW_SUBMISSIONS)) {
+            res = ResponseMsg.FORBIDDEN;
+            log.error("Low privilege from the request " + request.getRemoteAddr());
+        } else {
+            try {
+                assignmentStats = statService.getOneAssignmentStat(id);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal errors when getting assignment statistics from " + request.getRemoteAddr());
+            }
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<AssignmentStat>>builder().msg(res.getMsg()).data(assignmentStats).build(), res.getStatus());
     }
 }

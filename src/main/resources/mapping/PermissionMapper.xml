@@ -18,4 +18,13 @@
         from permission
         where valid;
     </select>
+    <insert id="savePermission">
+        insert into "permission" (role, allowance)
+        VALUES (#{role}, #{allowance});
+    </insert>
+    <update id="invalidatePermission">
+        update "permission"
+        set valid = false
+        where id = #{id};
+    </update>
 </mapper>

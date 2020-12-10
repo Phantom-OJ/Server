@@ -8,14 +8,16 @@
           and valid;
     </select>
     <select id="getAllJudgeScript" resultType="sustech.edu.phantom.dboj.entity.po.JudgeScript">
-        select id, keyword
-        from judge_script where valid;
+        select id, keyword, script
+        from judge_script
+        where valid;
     </select>
     <select id="selOneJudgeScript" resultType="sustech.edu.phantom.dboj.entity.po.JudgeScript">
         select id, keyword, script
         from "judge_script"
-        where id = #{id} and valid;
-        </select>
+        where id = #{id}
+          and valid;
+    </select>
     <insert id="saveJudgeScript">
         insert into "judge_script" (script, keyword)
         values (#{script}, #{keyword});

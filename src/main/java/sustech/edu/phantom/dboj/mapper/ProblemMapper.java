@@ -76,10 +76,10 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag") boolean isAdmin);
+    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title,@Param("flag2")boolean flag2, @Param("flag") boolean isAdmin);
 
 
-    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag") boolean isAdmin);
+    Integer queryProblemsByTagAndNameCounter(@Param("tags") List<Integer> tags, String title,@Param("flag2")boolean flag2, @Param("flag") boolean isAdmin);
 
 
     /**

@@ -36,4 +36,12 @@ public interface GroupMapper {
      * @return
      */
     List<Group> getStudentGroup(int sid);
+
+    int saveGroup(String description);
+
+    int invalidateGroup(int gid);
+
+    int invalidateGroupUser(int gid);
+
+    int invalidateGroupAssignment(int gid);
 }

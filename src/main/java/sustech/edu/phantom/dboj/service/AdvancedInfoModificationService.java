@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import sustech.edu.phantom.dboj.entity.po.Permission;
+import sustech.edu.phantom.dboj.mapper.GroupMapper;
 import sustech.edu.phantom.dboj.mapper.PermissionMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 
@@ -29,6 +30,10 @@ public class AdvancedInfoModificationService {
     @Autowired
     PermissionMapper permissionMapper;
 
+    @Autowired
+    GroupMapper groupMapper;
+
+
     public void grantUser(Map<String, List<Integer>> hm) {
         try {
             for (Map.Entry<String, List<Integer>> entry : hm.entrySet()) {
@@ -44,9 +49,17 @@ public class AdvancedInfoModificationService {
         }
     }
 
-    public List<Permission> getPermissionList(){
-        List<Permission> permissionList;
-        permissionList = permissionMapper.getPermissions();
-        return permissionList;
+    public int modifyPermission(Permission permission, boolean delete, int id) {
+        return delete ? permissionMapper.invalidatePermission(id) : permissionMapper.savePermission(permission);
+    }
+
+    public int modifyGroup(String description, boolean delete, int id) {
+        if (delete) {
+            groupMapper.invalidateGroupAssignment(id);
+            groupMapper.invalidateGroupUser(id);
+            return groupMapper.invalidateGroup(id);
+        } else {
+            return groupMapper.saveGroup(description);
+        }
     }
 }

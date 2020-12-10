@@ -86,7 +86,7 @@
 
 21. problem和assignment的public private closed 权限[算是solved]
 
-22. profile 里面放得分
+22. profile 里面放得分 [solved]
 
 23. assignment 数据 每一个题有多少人ac了，一共要ac多少人，交了没ac，ac了，没交，总数 
 
@@ -94,3 +94,5 @@
 judge script: text
 
 judge database: json text
+
+==database, schema, imageId==

@@ -304,4 +304,48 @@
           and valid
         group by result;
     </select>
+    <select id="counterOneAssignmentAC" resultType="sustech.edu.phantom.dboj.entity.po.AssignmentCount">
+        select problem_id, count(*)
+        from (
+                 select distinct problem_id, user_id
+                 from "record"
+                 where valid
+                   and problem_id in (1, 2, 3, 4, 5)
+                   and result = 'AC') x
+        group by problem_id
+        order by problem_id;
+    </select>
+    <select id="counterOneAssignment" resultType="java.lang.Integer">
+        select count(distinct user_id)
+        from "user_group"
+        where valid
+          and group_id in (
+            select distinct group_id
+            from "assignment_group"
+            where assignment_id = #{aid}
+              and valid);
+    </select>
+    <select id="counterOneAssignmentNotAC" resultType="sustech.edu.phantom.dboj.entity.po.AssignmentCount">
+        select problem_id, count(*) from (
+        select distinct problem_id, user_id
+        from "record"
+        where valid
+        and problem_id in (
+        <foreach collection="list" separator="," close="" item="l" index="index">
+            #{l.id}
+        </foreach>
+        )
+        and result &lt;&gt; 'AC'
+        except
+        select distinct problem_id, user_id
+        from "record"
+        where valid
+        and problem_id in (
+        <foreach collection="list" separator="," close="" item="l" index="index">
+            #{l.id}
+        </foreach>
+        )
+        and result = 'AC') x group by problem_id
+        order by problem_id;
+    </select>
 </mapper>

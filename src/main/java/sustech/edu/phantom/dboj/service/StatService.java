@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sustech.edu.phantom.dboj.entity.po.AssignmentCount;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
 import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
@@ -13,6 +14,7 @@ import sustech.edu.phantom.dboj.mapper.GradeMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,7 +91,30 @@ public class StatService {
 
     public List<AssignmentStat> getOneAssignmentStat(int aid) {
         List<Problem> problemList = problemMapper.oneAssignmentProblems(aid);
-        return null;
+        List<AssignmentCount> ACList = recordMapper.counterOneAssignmentAC(problemList);
+        List<AssignmentCount> NotACList = recordMapper.counterOneAssignmentNotAC(problemList);
+        Integer total = recordMapper.counterOneAssignment(aid);
+        List<AssignmentStat> assignmentStats = new ArrayList<>();
+        for (Problem problem : problemList) {
+            assignmentStats.add(AssignmentStat.builder().problemId(problem.getId()).ac(0).wa(0).problemTitle(problem.getTitle()).total(total).build());
+        }
+        for (AssignmentCount a : ACList) {
+            for (AssignmentStat assignmentStat : assignmentStats) {
+                if (assignmentStat.getProblemId().equals(a.getProblemId())) {
+                    assignmentStat.setAc(a.getCount());
+                    break;
+                }
+            }
+        }
+        for (AssignmentCount a : NotACList) {
+            for (AssignmentStat assignmentStat : assignmentStats) {
+                if (assignmentStat.getProblemId().equals(a.getProblemId())) {
+                    assignmentStat.setWa(a.getCount());
+                    break;
+                }
+            }
+        }
+        return assignmentStats;
     }
 
 }

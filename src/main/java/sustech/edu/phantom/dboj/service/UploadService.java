@@ -65,7 +65,6 @@ public class UploadService {
         } catch (Exception e) {
             log.error("Something wrong with saving announcement.");
         }
-
         return flag != 0;
     }
 
@@ -92,38 +91,6 @@ public class UploadService {
         }
     }
 
-    /**
-     * 返回给前端的接口
-     * 根据id筛选具体的judge database
-     * 只有 id 和 keyword
-     * @param id judge database id
-     * @return judge database 对象
-     */
-    public JudgeDatabase selOneDB(int id) {
-        JudgeDatabase j = null;
-        try {
-            j = judgeDatabaseMapper.selJudgeDatabaseById(id);
-        } catch (Exception e) {
-            log.error("something wrong with selOneDB");
-        }
-        return j;
-    }
-
-    /**
-     * 返回给前端的接口
-     * 获取所有的judge database信息
-     * 只有 id 和 keyword
-     * @return 所有的judge database
-     */
-    public List<JudgeDatabase> getAllJudgeDB() {
-        List<JudgeDatabase> list = null;
-        try {
-            list = judgeDatabaseMapper.getAllJudgeDB();
-        } catch (Exception e) {
-            log.error("something wrong with getAllJudgeDB");
-        }
-        return list;
-    }
 
     /**
      * 上传judge script
@@ -148,39 +115,6 @@ public class UploadService {
         }
     }
 
-    /**
-     * 返回给前端的接口
-     * 获取所有的judge script
-     * 只有 id 和 keyword
-     *
-     * @return judge scripts
-     */
-    public List<JudgeScript> getAllJudgeScript() {
-        List<JudgeScript> list = null;
-        try {
-            list = judgeScriptMapper.getAllJudgeScript();
-        } catch (Exception e) {
-            log.error("something wrong with getAllJudgeDB");
-        }
-        return list;
-    }
-
-    /**
-     * 返回给前端的接口
-     * 获取具体的judge script
-     *
-     * @param id judge script id
-     * @return judge script 信息
-     */
-    public JudgeScript selOneJScript(int id) {
-        JudgeScript j = null;
-        try {
-            j = judgeScriptMapper.selOneJudgeScript(id);
-        } catch (Exception e) {
-            log.error("something wrong with selOneJScript");
-        }
-        return j;
-    }
 
     /**
      * 添加整个assignment是一个整体，所以只要其中一个出现了问题就全部rollback
@@ -252,7 +186,7 @@ public class UploadService {
      * 上传头像
      *
      * @param filePath 图片路径
-     * @param uid user id
+     * @param uid      user id
      * @return 是否成功
      */
     public boolean uploadAvatar(String filePath, int uid) {

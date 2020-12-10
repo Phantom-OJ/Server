@@ -56,7 +56,7 @@ public class ProblemService {
      * @param userId user id
      * @return problem 对象
      */
-    public Problem getOneProblem(int id, int userId,boolean isAdmin) {
+    public Problem getOneProblem(int id, int userId, boolean isAdmin) {
         Problem problem = getOneProblem(id, isAdmin);
         problem.setRecentCode(codeMapper.queryRecentCode(userId, id));
         return problem;
@@ -152,12 +152,13 @@ public class ProblemService {
                     count = problemMapper.queryProblemsByNameCounter(pagination, name.trim(), isAdmin);
                 } else {
                     List<Integer> tags = getProblemTagsIdList(pagination);
-                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim(), isAdmin);
-                    count = problemMapper.queryProblemsByTagAndNameCounter(pagination, tags, name.trim(), isAdmin);
+                    boolean flag2 = "".equals(name.trim());
+                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim(), flag2, isAdmin);
+                    count = problemMapper.queryProblemsByTagAndNameCounter(tags, name.trim(), flag2, isAdmin);
                 }
             }
         }
-        setSolvedAndTags(problemList, isUser, userId,isAdmin);
+        setSolvedAndTags(problemList, isUser, userId, isAdmin);
         return EntityVO.<Problem>builder().entities(problemList).count(count).build();
     }
 

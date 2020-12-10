@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 
@@ -51,11 +52,18 @@ public class GlobalExceptionHandler {
         log.error("Request from " + request.getRemoteAddr() + " has wrong format of request path data.");
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(ResponseMsg.PATH_VAR_EXCEPTION.getMsg()).build(), ResponseMsg.PATH_VAR_EXCEPTION.getStatus());
     }
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<GlobalResponse<String>> error404(HttpServletRequest request, Exception e) throws Exception {
+
+    /**
+     * 处理不存在的URL的情况
+     * @param request http请求
+     * @param e NoHandlerFoundException
+     * @return 404 响应信息
+     */
+    @ExceptionHandler(value = NoHandlerFoundException.class)
+    public ResponseEntity<GlobalResponse<String>> error404(HttpServletRequest request, NoHandlerFoundException e) {
         e.printStackTrace();
         log.error(e.getMessage());
-        log.error("Request from " + request.getRemoteAddr() + " has wrong format of request path data.");
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(ResponseMsg.PATH_VAR_EXCEPTION.getMsg()).build(), ResponseMsg.PATH_VAR_EXCEPTION.getStatus());
+        log.error("Request from " + request.getRemoteAddr() + " has no such path.");
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(ResponseMsg.NOT_EXIST_URL.getMsg()).build(), ResponseMsg.NOT_EXIST_URL.getStatus());
     }
 }

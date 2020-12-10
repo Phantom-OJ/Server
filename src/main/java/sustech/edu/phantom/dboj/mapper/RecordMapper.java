@@ -1,5 +1,8 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import sustech.edu.phantom.dboj.entity.po.AssignmentCount;
+import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.po.Record;
 import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
@@ -144,4 +147,10 @@ public interface RecordMapper {
      * @return count (*) of AC
      */
     List<ResultCnt> isSolvedByUser(int uid, int pid);
+
+    List<AssignmentCount> counterOneAssignmentAC(@Param("list") List<Problem> list);
+
+    Integer counterOneAssignment(int aid);
+
+    List<AssignmentCount> counterOneAssignmentNotAC(@Param("list") List<Problem> list);
 }

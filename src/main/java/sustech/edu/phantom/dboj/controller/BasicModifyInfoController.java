@@ -60,19 +60,6 @@ public class BasicModifyInfoController {
             if (!flag) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
             } else {
-
-//                SecurityContextImpl securityContextImpl = (SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
-//                log.info("securitycontext impl is " + securityContextImpl.toString());
-//                Authentication authentication = securityContextImpl.getAuthentication();
-//                log.info("authentication is" + authentication.toString());
-
-//                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, authentication.getCredentials());
-//                auth.setDetails(authentication.getDetails());
-//                log.info("authentication details are " + authentication.getDetails().toString());
-//                log.info("cookie is " + Arrays.toString(request.getCookies()));
-//                securityContextImpl.setAuthentication(auth);
-//                User user1 = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//                log.info(user1.toString());
                 user.modifyInfo(form);
                 res = ResponseMsg.OK;
                 log.info("Modification of user " + user.getUsername() + " from " + request.getRemoteAddr() + " successfully");

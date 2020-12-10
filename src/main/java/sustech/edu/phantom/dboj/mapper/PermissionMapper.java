@@ -14,4 +14,8 @@ public interface PermissionMapper {
     int save(@Param("list") List<Permission> list);
 
     List<Permission> getPermissions();
+
+    int savePermission(Permission permission);
+
+    int invalidatePermission(int id);
 }

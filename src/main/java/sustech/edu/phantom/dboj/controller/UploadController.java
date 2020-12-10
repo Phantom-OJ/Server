@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.JudgeDatabase;
@@ -19,8 +22,6 @@ import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 import sustech.edu.phantom.dboj.service.UploadService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Shilong Li (Lori)
@@ -29,7 +30,7 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/upload")
 @Api(tags = {"upload functions"})
 @PreAuthorize("hasRole('ROLE_STUDENT')")
 public class UploadController {
@@ -44,7 +45,7 @@ public class UploadController {
      * @return 成功与否信息
      */
     @ApiOperation("上传公告")
-    @RequestMapping(value = "/upload/announcement", method = RequestMethod.POST)
+    @RequestMapping(value = "/announcement", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> uploadAnnouncement(
             HttpServletRequest request,
@@ -71,30 +72,9 @@ public class UploadController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
-    @ApiOperation("获取全部判题数据库")
-    @RequestMapping(value = "/judgedb", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<List<JudgeDatabase>>> getAllJudgeDB(
-            HttpServletRequest request) {
-        ResponseMsg res;
-        List<JudgeDatabase> data = new ArrayList<>();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            res = ResponseMsg.FORBIDDEN;
-        } else {
-            try {
-                List<JudgeDatabase> list = uploadService.getAllJudgeDB();
-                res = ResponseMsg.OK;
-                data = list;
-            } catch (Exception e) {
-                res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                log.error("Internal server error when getting judge database from request " + request.getRemoteAddr());
-            }
-        }
-        return new ResponseEntity<>(GlobalResponse.<List<JudgeDatabase>>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
-    }
 
     @ApiOperation("上传判题数据库")
-    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
+    @RequestMapping(value = "/judgedb", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(
             HttpServletRequest request,
             @RequestBody JudgeDatabase judgeDatabase) {
@@ -120,54 +100,9 @@ public class UploadController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
-    @ApiOperation("获取单一判题数据库")
-    @RequestMapping(value = "/judgedb/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<JudgeDatabase>> selOneJDB(HttpServletRequest request, @PathVariable String id) {
-        ResponseMsg res;
-        JudgeDatabase data = null;
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            res = ResponseMsg.FORBIDDEN;
-        } else {
-            try {
-                int idx = Integer.parseInt(id);
-                JudgeDatabase j = uploadService.selOneDB(idx);
-                res = ResponseMsg.OK;
-                data = j;
-            } catch (NumberFormatException e) {
-                res = ResponseMsg.NOT_FOUND;
-                log.error("Wrong URL request from " + request.getRemoteAddr());
-            } catch (Exception e) {
-                res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                log.error("Internal server error when getting judge database from request " + request.getRemoteAddr());
-            }
-        }
-        return new ResponseEntity<>(GlobalResponse.<JudgeDatabase>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
-    }
-
-    @ApiOperation("获取全部判题脚本")
-    @RequestMapping(value = "/judgescript", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<List<JudgeScript>>> getJudgeScript(HttpServletRequest request) {
-        ResponseMsg res;
-        List<JudgeScript> data = new ArrayList<>();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            res = ResponseMsg.FORBIDDEN;
-        } else {
-            try {
-                List<JudgeScript> list = uploadService.getAllJudgeScript();
-                res = ResponseMsg.OK;
-                data = list;
-            } catch (Exception e) {
-                res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                log.error("Internal server error when getting judge script from request " + request.getRemoteAddr());
-            }
-        }
-        return new ResponseEntity<>(GlobalResponse.<List<JudgeScript>>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
-    }
 
     @ApiOperation("上传判题脚本")
-    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
+    @RequestMapping(value = "/judgescipt", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(
             HttpServletRequest request,
             @RequestBody JudgeScript judgeScript) {
@@ -193,33 +128,9 @@ public class UploadController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
-    @ApiOperation("获取单一判题脚本")
-    @RequestMapping(value = "/judgescript/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<JudgeScript>> selOneJs(HttpServletRequest request, @PathVariable String id) {
-        ResponseMsg res;
-        JudgeScript data = null;
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            res = ResponseMsg.FORBIDDEN;
-        } else {
-            try {
-                int idx = Integer.parseInt(id);
-                JudgeScript j = uploadService.selOneJScript(idx);
-                res = ResponseMsg.OK;
-                data = j;
-            } catch (NumberFormatException e) {
-                res = ResponseMsg.NOT_FOUND;
-                log.error("Wrong URL request from " + request.getRemoteAddr());
-            } catch (Exception e) {
-                res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                log.error("Internal server error when getting judge script from request " + request.getRemoteAddr());
-            }
-        }
-        return new ResponseEntity<>(GlobalResponse.<JudgeScript>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
-    }
 
     @ApiOperation("创建作业")
-    @RequestMapping(value = "/upload/assignment", method = RequestMethod.POST)
+    @RequestMapping(value = "/assignment", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadAssignment(
             HttpServletRequest request,
             @RequestBody UploadAssignmentForm form) {

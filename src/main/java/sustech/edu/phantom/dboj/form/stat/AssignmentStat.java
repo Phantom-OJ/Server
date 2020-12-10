@@ -33,4 +33,8 @@ public class AssignmentStat {
     private Integer noSubmission;
     @ApiModelProperty(value = "The number of students who need to submit the problem")
     private Integer total;
+
+    public void setNoSubmission() {
+        this.noSubmission = this.total - this.ac - this.wa;
+    }
 }

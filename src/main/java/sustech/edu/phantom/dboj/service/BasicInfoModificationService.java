@@ -58,11 +58,11 @@ public class BasicInfoModificationService {
                     a[1] = HttpStatus.OK;
                 } else {
                     a[0] = "Modification fails";
-                    a[1] = HttpStatus.NOT_FOUND;
+                    a[1] = HttpStatus.INTERNAL_SERVER_ERROR;
                 }
             } else {
                 a[0] = "Passwords are not matched";
-                a[1] = HttpStatus.NOT_FOUND;
+                a[1] = HttpStatus.BAD_REQUEST;
             }
         } catch (Exception e) {
             a[0] = "Internal Server Error";

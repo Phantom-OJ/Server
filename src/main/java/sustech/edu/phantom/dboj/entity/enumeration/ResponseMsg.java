@@ -30,7 +30,7 @@ public enum ResponseMsg {
     //全局异常处理
     PARSE_EXCEPTION("Wrong format of post data", HttpStatus.BAD_REQUEST),
     PATH_VAR_EXCEPTION("Wrong format of path variable data", HttpStatus.BAD_REQUEST),
-
+    NOT_EXIST_URL("Not exist such URL", HttpStatus.NOT_FOUND),
     ;
 
     private final String msg;

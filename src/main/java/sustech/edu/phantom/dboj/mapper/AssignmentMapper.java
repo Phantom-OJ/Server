@@ -34,7 +34,7 @@ public interface AssignmentMapper {
      * @param name       assignment title
      * @return 作业信息
      */
-    List<Assignment> queryAssignmentByName(Pagination pagination, String name, @Param("flag") boolean isAdmin);
+    List<Assignment> queryAssignmentByName(Pagination pagination, String name,@Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
 
     /**
      * 返回上面方法得到作业信息的总数
@@ -43,7 +43,7 @@ public interface AssignmentMapper {
      * @param isAdmin 是否有更高权限
      * @return 数量
      */
-    Integer queryAssignmentByNameCounter(String name, @Param("flag") boolean isAdmin);
+    Integer queryAssignmentByNameCounter(String name,@Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
 
     /**
      * 返回所有的作业

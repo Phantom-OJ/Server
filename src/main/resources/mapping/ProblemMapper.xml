@@ -170,11 +170,16 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        and (id in (select distinct problem_id from "problem_tag" where valid and (tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
         </foreach>)
-        or title like '%'||#{title}||'%'))
+        <if test="!flag2">
+            or title like '%'||#{title}||'%'
+        </if>
+        )
+        )
+        )
         order by id offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="queryProblemsByTagAndNameCounter" resultType="java.lang.Integer">
@@ -184,12 +189,16 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        and (id in (select distinct problem_id from "problem_tag" where valid and (tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
         </foreach>)
-        or title like '%'||#{title}||'%'))
-        offset #{param1.offset} limit #{param1.limit};
+        <if test="!flag2">
+            or title like '%'||#{title}||'%'
+        </if>
+        )
+        )
+        );
     </select>
     <select id="queryProblemsByName" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
