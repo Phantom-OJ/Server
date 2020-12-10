@@ -99,33 +99,37 @@ public class AdvancedModifyInfoController {
 
     @ApiOperation("修改题目")
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> modifyProblem(@PathVariable String id, @RequestBody Problem p) {
+    public ResponseEntity<GlobalResponse<String>> modifyProblem(
+            @PathVariable @ApiParam(name = "问题id", required = true, type = "java.lang.Integer") Integer id,
+            @RequestBody @ApiParam(name = "问题", required = true, type = "Problem类") Problem p) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
         int idx;
         if (!user.containPermission(PermissionEnum.MODIFY_ASSIGNMENT)) {
             res = ResponseMsg.FORBIDDEN;
         } else {
-            try {
-                idx = Integer.parseInt(id);
-                if (true) {
-                    res = ResponseMsg.OK;
-                } else {
-                    res = ResponseMsg.FAIL;
-                }
-            } catch (NumberFormatException e) {
-                res = ResponseMsg.BAD_REQUEST;
-            } catch (Exception e) {
-                res = ResponseMsg.INTERNAL_SERVER_ERROR;
-            }
+//            try {
+//                idx = Integer.parseInt(id);
+//                if (true) {
+//                    res = ResponseMsg.OK;
+//                } else {
+//                    res = ResponseMsg.FAIL;
+//                }
+//            } catch (NumberFormatException e) {
+//                res = ResponseMsg.BAD_REQUEST;
+//            } catch (Exception e) {
+//                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//            }
         }
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(null).build(), HttpStatus.OK);
     }
 
     //对作业进行修改
     @ApiOperation("修改作业")
     @RequestMapping(value = "/assignment/{id}", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> modifyAssign(@PathVariable String id, @RequestBody Assignment a) {
+    public ResponseEntity<GlobalResponse<String>> modifyAssign(
+            @PathVariable @ApiParam(name = "作业id", required = true, type = "java.lang.Integer") Integer id,
+            @RequestBody @ApiParam(name = "作业", required = true, type = "Assignment类") Assignment a) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
         int idx;
@@ -133,14 +137,12 @@ public class AdvancedModifyInfoController {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-                idx = Integer.parseInt(id);
+//                idx = Integer.parseInt(id);
                 if (true) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.FAIL;
                 }
-            } catch (NumberFormatException e) {
-                res = ResponseMsg.BAD_REQUEST;
             } catch (Exception e) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
             }
@@ -149,8 +151,9 @@ public class AdvancedModifyInfoController {
     }
 
     @ApiOperation("修改公告")
-    @RequestMapping(value = "/announcement", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> modifyAnnouncement() {
+    @RequestMapping(value = "/announcement/{id}", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<String>> modifyAnnouncement(
+            @PathVariable @ApiParam(name = "公告id", required = true, type = "java.lang.Integer") Integer id) {
         ResponseMsg res;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.containPermission(PermissionEnum.CREATE_ANNOUNCEMENT)) {
