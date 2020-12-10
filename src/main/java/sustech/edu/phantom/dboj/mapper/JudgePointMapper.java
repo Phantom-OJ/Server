@@ -11,7 +11,9 @@ public interface JudgePointMapper {
      * @param id problem id
      * @return a list of judge point of the problem
      */
+    //TODO:更改数据库取出值
     List<JudgePoint> getAllJudgePointsOfProblem(int id);
-
+//TODO:更改数据库取出值
     Integer saveOneProblemJudgePoints(@Param("list") List<JudgePoint> list);
+
 }

@@ -101,11 +101,12 @@ public class JudgeService {
      *
      * @param id problem id
      */
+
     public void judgeCode(int id, CodeForm codeForm, int userId) throws IOException {
         System.err.println(codeForm.getSubmitTime());
         long start = System.currentTimeMillis();
         //FastLinux.createDatabase("12002");
-        /*插入code表*/
+        ///*插入code表
         Code c = Code.builder()
                 .code(codeForm.getCode())
                 .codeLength(codeForm.getCode().getBytes(StandardCharsets.UTF_8).length)
@@ -118,7 +119,7 @@ public class JudgeService {
         List<JudgeInput> judgeInputList = new ArrayList<>();
         HashMap<String, Object> map = new HashMap<>();
         map.put("type", problem.getType());
-
+//TODO:要更改
         List<JudgePoint> judgePointList = judgePointMapper.getAllJudgePointsOfProblem(id);
         for (JudgePoint j : judgePointList) {
             ArrayList<String> answer = answerStringToArrayList(j.getAnswer());
@@ -150,7 +151,7 @@ public class JudgeService {
         }
 
         int score = 100 * acNum / totalTestPoint;
-        /*1.更新proble表*/
+        ///*1.更新proble表
         if (acNum == totalTestPoint) {
             problem.setNumberSubmit(problem.getNumberSubmit() + 1);
             problem.setNumberSolve(problem.getNumberSolve() + 1);
@@ -163,7 +164,7 @@ public class JudgeService {
         }
 
         problemMapper.updateProblemInfo(problem);
-        /*2.更新Record表*/
+        ///*2.更新Record表
         StringBuilder totalDescription = new StringBuilder();
         long time = 0, space = 0;
         for (JudgeResult j : judgeResults) {
@@ -185,9 +186,9 @@ public class JudgeService {
                 .dialect(codeForm.getDialect()).
                         build();
         recordMapper.saveRecord(record);
-        /*3.更新grade表*/
+        ///*3.更新grade表
         Grade oldGrade = gradeMapper.getOneGrade(userId, problem.getId());
-        /*4.新增一张表*/
+        ///*4.新增一张表
         ArrayList<RecordProblemJudgePoint> recordProblemJudgePoints = new ArrayList<>();
         for (int i = 0; i < judgeResults.size(); i++
         ) {
@@ -228,6 +229,8 @@ public class JudgeService {
         FastLinux.createDatabase("12002");
 
     }
+
+
 
     public static String codeToString(Integer code) {
         String s = "";

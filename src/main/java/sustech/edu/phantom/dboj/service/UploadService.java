@@ -202,8 +202,7 @@ public class UploadService {
         try {
             if (assignmentMapper.saveAssignment(a) > 0) {
                 int aid = a.getId();
-                for (UploadProblemForm p : form.getUploadProblemFormList()
-                ) {
+                for (UploadProblemForm p : form.getUploadProblemFormList()) {
                     Problem tmp = Problem
                             .builder()
                             .assignmentId(aid)
@@ -225,8 +224,7 @@ public class UploadService {
                             return false;
                         }
                         List<JudgePoint> judgePoints = new ArrayList<>();
-                        for (UploadJudgePointForm j : p.getJudgePointList()
-                        ) {
+                        for (UploadJudgePointForm j : p.getJudgePointList()) {
                             judgePoints.add(new JudgePoint(j));
                         }
                         if (judgePointMapper.saveOneProblemJudgePoints(judgePoints) == 0) {

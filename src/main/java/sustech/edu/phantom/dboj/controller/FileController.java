@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
-import sustech.edu.phantom.dboj.entity.po.JudgeDatabase;
-import sustech.edu.phantom.dboj.entity.po.JudgeScript;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.UploadService;
@@ -25,8 +23,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -102,138 +98,138 @@ public class FileController {
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
-
-    @ApiOperation("上传判题数据库")
-    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request) {
-        //TODO:判断是不是管理员
-        String resPath = getResourcesPath("judge_database", false);
-        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
-        List<MultipartFile> files = params.getFiles("file");
-        String keyword = params.getParameter("keyword");
-        log.info("keyword is " + keyword);
-        MultipartFile file;
-        BufferedOutputStream stream;
-        String judgeDatabasePath = null;
-        ResponseMsg res;
-//        if (file.isEmpty()) {
-//            res = ResponseMsg.EMPTY_FILE;
-//        } else {
-//            String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-//            String fileName = UUID.randomUUID().toString() + extName;
-//            String filePath = resPath + fileName;
-//            File toFile = new File(filePath);
-//            if (!toFile.getParentFile().exists()) {
-//                toFile.getParentFile().mkdirs();
+//
+//    @ApiOperation("上传判题数据库")
+//    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request) {
+//        //TODO:判断是不是管理员
+//        String resPath = getResourcesPath("judge_database", false);
+//        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+//        List<MultipartFile> files = params.getFiles("file");
+//        String keyword = params.getParameter("keyword");
+//        log.info("keyword is " + keyword);
+//        MultipartFile file;
+//        BufferedOutputStream stream;
+//        String judgeDatabasePath = null;
+//        ResponseMsg res;
+////        if (file.isEmpty()) {
+////            res = ResponseMsg.EMPTY_FILE;
+////        } else {
+////            String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+////            String fileName = UUID.randomUUID().toString() + extName;
+////            String filePath = resPath + fileName;
+////            File toFile = new File(filePath);
+////            if (!toFile.getParentFile().exists()) {
+////                toFile.getParentFile().mkdirs();
+////            }
+////            try {
+////                FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(toFile));
+////            } catch (Exception e) {
+////                log.error(Arrays.toString(e.getStackTrace()));
+////            }
+////        }
+//        try {
+//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            if (!user.getPermissionList().contains("upload judge database")) {
+//                res = ResponseMsg.FORBIDDEN;
+//            } else {
+//                for (MultipartFile multipartFile : files) {
+//                    file = multipartFile;
+//                    if (!file.isEmpty()) {
+//                        String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+//                        String fileName = UUID.randomUUID().toString() + extName;
+//                        String filePath = resPath + fileName;
+//                        byte[] bytes = file.getBytes();
+//                        stream = new BufferedOutputStream(new FileOutputStream(filePath));
+//                        stream.write(bytes);
+//                        stream.close();
+//                        judgeDatabasePath = filePath;
+//                    } else {
+//                        res = ResponseMsg.EMPTY_FILE;
+//                        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+//                    }
+//                    break;
+//                }
+//                JudgeDatabase judgeDatabase = JudgeDatabase.builder().keyword(keyword).databaseUrl(judgeDatabasePath).build();
+//                if (uploadService.saveJudgeDB(judgeDatabase)) {
+//                    res = ResponseMsg.OK;
+//                } else {
+//                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//                }
 //            }
-//            try {
-//                FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(toFile));
-//            } catch (Exception e) {
-//                log.error(Arrays.toString(e.getStackTrace()));
-//            }
+//        } catch (ClassCastException e) {
+//            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+//            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+//            res = ResponseMsg.UNAUTHORIZED;
+//        } catch (Exception e) {
+//            stream = null;
+//            System.out.println("You failed to upload " + " => "
+//                    + e.getMessage());
+//            res = ResponseMsg.BAD_REQUEST;
 //        }
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("upload judge database")) {
-                res = ResponseMsg.FORBIDDEN;
-            } else {
-                for (MultipartFile multipartFile : files) {
-                    file = multipartFile;
-                    if (!file.isEmpty()) {
-                        String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-                        String fileName = UUID.randomUUID().toString() + extName;
-                        String filePath = resPath + fileName;
-                        byte[] bytes = file.getBytes();
-                        stream = new BufferedOutputStream(new FileOutputStream(filePath));
-                        stream.write(bytes);
-                        stream.close();
-                        judgeDatabasePath = filePath;
-                    } else {
-                        res = ResponseMsg.EMPTY_FILE;
-                        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-                    }
-                    break;
-                }
-                JudgeDatabase judgeDatabase = JudgeDatabase.builder().keyword(keyword).databaseUrl(judgeDatabasePath).build();
-                if (uploadService.saveJudgeDB(judgeDatabase)) {
-                    res = ResponseMsg.OK;
-                } else {
-                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                }
-            }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
-        } catch (Exception e) {
-            stream = null;
-            System.out.println("You failed to upload " + " => "
-                    + e.getMessage());
-            res = ResponseMsg.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-    }
-
-    @ApiOperation("上传判题脚本")
-    @RequestMapping(value = "/upload/judgescript", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request) {
-        String resPath = getResourcesPath("judge_script", false);
-        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
-        List<MultipartFile> files = params.getFiles("file");
-        String keyword = params.getParameter("keyword");
-        log.info("keyword is " + keyword);
-        MultipartFile file;
-        BufferedOutputStream stream;
-        String judgeScriptPath = null;
-        ResponseMsg res;
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("upload judge script")) {
-                log.info("you have not such permission.");
-                res = ResponseMsg.FORBIDDEN;
-            } else {
-                for (MultipartFile multipartFile : files) {
-                    file = multipartFile;
-                    if (!file.isEmpty()) {
-                        log.info("文件不为空，开始上传");
-                        String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-                        String fileName = UUID.randomUUID().toString() + "." + extName;
-                        String filePath = resPath + fileName;
-                        log.info(filePath);
-
-                        new File(filePath).createNewFile();
-
-                        byte[] bytes = file.getBytes();
-                        stream = new BufferedOutputStream(new FileOutputStream(filePath));
-                        stream.write(bytes);
-                        stream.close();
-                        judgeScriptPath = filePath;
-                    } else {
-                        log.info("文件为空，退出");
-                        res = ResponseMsg.EMPTY_FILE;
-                        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-                    }
-                    break;
-                }
-                JudgeScript judgeScript = JudgeScript.builder().keyword(keyword).script(judgeScriptPath).build();
-                if (uploadService.saveJudgeScript(judgeScript)) {
-                    res = ResponseMsg.OK;
-                } else {
-                    log.info("Something happens inside the server.");
-                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
-                }
-            }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
-        } catch (Exception e) {
-            System.out.println("You failed to upload " + " => "
-                    + e.getMessage());
-            res = ResponseMsg.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-    }
+//        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+//    }
+//
+//    @ApiOperation("上传判题脚本")
+//    @RequestMapping(value = "/upload/judgescript", method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request) {
+//        String resPath = getResourcesPath("judge_script", false);
+//        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
+//        List<MultipartFile> files = params.getFiles("file");
+//        String keyword = params.getParameter("keyword");
+//        log.info("keyword is " + keyword);
+//        MultipartFile file;
+//        BufferedOutputStream stream;
+//        String judgeScriptPath = null;
+//        ResponseMsg res;
+//        try {
+//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            if (!user.getPermissionList().contains("upload judge script")) {
+//                log.info("you have not such permission.");
+//                res = ResponseMsg.FORBIDDEN;
+//            } else {
+//                for (MultipartFile multipartFile : files) {
+//                    file = multipartFile;
+//                    if (!file.isEmpty()) {
+//                        log.info("文件不为空，开始上传");
+//                        String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+//                        String fileName = UUID.randomUUID().toString() + "." + extName;
+//                        String filePath = resPath + fileName;
+//                        log.info(filePath);
+//
+//                        new File(filePath).createNewFile();
+//
+//                        byte[] bytes = file.getBytes();
+//                        stream = new BufferedOutputStream(new FileOutputStream(filePath));
+//                        stream.write(bytes);
+//                        stream.close();
+//                        judgeScriptPath = filePath;
+//                    } else {
+//                        log.info("文件为空，退出");
+//                        res = ResponseMsg.EMPTY_FILE;
+//                        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+//                    }
+//                    break;
+//                }
+//                JudgeScript judgeScript = JudgeScript.builder().keyword(keyword).script(judgeScriptPath).build();
+//                if (uploadService.saveJudgeScript(judgeScript)) {
+//                    res = ResponseMsg.OK;
+//                } else {
+//                    log.info("Something happens inside the server.");
+//                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//                }
+//            }
+//        } catch (ClassCastException e) {
+//            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+//            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
+//            res = ResponseMsg.UNAUTHORIZED;
+//        } catch (Exception e) {
+//            System.out.println("You failed to upload " + " => "
+//                    + e.getMessage());
+//            res = ResponseMsg.BAD_REQUEST;
+//        }
+//        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+//    }
 
     private String getResourcesPath(String type, boolean pic) {
         String osName = System.getProperty("os.name");

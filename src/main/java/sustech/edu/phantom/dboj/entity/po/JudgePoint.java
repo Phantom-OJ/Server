@@ -18,6 +18,7 @@ public class JudgePoint {
     private Integer judgeScriptId;
     private String answer;
     private Integer judgeDatabaseId;
+    private String dialect;
 //    private Boolean valid;
 
     public JudgePoint(UploadJudgePointForm form) {
@@ -26,5 +27,6 @@ public class JudgePoint {
         judgeScriptId = form.getJudgeScriptId();
         answer = form.getAnswer();
         judgeDatabaseId = form.getJudgeDatabaseId();
+        dialect = form.getDialect();
     }
 }

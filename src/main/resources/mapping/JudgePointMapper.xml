@@ -9,10 +9,12 @@
         order by id;
     </select>
     <insert id="saveOneProblemJudgePoints">
-        insert into "judge_point" (problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id)
+        insert into "judge_point" (problem_id, before_sql, after_sql, judge_script_id, answer,
+        judge_database_id,dialect)
         VALUES
         <foreach collection="list" index="index" item="l" separator="," close=";">
-            (#{l.problemId}, #{l.beforeSql}, #{l.afterSql}, #{l.judgeScriptId}, #{l.answer}, #{l.judgeDatabaseId})
+            (#{l.problemId}, #{l.beforeSql}, #{l.afterSql}, #{l.judgeScriptId}, #{l.answer},
+            #{l.judgeDatabaseId},#{l.dialect})
         </foreach>
     </insert>
 </mapper>

@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
@@ -20,7 +20,6 @@ import sustech.edu.phantom.dboj.service.UploadService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,8 +30,8 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping(value = "/api")
-@Api(tags = {"upload functions, may be discarded in the future"})
-//TODO: sampledb judgedb script avatar 图片链接
+@Api(tags = {"upload functions"})
+@PreAuthorize("hasRole('ROLE_STUDENT')")
 public class UploadController {
 
     @Autowired
@@ -46,201 +45,201 @@ public class UploadController {
      */
     @ApiOperation("上传公告")
     @RequestMapping(value = "/upload/announcement", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadAnnouncement(@RequestBody UploadAnnouncementForm form) {
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (user.getPermissionList().contains("publish the announcement")) {
-                String msg;
-                try {
-                    msg = uploadService.saveAnnouncement(form) ? "success" : "fail";
-                } catch (Exception e) {
-                    log.error(Arrays.toString(e.getStackTrace()));
-                    msg = "fail";
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<String>> uploadAnnouncement(
+            HttpServletRequest request,
+            @RequestBody UploadAnnouncementForm form) {
+        ResponseMsg res;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.CREATE_ANNOUNCEMENT)) {
+            res = ResponseMsg.FORBIDDEN;
+            log.error("The request from " + request.getRemoteAddr() + " wants to create an announcement.");
+        } else {
+            try {
+                if (uploadService.saveAnnouncement(form)) {
+                    log.info("Successfully create an announcement from " + request.getRemoteAddr());
+                    res = ResponseMsg.OK;
+                } else {
+                    log.error("Creating announcement fails " + request.getRemoteAddr());
+                    res = ResponseMsg.FAIL;
                 }
-                return new ResponseEntity<>(GlobalResponse.<String>builder().msg(msg).build(), "success".equals(msg) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
-                return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").data(null).build(), HttpStatus.FORBIDDEN);
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when request from " + request.getRemoteAddr() + " wants to create announcement.");
             }
-        } catch (ClassCastException e) {
-            log.error("You have not logged in.");
-            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Not authorized").data(null).build(), HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
-//
-//    //TODO:上传照片
-//    @RequestMapping(value = "/upload/avatar", method = RequestMethod.POST)
-//    @PreAuthorize("hasRole('ROLE_STUDENT')")
-//    public ResponseEntity<GlobalResponse<String>> uploadAvatar(String path) {
-//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (user.containSomePermission("modify personal information")) {
-//
-//        } else {
-//            return null;
-//        }
-//        return null;
-//    }
 
+    @ApiOperation("获取全部判题数据库")
     @RequestMapping(value = "/judgedb", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<List<JudgeDatabase>>> getAllJudgeDB(HttpServletRequest request) {
+    public ResponseEntity<GlobalResponse<List<JudgeDatabase>>> getAllJudgeDB(
+            HttpServletRequest request) {
         ResponseMsg res;
         List<JudgeDatabase> data = new ArrayList<>();
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("view judge database")) {
-                res = ResponseMsg.FORBIDDEN;
-            } else {
-                //TODO: query judge database表 异常处理
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
                 List<JudgeDatabase> list = uploadService.getAllJudgeDB();
-                if (list == null) {
-                    res = ResponseMsg.NOT_FOUND;
-                } else {
-                    res = ResponseMsg.OK;
-                    data = list;
-                }
+                res = ResponseMsg.OK;
+                data = list;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when getting judge database from request " + request.getRemoteAddr());
             }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
         }
         return new ResponseEntity<>(GlobalResponse.<List<JudgeDatabase>>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
     }
 
+    @ApiOperation("上传判题数据库")
+    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(
+            HttpServletRequest request,
+            @RequestBody JudgeDatabase judgeDatabase) {
+        ResponseMsg res;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                if (uploadService.saveJudgeDB(judgeDatabase)) {
+                    log.info("Successfully saving the judge database from " + request.getRemoteAddr());
+                    res = ResponseMsg.OK;
+                } else {
+                    log.info("Not saving the judge database from " + request.getRemoteAddr());
+                    res = ResponseMsg.FAIL;
+                }
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when uploading judge database from request " + request.getRemoteAddr());
+            }
+
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
+    }
+
+    @ApiOperation("获取单一判题数据库")
     @RequestMapping(value = "/judgedb/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<JudgeDatabase>> selOneJDB(HttpServletRequest request, @PathVariable Integer id) {
+    public ResponseEntity<GlobalResponse<JudgeDatabase>> selOneJDB(HttpServletRequest request, @PathVariable String id) {
         ResponseMsg res;
         JudgeDatabase data = null;
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("view judge database")) {
-                res = ResponseMsg.FORBIDDEN;
-            } else {
-                //TODO: query judge database表 异常处理
-                JudgeDatabase j = uploadService.selOneDB(id);
-                if (j == null) {
-                    res = ResponseMsg.NOT_FOUND;
-                } else {
-                    res = ResponseMsg.OK;
-                    data = j;
-                }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                int idx = Integer.parseInt(id);
+                JudgeDatabase j = uploadService.selOneDB(idx);
+                res = ResponseMsg.OK;
+                data = j;
+            } catch (NumberFormatException e) {
+                res = ResponseMsg.NOT_FOUND;
+                log.error("Wrong URL request from " + request.getRemoteAddr());
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when getting judge database from request " + request.getRemoteAddr());
             }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
         }
         return new ResponseEntity<>(GlobalResponse.<JudgeDatabase>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
     }
 
+    @ApiOperation("获取全部判题脚本")
     @RequestMapping(value = "/judgescript", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<List<JudgeScript>>> getJudgeScript(HttpServletRequest request) {
         ResponseMsg res;
         List<JudgeScript> data = new ArrayList<>();
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-                res = ResponseMsg.FORBIDDEN;
-            } else {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
                 List<JudgeScript> list = uploadService.getAllJudgeScript();
-                if (list == null) {
-                    res = ResponseMsg.NOT_FOUND;
-                } else {
-                    res = ResponseMsg.OK;
-                    data = list;
-                }
+                res = ResponseMsg.OK;
+                data = list;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when getting judge script from request " + request.getRemoteAddr());
             }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
         }
         return new ResponseEntity<>(GlobalResponse.<List<JudgeScript>>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
     }
 
-//    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
-//    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request, @RequestBody List<String> list) {
-//        ResponseMsg res;
-//        try {
-//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (!user.getPermissionList().contains("upload judge script")) {
-//                res = ResponseMsg.FORBIDDEN;
-//
-//            } else {
-//                //TODO:插入judge script表
-//                res = ResponseMsg.OK;
-//                if (true) {
-//
-//                } else {
-//
-//                }
-//            }
-//        } catch (ClassCastException e) {
-//            res = ResponseMsg.UNAUTHORIZED;
-//            log401(request);
-//        }
-//        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-//    }
+    @ApiOperation("上传判题脚本")
+    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(
+            HttpServletRequest request,
+            @RequestBody JudgeScript judgeScript) {
+        ResponseMsg res;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                if (uploadService.saveJudgeScript(judgeScript)) {
+                    log.info("Successfully saving the judge script from " + request.getRemoteAddr());
+                    res = ResponseMsg.OK;
+                } else {
+                    log.info("Not saving the judge script from " + request.getRemoteAddr());
+                    res = ResponseMsg.FAIL;
+                }
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when uploading judge script from request " + request.getRemoteAddr());
+            }
 
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
+    }
+
+    @ApiOperation("获取单一判题脚本")
     @RequestMapping(value = "/judgescript/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<JudgeScript>> selOneJs(HttpServletRequest request, @PathVariable Integer id) {
+    public ResponseEntity<GlobalResponse<JudgeScript>> selOneJs(HttpServletRequest request, @PathVariable String id) {
         ResponseMsg res;
         JudgeScript data = null;
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.getPermissionList().contains("view judge script")) {
-                res = ResponseMsg.FORBIDDEN;
-            } else {
-                //TODO: query judge database表 异常处理
-                JudgeScript j = uploadService.selOneJScript(id);
-                if (j == null) {
-                    res = ResponseMsg.NOT_FOUND;
-                } else {
-                    res = ResponseMsg.OK;
-                    data = j;
-                }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                int idx = Integer.parseInt(id);
+                JudgeScript j = uploadService.selOneJScript(idx);
+                res = ResponseMsg.OK;
+                data = j;
+            } catch (NumberFormatException e) {
+                res = ResponseMsg.NOT_FOUND;
+                log.error("Wrong URL request from " + request.getRemoteAddr());
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when getting judge script from request " + request.getRemoteAddr());
             }
-        } catch (ClassCastException e) {
-            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
         }
         return new ResponseEntity<>(GlobalResponse.<JudgeScript>builder().msg(res.getMsg()).data(data).build(), res.getStatus());
     }
 
+    @ApiOperation("创建作业")
     @RequestMapping(value = "/upload/assignment", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> uploadAssignment(HttpServletRequest request, @RequestBody UploadAssignmentForm form) {
+    public ResponseEntity<GlobalResponse<String>> uploadAssignment(
+            HttpServletRequest request,
+            @RequestBody UploadAssignmentForm form) {
         ResponseMsg res;
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
-                log.error("The visit from " + request.getRemoteAddr() + " has low authorities.");
-                res = ResponseMsg.FORBIDDEN;
-            }else{
-                //TODO: 插入assignment, problem, judge_point表
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
+            log.error("The visit from " + request.getRemoteAddr() + " has low authorities.");
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
                 if (uploadService.saveAssignment(form)) {
                     res = ResponseMsg.OK;
-                } else{
+                } else {
                     res = ResponseMsg.INTERNAL_SERVER_ERROR;
                 }
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error("Internal server error when uploading assignment from request " + request.getRemoteAddr());
             }
-        } catch (ClassCastException e) {
-            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-            res = ResponseMsg.UNAUTHORIZED;
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
-
-    // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
-    public static void log401(HttpServletRequest request) {
-        log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-    }
-
-    public static void log403(HttpServletRequest request) {
-        log.error("The visit from " + request.getRemoteAddr() + " has low authentication.");
-    }
-
-    public static void log500(HttpServletRequest request) {
-        log.error("The visit from " + request.getRemoteAddr() + " has internal server error.");
-    }
-
 }
