@@ -144,8 +144,8 @@ $$
 d_{cs} = \frac{x}{b}+kd+s
 $$',
         20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select',1);
-insert into public.problem(assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                           number_solve, index_in_assignment, solution, type, judge_script_id)
+insert into problem(assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
+                           number_solve, index_in_assignment, solution, status, type, judge_script_id)
 VALUES (2, 'p2.1', 'd2.1', 20, 256, 3000, 0, 0, 1, '### MySQL
 
 ```mysql
@@ -162,7 +162,7 @@ SELECT * FROM t WHERE id = 1;
 
 ```sqlite
 SELECT * FROM t WHERE id = 1;
-```', 'select'),
+```','public', 'select',1),
        (2, 'p2.2', 'd2.2', 20, 256, 3000, 0, 0, 2, '### MySQL
 
 ```mysql
@@ -179,24 +179,20 @@ SELECT * FROM t WHERE id = 1;
 
 ```sqlite
 SELECT * FROM t WHERE id = 1;
-```', 'select', 1),
-       (2, 'p2.3', 'd2.3', 20, 256, 3000, 0, 0, 3, '### MySQL
-
+```','public', 'select', 1),
+       (2, 'p2.3', 'd2.3', 20, 256, 3000, 0, 0, 3,
+        '### MySQL
 ```mysql
 SELECT * FROM t WHERE id = 1;
 ```
-
 ### PgSQL
-
 ```plsql
 SELECT * FROM t WHERE id = 1;
 ```
-
 ### SQLite
-
 ```sqlite
-SELECT * FROM t WHERE id = 1;
-```', 'select', 1),
+SELECT * FROM t WHERE id = 1
+```', 'public','select', 1),
        (2, 'p2.4', 'd2.4', 20, 256, 3000, 0, 0, 4, '### MySQL
 
 ```mysql
@@ -213,7 +209,7 @@ SELECT * FROM t WHERE id = 1;
 
 ```sqlite
 SELECT * FROM t WHERE id = 1;
-```', 'select', 1),
+```', 'public','select', 1),
        (2, 'p2.5', 'd2.5', 20, 256, 3000, 0, 0, 5, '### MySQL
 
 ```mysql
@@ -230,7 +226,7 @@ SELECT * FROM t WHERE id = 1;
 
 ```sqlite
 SELECT * FROM t WHERE id = 1;
-```', 'select', 1);
+```', 'public','select', 1);
 
 INSERT INTO public.assignment (title, description, start_time, end_time, status, full_score, sample_database_path,
                                valid)
