@@ -36,7 +36,6 @@ public class AdvancedInfoModificationService {
             }
         } catch (Exception e) {
             log.error("something happens in the internal server.");
-
         }
     }
 }

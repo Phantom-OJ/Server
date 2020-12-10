@@ -2,6 +2,7 @@ package sustech.edu.phantom.dboj.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,7 +75,11 @@ public class AdvancedModifyInfoController {
      */
     @ApiOperation("修改用户的角色")
     @RequestMapping(value = "/grant", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<String>> grantOthers(HttpServletRequest request, @RequestBody Map<String, List<Integer>> hm) {
+    public ResponseEntity<GlobalResponse<String>> grantOthers(
+            HttpServletRequest request,
+            @RequestBody
+            @ApiParam(name = "授权信息", value = "map", required = true)
+                    Map<String, List<Integer>> hm) {
         ResponseMsg res;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!user.containPermission(PermissionEnum.GRANT)) {

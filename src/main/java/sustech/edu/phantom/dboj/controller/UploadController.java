@@ -94,7 +94,7 @@ public class UploadController {
     }
 
     @ApiOperation("上传判题数据库")
-    @RequestMapping(value = "/upload/judgescipt", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(
             HttpServletRequest request,
             @RequestBody JudgeDatabase judgeDatabase) {
