@@ -89,3 +89,8 @@
 22. profile 里面放得分
 
 23. assignment 数据 每一个题有多少人ac了，一共要ac多少人，交了没ac，ac了，没交，总数 
+
+
+judge script: text
+
+judge database: json text
