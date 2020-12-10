@@ -37,6 +37,10 @@ spring:
       enabled: true
       max-file-size: 100MB
       max-request-size: 100MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
   mail:
     host: smtp.qq.com
     username: 695297502@qq.com

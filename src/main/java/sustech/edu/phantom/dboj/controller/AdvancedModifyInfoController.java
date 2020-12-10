@@ -52,10 +52,9 @@ public class AdvancedModifyInfoController {
         if (!user.containPermission(PermissionEnum.VIEW_PERMISSIONS)) {
             res = ResponseMsg.FORBIDDEN;
         } else {
-            //TODO:获取对应的权限信息
+            permissionList = advancedInfoModificationService.getPermissionList();
             res = ResponseMsg.OK;
         }
-
         return new ResponseEntity<>(GlobalResponse.<List<Permission>>builder().msg(res.getMsg()).data(permissionList).build(), res.getStatus());
     }
 

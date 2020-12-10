@@ -13,4 +13,9 @@
         where valid
           and role = #{role};
     </select>
+    <select id="getPermissions" resultType="sustech.edu.phantom.dboj.entity.po.Permission">
+        select id, role, allowance
+        from permission
+        where valid;
+    </select>
 </mapper>

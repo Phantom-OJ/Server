@@ -51,4 +51,11 @@ public class GlobalExceptionHandler {
         log.error("Request from " + request.getRemoteAddr() + " has wrong format of request path data.");
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(ResponseMsg.PATH_VAR_EXCEPTION.getMsg()).build(), ResponseMsg.PATH_VAR_EXCEPTION.getStatus());
     }
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<GlobalResponse<String>> error404(HttpServletRequest request, Exception e) throws Exception {
+        e.printStackTrace();
+        log.error(e.getMessage());
+        log.error("Request from " + request.getRemoteAddr() + " has wrong format of request path data.");
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(ResponseMsg.PATH_VAR_EXCEPTION.getMsg()).build(), ResponseMsg.PATH_VAR_EXCEPTION.getStatus());
+    }
 }

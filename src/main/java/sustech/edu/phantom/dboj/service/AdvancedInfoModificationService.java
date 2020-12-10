@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import sustech.edu.phantom.dboj.entity.po.Permission;
+import sustech.edu.phantom.dboj.mapper.PermissionMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 import java.util.List;
@@ -24,6 +26,9 @@ public class AdvancedInfoModificationService {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    PermissionMapper permissionMapper;
+
     public void grantUser(Map<String, List<Integer>> hm) {
         try {
             for (Map.Entry<String, List<Integer>> entry : hm.entrySet()) {
@@ -37,5 +42,11 @@ public class AdvancedInfoModificationService {
         } catch (Exception e) {
             log.error("something happens in the internal server.");
         }
+    }
+
+    public List<Permission> getPermissionList(){
+        List<Permission> permissionList;
+        permissionList = permissionMapper.getPermissions();
+        return permissionList;
     }
 }
