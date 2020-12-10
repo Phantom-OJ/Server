@@ -113,24 +113,24 @@ INSERT INTO public.judge_database (database_url, valid, keyword,dialect)
 VALUES ('{"host":"localhost","start_port":12000,"end_port":12010,"image_id":12345}',
         true, 'k2','pgsql');
 INSERT INTO public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                            number_solve, index_in_assignment, solution, valid, status, type)
+                            number_solve, index_in_assignment, solution, valid, status, type,judge_script_id)
 VALUES (1, 'select_test', 'select_test_description', 100, 46, 10000, 14, 5, 1, 'no solution', true, 'public',
-        'select');
+        'select',1);
 INSERT INTO public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                            number_solve, index_in_assignment, solution, valid, status, type)
+                            number_solve, index_in_assignment, solution, valid, status, type,judge_script_id)
 VALUES (1, 'trigger_test', 'trigger_test_description', 100, 256, 10000, 13, 2, 6, 'no public', true, 'public',
-        'trigger');
+        'trigger',2);
 INSERT INTO public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                            number_solve, index_in_assignment, solution, valid, status, type)
-VALUES (1, 'test5', 'test5', 20, 22, 1, 10, 1, 5, 'store a markdown', true, 'public', 'select');
+                            number_solve, index_in_assignment, solution, valid, status, type,judge_script_id)
+VALUES (1, 'test5', 'test5', 20, 22, 1, 10, 1, 5, 'store a markdown', true, 'public', 'select',1);
 INSERT INTO public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                            number_solve, index_in_assignment, solution, valid, status, type)
-VALUES (1, 'test4', 'test4', 20, 22, 1, 9, 1, 4, 'store a markdown', true, 'public', 'select');
+                            number_solve, index_in_assignment, solution, valid, status, type,judge_script_id)
+VALUES (1, 'test4', 'test4', 20, 22, 1, 9, 1, 4, 'store a markdown', true, 'public', 'select',1);
 INSERT INTO public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                            number_solve, index_in_assignment, solution, valid, status, type)
-VALUES (1, 'test3', 'est3', 20, 33, 1, 8, 2, 3, 'store a markdown', true, 'public', 'select');
+                            number_solve, index_in_assignment, solution, valid, status, type,judge_script_id)
+VALUES (1, 'test3', 'est3', 20, 33, 1, 8, 2, 3, 'store a markdown', true, 'public', 'select',1);
 INSERT INTO public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
-                            number_solve, index_in_assignment, solution, valid, status, type)
+                            number_solve, index_in_assignment, solution, valid, status, type,judge_script_id)
 VALUES (1, 'test2', '# Computer Network hw1
 
 **Name: **黎诗龙
@@ -143,8 +143,8 @@ The total delay is
 $$
 d_{cs} = \frac{x}{b}+kd+s
 $$',
-        20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select');
-insert into public.problem(id, assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
+        20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select',1);
+insert into public.problem(assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                            number_solve, index_in_assignment, solution, type, judge_script_id)
 VALUES (2, 'p2.1', 'd2.1', 20, 256, 3000, 0, 0, 1, '### MySQL
 
