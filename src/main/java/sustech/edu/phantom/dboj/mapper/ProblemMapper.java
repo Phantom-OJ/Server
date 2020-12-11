@@ -110,4 +110,6 @@ public interface ProblemMapper {
      * @return 更新的行数
      */
     int closedProblems(@Param("list") List<Integer> list);
+
+    List<Integer> problemGroups(int pid);
 }
