@@ -118,7 +118,6 @@ create table if not exists "assignment"
     end_time             bigint      not null,
     status               varchar(45) not null default 'private',
     full_score           int         not null,
-    sample_database_path text        not null,
     valid                bool        not null default true
 );
 create table if not exists "code"
