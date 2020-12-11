@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import sustech.edu.phantom.dboj.entity.po.Group;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.form.modification.UserForm;
 
@@ -73,4 +74,6 @@ public interface UserMapper {
     int grantUser(@Param("list") String role, List<Integer> list);
 
     List<User> findUserByFilter(String filter);
+
+    List<Group> findOneUserGroup(int uid);
 }

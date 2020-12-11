@@ -54,6 +54,7 @@ mybatis:
   type-aliases-package: sustech.edu.phantom.dboj.entity.*
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 filerootpath:
   windows: C:\Users\

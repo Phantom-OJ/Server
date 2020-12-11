@@ -101,6 +101,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("Username does not exist");
         }
         user.setPermissionList(permissionMapper.getUserPermission(user.getRole()));
+        user.setGroupList(userMapper.findOneUserGroup(user.getId()));
         return user;
     }
 }

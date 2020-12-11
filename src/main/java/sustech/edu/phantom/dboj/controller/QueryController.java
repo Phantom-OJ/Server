@@ -54,25 +54,20 @@ public class QueryController {
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(
             HttpServletRequest request,
-            @PathVariable @ApiParam(name = "记录id", required = true, type = "int") String id) {
+            @PathVariable @ApiParam(name = "记录id", required = true, type = "int") Integer id) {
         //TODO:Record记录这里可能要改，包括查询具体的record，管理员权限没有设置
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("User " + user.getUsername() + " from " + request.getRemoteAddr() + " wants to fetch the code " + id);
-        int idx;
         ResponseMsg res;
         RecordDetail record = null;
         try {
-            idx = Integer.parseInt(id);
-            record = recordService.getOneRecord(idx, user.getId());
+            record = recordService.getOneRecord(id, user.getId());
             if (record == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
                 res = ResponseMsg.OK;
             }
-        } catch (NumberFormatException e) {
-            log.error("The request URL from " + request.getRemoteAddr() + " has wrong format.");
-            res = ResponseMsg.BAD_REQUEST;
-        } catch (Exception e) {
+        }catch (Exception e) {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder().msg(res.getMsg()).data(record).build(), res.getStatus());

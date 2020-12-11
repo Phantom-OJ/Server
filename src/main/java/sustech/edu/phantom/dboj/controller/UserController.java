@@ -83,17 +83,13 @@ public class UserController {
                 idx = Integer.parseInt(id);
                 p = problemService.getOneProblem(idx, false);
                 res = ResponseMsg.OK;
-            } catch (NumberFormatException e1) {
-                log.error("No user signed in and occurs number format exception from " + request.getRemoteAddr());
-                res = ResponseMsg.BAD_REQUEST;
             } catch (Exception e2) {
                 log.error("No user signed in and occurs internal server error to " + request.getRemoteAddr());
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
             }
 
-        } catch (NumberFormatException e) {
-            res = ResponseMsg.BAD_REQUEST;
-            log.error("Bad request from the " + request.getRemoteAddr());
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
 
         return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg(res.getMsg()).data(p).build(), res.getStatus());
@@ -116,7 +112,8 @@ public class UserController {
      */
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
     @ApiOperation("提交代码")
-    public Boolean submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public Boolean submitCode(@PathVariable int id, @RequestBody CodeForm codeForm) throws Exception {
         //这个方法要用到消息队列
 
 //        try {
