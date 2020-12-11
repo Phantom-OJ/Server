@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Api(tags = {"需要验证码的方法"})
 public class VerificationController {
     @Autowired
-    RedisTemplate<String, String> redisTemplate;
+    RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     EmailService emailService;
@@ -74,9 +73,7 @@ public class VerificationController {
                 return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
             }
             String codeString = emailService.sendVerifyCode(username);
-            ValueOperations forValue = redisTemplate.opsForValue();
-            forValue.set(username, codeString);
-            redisTemplate.expire(username, 5 * 60, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(username, codeString, 5 * 60, TimeUnit.SECONDS);
             res = ResponseMsg.OK;
         } catch (Exception e) {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
@@ -95,8 +92,7 @@ public class VerificationController {
         ResponseMsg res;
         try {
             User user = userService.find(registerForm.getUsername());
-            ValueOperations<String, String> forValue = redisTemplate.opsForValue();
-            String validateCodeInRedis = forValue.get(registerForm.getUsername());
+            String validateCodeInRedis = (String) redisTemplate.opsForValue().get(registerForm.getUsername());
             log.info(registerForm.toString());
             if (user != null || !registerForm.getVerifyCode().equals(validateCodeInRedis)) {
                 return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Register Fails").build(), HttpStatus.BAD_REQUEST);
@@ -124,10 +120,9 @@ public class VerificationController {
         ResponseMsg res;
         try {
             User user = userService.find(form.getUsername());
-            ValueOperations<String, String> forValue = redisTemplate.opsForValue();
-            String validateCodeInRedis = forValue.get(form.getUsername());
+            String validateCodeInRedis = (String) redisTemplate.opsForValue().get(form.getUsername());
 
-            if (!form.getVCode().equals(validateCodeInRedis)) {
+            if (!form.getVerifyCode().equals(validateCodeInRedis)) {
                 res = ResponseMsg.VERIFICATION_CODE_NOT_MATCHED;
                 log.error("Reset password: verification code not matched from " + request.getRemoteAddr());
             } else {
@@ -160,8 +155,7 @@ public class VerificationController {
                     ModifyUsernameForm form) {
         ResponseMsg res;
         User user = userService.find(form.getUsername());
-        ValueOperations<String, String> forValue = redisTemplate.opsForValue();
-        String validateCodeInRedis = forValue.get(form.getUsername());
+        String validateCodeInRedis = (String) redisTemplate.opsForValue().get(form.getUsername());
         if (user != null) {
             res = ResponseMsg.USER_ALREADY_EXIST;
         } else {

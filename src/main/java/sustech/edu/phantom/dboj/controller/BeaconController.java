@@ -4,11 +4,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.po.User;
+import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +24,7 @@ import java.io.IOException;
  * @version 1.0
  * @date 2020/12/6 22:02
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api")
 @Slf4j
 @Api(tags = "Save state when signing out")
@@ -35,7 +38,7 @@ public class BeaconController {
      */
     @ApiOperation("退出浏览器时发送当前状态")
     @RequestMapping(value = "/beacon", method = RequestMethod.POST)
-    public void beacon(HttpServletRequest request) {
+    public ResponseEntity<GlobalResponse<String>> beacon(HttpServletRequest request) {
         try {
             String state = new String(request.getInputStream().readAllBytes());
             log.info("The current exiting state is " + state + " from " + request.getRemoteAddr());
@@ -53,5 +56,6 @@ public class BeaconController {
         } catch (Exception e) {
             log.error("Something wrong with request from address " + request.getRemoteAddr());
         }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().build(), HttpStatus.OK);
     }
 }

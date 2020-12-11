@@ -50,6 +50,9 @@ spring:
     protocol: smtp
   redis:
     timeout: 5000
+    database: 0
+    host: localhost
+    port: 6379
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: sustech.edu.phantom.dboj.entity.*

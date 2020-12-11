@@ -69,6 +69,8 @@ public interface UserMapper {
 
     List<User> findUserByGroup(int gid);
 
+    List<User> findNotUserByGroup(int gid);
+
     int uploadAvatar(String filePath, int uid);
 
     int grantUser(@Param("list") String role, List<Integer> list);

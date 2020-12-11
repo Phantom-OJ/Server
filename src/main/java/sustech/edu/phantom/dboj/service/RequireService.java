@@ -124,6 +124,10 @@ public class RequireService {
         return userMapper.findUserByGroup(gid);
     }
 
+    public List<User> getUserNotInGroup(int gid) {
+        return userMapper.findNotUserByGroup(gid);
+    }
+
     public List<Tag> getTag() {
         return tagMapper.allTagList();
     }

@@ -18,7 +18,18 @@ import javax.servlet.http.HttpServletRequest;
  * @filename JsonParseExceptionHandling
  * @date 2020/12/10 11:01
  */
-@RestControllerAdvice()
+@RestControllerAdvice(basePackageClasses = {
+        sustech.edu.phantom.dboj.controller.AdvancedModifyInfoController.class,
+        sustech.edu.phantom.dboj.controller.RequireController.class,
+        sustech.edu.phantom.dboj.controller.BasicController.class,
+        sustech.edu.phantom.dboj.controller.BasicModifyInfoController.class,
+        sustech.edu.phantom.dboj.controller.FileController.class,
+        sustech.edu.phantom.dboj.controller.QueryController.class,
+        sustech.edu.phantom.dboj.controller.StatController.class,
+        sustech.edu.phantom.dboj.controller.UploadController.class,
+        sustech.edu.phantom.dboj.controller.UserController.class,
+        sustech.edu.phantom.dboj.controller.VerificationController.class,
+        sustech.edu.phantom.dboj.controller.BeaconController.class})
 @Slf4j
 public class GlobalExceptionHandler {
     /**

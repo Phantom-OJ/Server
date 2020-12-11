@@ -83,7 +83,18 @@
         select u.id, u.username, u.nickname, u.role, u.avatar
         from "user" u
                  join user_group ug on u.id = ug.user_id and u.valid and ug.valid
-        where ug.group_id = #{gid};
+        where ug.group_id = #{gid}
+        limit 50;
+    </select>
+    <select id="findNotUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        ((select u1.id, u1.username, u1.nickname, u1.role, u1.avatar
+        from "user" u1)
+            except
+        (select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+                 join user_group ug on u.id = ug.user_id and u.valid and ug.valid
+        where ug.group_id = #{gid}))
+        limit 50;
     </select>
     <update id="uploadAvatar">
         update "user"
@@ -102,10 +113,11 @@
         from "user"
         where valid
           and (username like '%' || #{filter} || '%' or cast(id as varchar) like '%' || #{filter} || '%' or
-               role like '%' || #{filter} || '%')
+               role like '%' || #{filter} || '%');
     </select>
+
     <select id="findOneUserGroup" resultType="sustech.edu.phantom.dboj.entity.po.Group">
-        select g.id,g.description
+        select g.id, g.description
         from "user_group" ug
                  join "group" g on ug.group_id = g.id and g.valid and ug.valid
         where user_id = #{uid};
