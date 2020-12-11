@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @filename JsonParseExceptionHandling
  * @date 2020/12/10 11:01
  */
-@RestControllerAdvice
+@RestControllerAdvice()
 @Slf4j
 public class GlobalExceptionHandler {
     /**
@@ -55,8 +55,9 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理不存在的URL的情况
+     *
      * @param request http请求
-     * @param e NoHandlerFoundException
+     * @param e       NoHandlerFoundException
      * @return 404 响应信息
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)

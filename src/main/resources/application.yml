@@ -46,7 +46,8 @@ spring:
     username: 695297502@qq.com
     password: cpbfgjargvrkbeec
     default-encoding: utf-8
-    properties: { mail.smtp.auth: true,mail.smtp.starttls.enable: true,mail.smtp.starttls.required: true }
+    properties: { mail.smtp.auth: true,mail.smtp.port: 465,mail.smtp.ssl.enable: true }
+    protocol: smtp
   redis:
     timeout: 5000
 mybatis:
