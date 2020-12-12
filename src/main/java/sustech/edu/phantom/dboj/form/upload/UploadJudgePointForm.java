@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @ApiModel(description = "Upload judge point form")
 public class UploadJudgePointForm {
+    @ApiModelProperty(value = "the index of the Judge point")
+    private Integer id;
     @ApiModelProperty(value = "problem id")
     private Integer problemId;
     @ApiModelProperty(value = "before SQL")

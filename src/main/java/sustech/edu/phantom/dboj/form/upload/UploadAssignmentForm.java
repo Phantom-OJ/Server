@@ -20,6 +20,8 @@ import java.util.List;
 @Builder
 @ApiModel(description = "Upload assignment form")
 public class UploadAssignmentForm {
+    @ApiModelProperty(value = "the index of the assignment")
+    private Integer id;
     @ApiModelProperty(value = "assignment title")
     private String title;
     @ApiModelProperty(value = "assignment description")

@@ -18,5 +18,7 @@ public class HomeStat {
     @ApiModelProperty(value = "date")
     private String date;
     @ApiModelProperty(value = "the number of submission")
-    private Integer count;
+    private Integer total;
+    @ApiModelProperty(value = "ac")
+    private Integer ac;
 }

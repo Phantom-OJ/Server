@@ -45,7 +45,7 @@ public interface ProblemMapper {
     List<Problem> oneAssignmentProblems(int id);
 
     /**
-     * @param id         tag id
+     * @param id tag id
      * @return list of problems
      */
     List<Problem> oneTagProblems(int id);
@@ -77,10 +77,10 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title,@Param("flag2")boolean flag2, @Param("flag") boolean isAdmin);
+    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
 
 
-    Integer queryProblemsByTagAndNameCounter(@Param("tags") List<Integer> tags, String title,@Param("flag2")boolean flag2, @Param("flag") boolean isAdmin);
+    Integer queryProblemsByTagAndNameCounter(@Param("tags") List<Integer> tags, String title, @Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
 
 
     /**
@@ -115,4 +115,6 @@ public interface ProblemMapper {
     List<Integer> problemGroups(int pid);
 
     int modifyProblem(@Param("pid") int pid, @Param("param2") UploadProblemForm param2);
+
+    List<UploadProblemForm> getProblem(int aid);
 }

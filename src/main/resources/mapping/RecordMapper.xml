@@ -98,11 +98,10 @@
                u.nickname as username,
                u.avatar
         from record r
-                 join code c on r.code_id = c.id
-                 join problem p on r.problem_id = p.id
-                 join "user" u on u.id = r.user_id
+                 join code c on r.code_id = c.id and c.valid
+                 join problem p on r.problem_id = p.id and p.valid
+                 join "user" u on u.id = r.user_id and u.valid
         where r.valid
-          and r.user_id = #{userId}
           and r.id = #{id};
     </select>
     <select id="getRecordsOfOnePerson" resultType="sustech.edu.phantom.dboj.entity.po.Record">
@@ -349,11 +348,14 @@
         order by problem_id;
     </select>
     <select id="getHomeStat" resultType="sustech.edu.phantom.dboj.form.stat.HomeStat">
-        select cast(substr(cast(to_timestamp(submit_time / 1000) as varchar), 1, 10) as date) as date, count(*)
+        select cast(substr(cast(to_timestamp(submit_time / 1000) as varchar), 1, 10) as date) as date,
+               count(*)                                                                       as total,
+               sum(case record.result when 'AC' then 1 else 0 end)                            as ac
         from record
         where valid
         group by date
-        order by date desc
+        order by date
         limit 20;
     </select>
+
 </mapper>

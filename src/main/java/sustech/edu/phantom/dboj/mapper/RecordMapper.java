@@ -62,10 +62,9 @@ public interface RecordMapper {
      * 查询单个record
      *
      * @param id     record id
-     * @param userId user id
      * @return Record 对象
      */
-    RecordDetail getOneRecord(int id, int userId);
+    RecordDetail getOneRecord(int id);
 
     /**
      * 通过userid去查

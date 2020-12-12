@@ -69,14 +69,15 @@ public class QueryController {
         ResponseMsg res;
         RecordDetail record = null;
         try {
-            record = recordService.getOneRecord(id, user.getId());
+            boolean isAdmin = user.containPermission(PermissionEnum.VIEW_CODES);
+            record = recordService.getOneRecord(id, user.getId(), isAdmin);
             if (record == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
                 res = ResponseMsg.OK;
             }
         } catch (Exception e) {
-            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            res = ResponseMsg.FORBIDDEN;
         }
         return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder().msg(res.getMsg()).data(record).build(), res.getStatus());
     }

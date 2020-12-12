@@ -4,7 +4,8 @@
     <select id="getAllJudgePointsOfProblem" resultType="sustech.edu.phantom.dboj.entity.po.JudgePoint">
         select id, problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id
         from "judge_point"
-        where problem_id = #{id} and valid
+        where problem_id = #{id}
+          and valid
         order by id;
     </select>
     <insert id="saveOneProblemJudgePoints">
@@ -16,7 +17,7 @@
             #{l.judgeDatabaseId},#{l.dialect})
         </foreach>
     </insert>
-    <update id="invalidateJudgePoint" >
+    <update id="invalidateJudgePoint">
         update judge_point
         set valid = false
         where id = #{id};
@@ -32,4 +33,17 @@
             dialect           = #{param2.dialect}
         where id = #{id};
     </update>
+    <select id="getJudgePoints" resultType="sustech.edu.phantom.dboj.form.upload.UploadJudgePointForm">
+        select id,
+               problem_id,
+               before_sql,
+               after_sql,
+               judge_script_id,
+               answer,
+               judge_database_id,
+               dialect
+        from judge_point
+        where problem_id = #{pid}
+          and valid;
+    </select>
 </mapper>

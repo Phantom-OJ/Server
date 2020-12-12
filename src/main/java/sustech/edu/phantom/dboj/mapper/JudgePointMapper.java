@@ -2,6 +2,7 @@ package sustech.edu.phantom.dboj.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.JudgePoint;
+import sustech.edu.phantom.dboj.form.upload.UploadJudgePointForm;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface JudgePointMapper {
 
     int modifyJudgePoint(@Param("id") int id, @Param("param2") JudgePoint param2);
 
+    List<UploadJudgePointForm> getJudgePoints(int pid);
 }

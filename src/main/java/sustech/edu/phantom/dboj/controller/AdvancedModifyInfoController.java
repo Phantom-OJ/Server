@@ -225,6 +225,27 @@ public class AdvancedModifyInfoController {
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
+    @ApiOperation("获取作业信息")
+    @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<UploadAssignmentForm>> getAssignmentForm(
+            @PathVariable Integer id, HttpServletRequest request) {
+        ResponseMsg res;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UploadAssignmentForm a = null;
+        if (user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
+            try {
+                a = advancedInfoModificationService.getAssignmentForm(id);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            }
+        } else {
+            res = ResponseMsg.FORBIDDEN;
+        }
+        return new ResponseEntity<>(GlobalResponse.<UploadAssignmentForm>builder().msg(res.getMsg()).data(a).build(), res.getStatus());
+    }
+
+
     @ApiOperation("修改公告")
     @RequestMapping(value = "/announcement/{id}", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> modifyAnnouncement(

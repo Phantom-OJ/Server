@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import sustech.edu.phantom.dboj.entity.po.Group;
 import sustech.edu.phantom.dboj.entity.po.JudgePoint;
 import sustech.edu.phantom.dboj.entity.po.Permission;
+import sustech.edu.phantom.dboj.entity.po.Tag;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 import sustech.edu.phantom.dboj.form.upload.UploadProblemForm;
@@ -47,6 +49,8 @@ public class AdvancedInfoModificationService {
     @Autowired
     JudgePointMapper judgePointMapper;
 
+    @Autowired
+    TagMapper tagMapper;
 
 
     public void grantUser(Map<String, List<Integer>> hm) {
@@ -114,10 +118,23 @@ public class AdvancedInfoModificationService {
     }
 
     public boolean deleteJudgePoint(int id) {
-        return judgePointMapper.invalidateJudgePoint(id)!=0;
+        return judgePointMapper.invalidateJudgePoint(id) != 0;
     }
 
     public boolean modifyJudgePoint(int id, JudgePoint judgePoint) {
         return judgePointMapper.modifyJudgePoint(id, judgePoint) != 0;
+    }
+
+    public UploadAssignmentForm getAssignmentForm(int aid) {
+        UploadAssignmentForm form = assignmentMapper.getAssign(aid);
+        List<UploadProblemForm> uploadProblemFormList = problemMapper.getProblem(aid);
+        List<Integer> groupList = groupMapper.getAssignmentGroup(aid).stream().map(Group::getId).collect(Collectors.toList());
+        form.setGroupList(groupList);
+        for (UploadProblemForm f : uploadProblemFormList) {
+            f.setJudgePointList(judgePointMapper.getJudgePoints(f.getId()));
+            f.setTagList(tagMapper.getProblemTags(f.getId()).stream().map(Tag::getId).collect(Collectors.toList()));
+        }
+        form.setUploadProblemFormList(uploadProblemFormList);
+        return form;
     }
 }

@@ -140,4 +140,9 @@
             full_score  = #{param2.fullScore}
         where id = #{aid};
     </update>
+    <select id="getAssign" resultType="sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm">
+        select id, title, description, start_time, end_time, status, full_score
+        from assignment
+        where id = #{aid} and valid;
+    </select>
 </mapper>

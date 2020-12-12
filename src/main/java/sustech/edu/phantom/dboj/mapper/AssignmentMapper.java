@@ -101,4 +101,6 @@ public interface AssignmentMapper {
     List<Integer> get2BClosedId();
 
     boolean modifyAssignment(@Param("aid") int aid, @Param("param2") UploadAssignmentForm param2);
+
+    UploadAssignmentForm getAssign(int aid);
 }

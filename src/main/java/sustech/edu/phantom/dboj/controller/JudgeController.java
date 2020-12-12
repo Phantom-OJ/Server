@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/api")
 @Api(tags = {"判题"})
 public class JudgeController {
-//TODO:rejudge
+    //TODO:rejudge
     @ApiOperation("重新判题")
     @RequestMapping(value = "/rejudge/{id}", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> rejudge(

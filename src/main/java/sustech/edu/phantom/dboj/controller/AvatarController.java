@@ -116,7 +116,7 @@ public class AvatarController {
 //    @ApiOperation("上传判题数据库")
 //    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
 //    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request) {
-//        //TODO:判断是不是管理员
+//
 //        String resPath = getResourcesPath("judge_database", false);
 //        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
 //        List<MultipartFile> files = params.getFiles("file");
@@ -172,7 +172,7 @@ public class AvatarController {
 //                }
 //            }
 //        } catch (ClassCastException e) {
-//            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+//
 //            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
 //            res = ResponseMsg.UNAUTHORIZED;
 //        } catch (Exception e) {
@@ -234,7 +234,7 @@ public class AvatarController {
 //                }
 //            }
 //        } catch (ClassCastException e) {
-//            // TODO: 所有的未验证的访问全部显示 The visit from (IPv4) at <timestamp> is not signed in.
+//
 //            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
 //            res = ResponseMsg.UNAUTHORIZED;
 //        } catch (Exception e) {

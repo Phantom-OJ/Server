@@ -9,7 +9,6 @@ import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.home.Pagination;
-import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.RecordProblemMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
@@ -17,6 +16,7 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 /**
  * @author Shilong Li (Lori)
  * @version 1.0
@@ -97,24 +97,25 @@ public class RecordService {
     }
 
     /**
-     *
-     * @param id
-     * @param userId
-     * @return
+     * 得到具体record的代码等信息
+     * @param id record id
+     * @param userId user id
+     * @param isAdmin 是否是管理员
+     * @return record detail信息
      */
-    public RecordDetail getOneRecord(int id, int userId) {
-        RecordDetail r = recordMapper.getOneRecord(id, userId);
-        r.setDescription(recordProblemMapper.getOneRecordDetails(id, r.getProblemId()));
-        return r;
+    public RecordDetail getOneRecord(int id, int userId, boolean isAdmin) {
+        RecordDetail r = recordMapper.getOneRecord(id);
+        if (!isAdmin || !r.getUserId().equals(userId)) {
+            r = null;
+            throw new RuntimeException();
+        } else {
+            r.setDescription(recordProblemMapper.getOneRecordDetails(id, r.getProblemId()));
+            return r;
+        }
     }
-
 
 
     public Integer getUserIdByCodeId(int cid) {
         return recordMapper.getUserIdByCodeId(cid);
-    }
-
-    public List<HomeStat> getHomeStat() {
-        return recordMapper.getHomeStat();
     }
 }

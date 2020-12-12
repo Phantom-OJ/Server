@@ -255,4 +255,16 @@
             type        = #{param2.type}
         where id = #{pid};
     </update>
+    <select id="getProblem" resultType="sustech.edu.phantom.dboj.form.upload.UploadProblemForm">
+        select index_in_assignment,
+               title,
+               description,
+               full_score,
+               space_limit,
+               time_limit,
+               solution,
+               type
+        from problem
+        where assignment_id = #{aid} and valid;
+    </select>
 </mapper>
