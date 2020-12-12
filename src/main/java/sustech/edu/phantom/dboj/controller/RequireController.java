@@ -250,4 +250,8 @@ public class RequireController {
         return new ResponseEntity<>(GlobalResponse.<List<Permission>>builder().msg(res.getMsg()).data(permissionList).build(), res.getStatus());
     }
 
+//    @ApiOperation("获取人员接口")
+//    @RequestMapping(value = "/info",method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<List<GroupRoleForm>>>  getUserInfo(@ResponseBody @ApiParam())
+
 }
