@@ -70,8 +70,8 @@
         </if>;
     </select>
     <insert id="saveAssignment" useGeneratedKeys="true" keyProperty="id">
-        insert into "assignment" (title, description, start_time, end_time, full_score)
-        VALUES (#{title}, #{description}, #{startTime}, #{endTime}, #{fullScore});
+        insert into "assignment" (title, description, start_time, end_time, full_score, status)
+        VALUES (#{title}, #{description}, #{startTime}, #{endTime}, #{fullScore}, #{status});
     </insert>
     <select id="getOneAssignment" resultType="sustech.edu.phantom.dboj.entity.po.Assignment">
         select id,
@@ -129,5 +129,15 @@
                 #{l}
             </foreach>);
         </if>
+    </update>
+    <update id="modifyAssignment">
+        update assignment
+        set title       = #{param2.title},
+            description = #{param2.description},
+            start_time  = #{param2.startTime},
+            end_time    = #{param2.endTime},
+            status      = #{param2.status},
+            full_score  = #{param2.fullScore}
+        where id = #{aid};
     </update>
 </mapper>

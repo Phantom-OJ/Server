@@ -85,43 +85,43 @@ public class RequireController {
         return new ResponseEntity<>(GlobalResponse.<List<Group>>builder().data(data).msg(msg.getMsg()).build(), msg.getStatus());
     }
 
+//
+//    @ApiOperation("获取一个群组的所有人员")
+//    @RequestMapping(value = "/group/{id}", method = RequestMethod.GET)
+//    public ResponseEntity<GlobalResponse<List<User>>> getUserByGroup(
+//            HttpServletRequest request,
+//            @PathVariable
+//            @ApiParam(name = "群组id", value = "java.lang.Integer", required = true) Integer id){
+//        ResponseMsg res;
+//        List<User> users = null;
+//        try {
+//            users = requireService.getUsersByGroup(id);
+//            res = ResponseMsg.OK;
+//        } catch (Exception e) {
+//            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
+//            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
+//    }
 
-    @ApiOperation("获取一个群组的所有人员")
-    @RequestMapping(value = "/group/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<List<User>>> getUserByGroup(
-            HttpServletRequest request,
-            @PathVariable
-            @ApiParam(name = "群组id", value = "java.lang.Integer", required = true) Integer id){
-        ResponseMsg res;
-        List<User> users = null;
-        try {
-            users = requireService.getUsersByGroup(id);
-            res = ResponseMsg.OK;
-        } catch (Exception e) {
-            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
-            res = ResponseMsg.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
-    }
 
-
-    @ApiOperation("获取不在某个群组的所有人")
-    @RequestMapping(value = "/notgroup/{id}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<List<User>>> getUserNotInGroup(
-            HttpServletRequest request,
-            @PathVariable
-            @ApiParam(name = "群组id", value = "java.lang.Integer", required = true) Integer id){
-        ResponseMsg res;
-        List<User> users = null;
-        try {
-            users = requireService.getUserNotInGroup(id);
-            res = ResponseMsg.OK;
-        } catch (Exception e) {
-            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
-            res = ResponseMsg.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
-    }
+//    @ApiOperation("获取不在某个群组的所有人")
+//    @RequestMapping(value = "/notgroup/{id}", method = RequestMethod.GET)
+//    public ResponseEntity<GlobalResponse<List<User>>> getUserNotInGroup(
+//            HttpServletRequest request,
+//            @PathVariable
+//            @ApiParam(name = "群组id", value = "java.lang.Integer", required = true) Integer id){
+//        ResponseMsg res;
+//        List<User> users = null;
+//        try {
+//            users = requireService.getUserNotInGroup(id);
+//            res = ResponseMsg.OK;
+//        } catch (Exception e) {
+//            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
+//            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
+//    }
 
 
 //    @ApiOperation("获取所有用户信息")

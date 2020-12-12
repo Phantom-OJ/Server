@@ -348,4 +348,12 @@
         and result = 'AC') x group by problem_id
         order by problem_id;
     </select>
+    <select id="getHomeStat" resultType="sustech.edu.phantom.dboj.form.stat.HomeStat">
+        select cast(substr(cast(to_timestamp(submit_time / 1000) as varchar), 1, 10) as date) as date, count(*)
+        from record
+        where valid
+        group by date
+        order by date desc
+        limit 20;
+    </select>
 </mapper>

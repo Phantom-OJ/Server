@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import sustech.edu.phantom.dboj.controller.FileController;
+import sustech.edu.phantom.dboj.controller.AvatarController;
 import sustech.edu.phantom.dboj.entity.po.Grade;
 import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.form.home.Pagination;
@@ -53,7 +53,7 @@ public class DbojApplicationTests {
     UserMapper userMapper;
 
     @Autowired
-    FileController fileController;
+    AvatarController avatarController;
     @Autowired
     RecordMapper recordMapper;
 

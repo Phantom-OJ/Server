@@ -116,25 +116,30 @@ public class RequireService {
         return permissionList;
     }
 
-    public List<User> getUsers(String filter) throws Exception{
-        return userMapper.findUserByFilter(filter);
-    }
-
-
-    public List<User> getUsersByGroup(int gid) throws Exception{
-        return userMapper.findUserByGroup(gid);
-    }
-
-    public List<User> getUserNotInGroup(int gid) {
-        return userMapper.findNotUserByGroup(gid);
-    }
+//    public List<User> getUsers(String filter) throws Exception{
+//        return userMapper.findUserByFilter(filter);
+//    }
+//
+//
+//    public List<User> getUsersByGroup(int gid) throws Exception{
+//        return userMapper.findUserByGroup(gid);
+//    }
+//
+//    public List<User> getUserNotInGroup(int gid) {
+//        return userMapper.findNotUserByGroup(gid);
+//    }
 
     public List<Tag> getTag() {
         return tagMapper.allTagList();
     }
 
     public List<User> getUserByFilter(GroupRoleForm form) {
-        return userMapper.findUserByFilterMixed(form);
+        List<User> users =  userMapper.findUserByFilterMixed(form);
+        for (User u :
+                users) {
+            u.setGroupList(groupMapper.getStudentGroup(u.getId()));
+        }
+        return users;
     }
 
 }

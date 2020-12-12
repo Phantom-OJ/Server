@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RequestMapping(value = "/api")
 @Api(tags = {"Basic functions for home pages"})
-public class BasicController {
+public class HomeController {
 
     @Autowired
     AnnouncementService announcementService;

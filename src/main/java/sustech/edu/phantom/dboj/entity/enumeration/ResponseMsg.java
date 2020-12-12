@@ -17,6 +17,7 @@ public enum ResponseMsg {
     VERIFICATION_CODE_NOT_MATCHED("Verification code is not matched", HttpStatus.BAD_REQUEST),
     PASSWORD_WRONG("The password is wrong", HttpStatus.BAD_REQUEST),
     RESET_PASSWORD_WRONG("Fail to reset the password", HttpStatus.BAD_REQUEST),
+    FAIL_MODIFY("Fail", HttpStatus.OK),
 
     //权限
     UNAUTHORIZED("Not authorized", HttpStatus.UNAUTHORIZED),

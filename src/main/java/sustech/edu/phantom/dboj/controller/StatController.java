@@ -22,6 +22,7 @@ import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
 import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.StatService;
+import sustech.edu.phantom.dboj.utils.PreLoadUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -120,9 +121,6 @@ public class StatController {
         try {
             userGrades = statService.getUserGrade(id);
             res = ResponseMsg.OK;
-        } catch (NumberFormatException e) {
-            res = ResponseMsg.BAD_REQUEST;
-            log.error("Wrong URL from request " + request.getRemoteAddr());
         } catch (Exception e) {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
             log.error("Some errors happens in the internal server to the request " + request.getRemoteAddr());
@@ -161,7 +159,7 @@ public class StatController {
         ResponseMsg res;
         List<HomeStat> homeStats = null;
         try {
-            homeStats = (List<HomeStat>) redisTemplate.opsForValue().get("Home statistics");
+            homeStats = (List<HomeStat>) redisTemplate.opsForValue().get(PreLoadUtil.homeStatistics);
             res = ResponseMsg.OK;
             log.info("success getting info from " + request.getRemoteAddr());
         } catch (Exception e) {

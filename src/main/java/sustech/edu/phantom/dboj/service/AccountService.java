@@ -19,7 +19,7 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @Slf4j
-public class BasicInfoModificationService {
+public class AccountService {
 
     @Autowired
     UserMapper userMapper;

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import sustech.edu.phantom.dboj.entity.po.User;
-import sustech.edu.phantom.dboj.form.home.LoginForm;
 import sustech.edu.phantom.dboj.form.home.RegisterForm;
 import sustech.edu.phantom.dboj.form.home.RstPwdForm;
 import sustech.edu.phantom.dboj.mapper.GroupMapper;
@@ -44,21 +43,13 @@ public class UserService implements UserDetailsService {
         if (flag != null) {
             throw new RuntimeException("The username has been registered.");
         } else {
-            if (!userMapper.register(user)) {
+            if (!userMapper.register(user) || !userMapper.initUserGroup(user.getId())) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 throw new RuntimeException("Your registration has been declined.");
             } else {
                 log.info("Registration successfully");
-//                User usr = userMapper.login(user);
-//                usr.setPermissionList(permissionMapper.getUserPermission(usr.getRole()));
-//                usr.setGroupList(groupMapper.getStudentGroup(usr.getId()));
             }
         }
-    }
-
-    public User login(LoginForm loginForm) {
-        User user = User.builder().username(loginForm.getUsername()).password(loginForm.getPassword()).build();
-        return userMapper.login(user);
     }
 
     public User find(String username) {

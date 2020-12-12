@@ -46,17 +46,6 @@ public class UserController {
     JudgeService judgeService;
 
     /**
-     * 注册api 还没写好
-     *
-     * @param registerForm 注册表单
-     * @return 刚注册的user对象
-     */
-//    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-//    public User signup(@RequestBody RegisterForm registerForm) throws Exception {
-//        return userService.register(registerForm);
-//    }
-
-    /**
      * 根据id查询具体的problem，这里存在权限控制，因为有recentCode
      *
      * @param id problem id
@@ -89,13 +78,6 @@ public class UserController {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg(res.getMsg()).data(p).build(), res.getStatus());
-//        try {
-//            Problem p = problemService.getOneProblem(id, user.getId());
-//            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
-//        } catch (NullPointerException e) {
-//            Problem p = problemService.getOneProblem(id);
-//            return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg("success").data(p).build(), HttpStatus.OK);
-//        }
     }
 
 

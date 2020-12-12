@@ -60,8 +60,9 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-filerootpath:
+file-root-path:
   windows: C:\Users\
   linux: /resources/
+  default-avatar-filename: phantom.svg
 #logging:
 #  config: classpath:log4j2.yml

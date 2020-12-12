@@ -16,7 +16,10 @@
           and username = #{username,jdbcType=VARCHAR}
           and password = #{password,jdbcType=VARCHAR};
     </select>
-
+    <insert id="initUserGroup">
+        insert into "user_group" (user_id, group_id)
+        VALUES (#{id}, 1);
+    </insert>
     <insert id="register" parameterType="sustech.edu.phantom.dboj.entity.po.User" useGeneratedKeys="true">
         insert into "user" (username, password, nickname)
         values (#{username,jdbcType=VARCHAR},
@@ -28,11 +31,6 @@
         from "user"
         where username = #{param1};
     </select>
-    <update id="privilegeEscalation">
-        update "user"
-        set role = #{param2}
-        where id = #{param1};
-    </update>
     <select id="findUserByName" resultType="sustech.edu.phantom.dboj.entity.po.User">
         select *
         from "user"
@@ -79,23 +77,6 @@
         from "user"
         where id = #{id};
     </select>
-    <select id="findUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
-        select u.id, u.username, u.nickname, u.role, u.avatar
-        from "user" u
-                 join user_group ug on u.id = ug.user_id and u.valid and ug.valid
-        where ug.group_id = #{gid}
-        limit 50;
-    </select>
-    <select id="findNotUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
-        ((select u1.id, u1.username, u1.nickname, u1.role, u1.avatar
-          from "user" u1)
-         except
-         (select u.id, u.username, u.nickname, u.role, u.avatar
-          from "user" u
-                   join user_group ug on u.id = ug.user_id and u.valid and ug.valid
-          where ug.group_id = #{gid}))
-            limit 50;
-    </select>
     <update id="uploadAvatar">
         update "user"
         set avatar = #{filePath}
@@ -108,13 +89,6 @@
         </foreach>
         );
     </update>
-    <select id="findUserByFilter" resultType="sustech.edu.phantom.dboj.entity.po.User">
-        select id, username, nickname, role, avatar
-        from "user"
-        where valid
-          and (username like '%' || #{filter} || '%' or cast(id as varchar) like '%' || #{filter} || '%' or
-               role like '%' || #{filter} || '%');
-    </select>
 
     <select id="findOneUserGroup" resultType="sustech.edu.phantom.dboj.entity.po.Group">
         select g.id, g.description
@@ -130,7 +104,7 @@
         <if test="list.group!=0">
             and ug.group_id = #{list.group}
         </if>
-        and u.role = #{list.role}
+        and u.role like '%'||#{list.role}||'%'
         except
         select u.id, u.username, u.nickname, u.role, u.avatar
         from "user" u
@@ -142,4 +116,30 @@
         u.role = #{list.notRole}
         limit 50;
     </select>
+    <select id="checkUsrGroup" resultType="java.lang.Integer">
+        select count(*)
+        from user_group
+        where group_id = #{gid}
+          and user_id = #{uid};
+    </select>
+    <update id="saveUserGroup">
+        <choose>
+            <when test="flag">
+                update user_group
+                set valid = true
+                where group_id = #{gid}
+                and user_id = #{uid};
+            </when>
+            <otherwise>
+                insert into user_group (user_id, group_id) VALUES (#{uid},#{gid});
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="deleteUserGroup">
+        update user_group
+        set valid = false
+        where group_id = #{gid}
+          and user_id = #{uid};
+    </update>
 </mapper>

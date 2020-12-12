@@ -149,7 +149,8 @@ public class UploadService {
                             .status(a.getStatus())
                             .type(p.getType())
                             .build();
-                    if (problemMapper.saveProblem(tmp) > 0) {
+                    int pid = problemMapper.saveProblem(tmp);
+                    if (pid > 0) {
                         List<Integer> list = p.getTagList();
                         if (tagMapper.saveOneProblemTags(list, tmp.getId()) == 0) {
                             //:ROLLBACK
@@ -158,6 +159,7 @@ public class UploadService {
                         }
                         List<JudgePoint> judgePoints = new ArrayList<>();
                         for (UploadJudgePointForm j : p.getJudgePointList()) {
+                            j.setProblemId(pid);
                             judgePoints.add(new JudgePoint(j));
                         }
                         if (judgePointMapper.saveOneProblemJudgePoints(judgePoints) == 0) {
@@ -172,10 +174,12 @@ public class UploadService {
                 }
             } else {
                 log.error("No saving assignment.");
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
             }
         } catch (Exception e) {
             log.error("Something wrong with saving assignment.");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return false;
         }
         return true;

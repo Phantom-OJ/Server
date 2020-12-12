@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.service.SchedulingService;
-import sustech.edu.phantom.dboj.service.StatService;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,12 +22,10 @@ public class DatabaseSchedulingUtil {
     SchedulingService schedulingService;
 
     @Autowired
-    StatService statService;
-
-    @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
     @Scheduled(cron = "0 0/30 * * * ?")
+    @PostConstruct
     public void updateAssignmentInfo() {
         log.info("Updating the assignment and problem table every 30 minutes.");
         schedulingService.updateAssignmentInfo();
@@ -33,12 +33,15 @@ public class DatabaseSchedulingUtil {
 
     @Scheduled(cron = "1 0 0 * * ?")
     public void getHomeStat() {
-        try {
-
-        } catch (RuntimeException e) {
-
+        while (true) {
+            try {
+                List<HomeStat> homeStats = schedulingService.getHomeStat();
+                log.info("Getting home statistics every day!!!!!");
+                redisTemplate.opsForValue().set(PreLoadUtil.homeStatistics, homeStats, 1, TimeUnit.DAYS);
+                break;
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         }
-        log.info("Getting home statistics every day!!!!!");
-        redisTemplate.opsForValue().set("Home statistics", "", 1, TimeUnit.DAYS);
     }
 }

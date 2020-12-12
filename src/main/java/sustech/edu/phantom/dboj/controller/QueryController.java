@@ -15,14 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.Assignment;
+import sustech.edu.phantom.dboj.entity.po.JudgePoint;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
+import sustech.edu.phantom.dboj.service.AdvancedInfoModificationService;
 import sustech.edu.phantom.dboj.service.AssignmentService;
 import sustech.edu.phantom.dboj.service.RecordService;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 /**
  * @author Shilong Li (Lori)
  * @version 1.0
@@ -41,6 +45,10 @@ public class QueryController {
 
     @Autowired
     AssignmentService assignmentService;
+
+    @Autowired
+    AdvancedInfoModificationService advancedInfoModificationService;
+
 
     /**
      * 具体的查询某个record
@@ -67,7 +75,7 @@ public class QueryController {
             } else {
                 res = ResponseMsg.OK;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<>(GlobalResponse.<RecordDetail>builder().msg(res.getMsg()).data(record).build(), res.getStatus());
@@ -168,5 +176,27 @@ public class QueryController {
             log.error("The visit from the " + request.getRemoteAddr() + " has internal server error.");
         }
         return new ResponseEntity<>(GlobalResponse.<Assignment>builder().msg(res.getMsg()).data(assignment).build(), res.getStatus());
+    }
+
+    @ApiOperation("获取一个问题所有的判题点")
+    @RequestMapping(value = "/judgepoint/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<List<JudgePoint>>> getOneProblemJudgePoint(
+            HttpServletRequest request,
+            @PathVariable @ApiParam(name = "问题id") Integer id){
+        ResponseMsg res;
+        List<JudgePoint> judgePoints = null;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
+            try {
+                judgePoints = advancedInfoModificationService.getOneProblemJudgePoint(id);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            }
+        } else {
+            res = ResponseMsg.FORBIDDEN;
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<JudgePoint>>builder().msg(res.getMsg()).data(judgePoints).build(), res.getStatus());
     }
 }

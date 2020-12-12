@@ -21,14 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice(basePackageClasses = {
         sustech.edu.phantom.dboj.controller.AdvancedModifyInfoController.class,
         sustech.edu.phantom.dboj.controller.RequireController.class,
-        sustech.edu.phantom.dboj.controller.BasicController.class,
-        sustech.edu.phantom.dboj.controller.BasicModifyInfoController.class,
-        sustech.edu.phantom.dboj.controller.FileController.class,
+        sustech.edu.phantom.dboj.controller.HomeController.class,
+        sustech.edu.phantom.dboj.controller.AvatarController.class,
         sustech.edu.phantom.dboj.controller.QueryController.class,
         sustech.edu.phantom.dboj.controller.StatController.class,
         sustech.edu.phantom.dboj.controller.UploadController.class,
         sustech.edu.phantom.dboj.controller.UserController.class,
-        sustech.edu.phantom.dboj.controller.VerificationController.class,
+        sustech.edu.phantom.dboj.controller.AccountController.class,
         sustech.edu.phantom.dboj.controller.BeaconController.class})
 @Slf4j
 public class GlobalExceptionHandler {

@@ -3,6 +3,7 @@ package sustech.edu.phantom.dboj.mapper;
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.form.home.Pagination;
+import sustech.edu.phantom.dboj.form.upload.UploadProblemForm;
 
 import java.util.List;
 
@@ -93,7 +94,7 @@ public interface ProblemMapper {
 
     Integer queryProblemsByNameCounter(Pagination pagination, String title, @Param("flag") boolean isAdmin);
 
-    Integer saveProblem(Problem p);
+    int saveProblem(Problem p);
 
     /**
      * 更新problem的状态公开可见
@@ -112,4 +113,6 @@ public interface ProblemMapper {
     int closedProblems(@Param("list") List<Integer> list);
 
     List<Integer> problemGroups(int pid);
+
+    int modifyProblem(@Param("pid") int pid, @Param("param2") UploadProblemForm param2);
 }

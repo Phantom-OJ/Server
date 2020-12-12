@@ -35,13 +35,16 @@ import java.util.regex.Pattern;
 @Slf4j
 @Api(tags = "File uploading functions")
 @PreAuthorize("hasRole('ROLE_STUDENT')")
-public class FileController {
+public class AvatarController {
 
-    @Value("${filerootpath.windows}")
+    @Value("${file-root-path.windows}")
     private String UPLOAD_FOLDER_WINDOWS;
 
-    @Value("${filerootpath.linux}")
+    @Value("${file-root-path.linux}")
     private String UPLOAD_FOLDER_LINUX;
+
+    @Value("${file-root-path.default-avatar-filename}")
+    private String DEFAULT_AVATAR;
 
     @Autowired
     UploadService uploadService;
@@ -75,6 +78,13 @@ public class FileController {
                     if (!isImage(bytes)) {
                         throw new Exception("Not images!");
                     }
+                    String originalName = user.getAvatar().substring(user.getAvatar().lastIndexOf(File.separator)+1);
+                    if (!originalName.equals(DEFAULT_AVATAR)) {
+                        log.info(originalName);
+                        File file1 = new File(user.getAvatar());
+                        file1.delete();
+                    }
+
                     new File(filePath).createNewFile();
 
                     stream = new BufferedOutputStream(new FileOutputStream(filePath));
@@ -248,15 +258,16 @@ public class FileController {
         String path = null;
         if (Pattern.matches("Linux.*", osName) || Pattern.matches("Mac.*", osName)) {
             if (pic) {
-                path = UPLOAD_FOLDER_LINUX + "avatar/";
+                path = UPLOAD_FOLDER_LINUX + "avatar" + File.separator;
             } else {
-                path = UPLOAD_FOLDER_LINUX + "data/" + type + "/";
+                path = UPLOAD_FOLDER_LINUX + "data" + File.separator + type + File.separator;
             }
         } else if (Pattern.matches("Windows.*", osName)) {
             if (pic) {
-                path = UPLOAD_FOLDER_WINDOWS + usrName + "\\Desktop\\avatar\\";
+                path = UPLOAD_FOLDER_WINDOWS + usrName + File.separator + "Desktop" + File.separator +
+                        "avatar" + File.separator;
             } else {
-                path = UPLOAD_FOLDER_WINDOWS + usrName + "\\Desktop\\data\\" + type + "\\";
+                path = UPLOAD_FOLDER_WINDOWS + usrName + File.separator + "Desktop" + File.separator + "data" + File.separator + type + File.separator;
             }
         }
         try {
@@ -336,6 +347,7 @@ public class FileController {
             return false;
         }
     }
+
     public static byte[] subBytes(byte[] src, int begin, int count) {
         byte[] bs = new byte[count];
         System.arraycopy(src, begin, bs, 0, count);

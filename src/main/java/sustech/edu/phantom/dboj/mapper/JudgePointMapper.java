@@ -16,4 +16,8 @@ public interface JudgePointMapper {
 //TODO:更改数据库取出值
     Integer saveOneProblemJudgePoints(@Param("list") List<JudgePoint> list);
 
+    int invalidateJudgePoint(int id);
+
+    int modifyJudgePoint(@Param("id") int id, @Param("param2") JudgePoint param2);
+
 }

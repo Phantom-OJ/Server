@@ -8,13 +8,6 @@
         order by last_modified desc
         offset #{offset} limit #{limit};
     </select>
-    <insert id="insertAnnouncement" parameterType="sustech.edu.phantom.dboj.entity.po.Announcement">
-        insert into announcement (title, description)
-        values
-        <foreach collection="announcementList" index="index" item="announcement" separator="," close=";">
-            (#{announcement.title},#{announcement.description})
-        </foreach>
-    </insert>
     <insert id="insertOneAnnouncement">
         insert into "announcement" (title, description, create_date)
         values (#{title}, #{description}, #{createDate});
@@ -24,4 +17,16 @@
         from "announcement"
         offset #{offset} limit #{limit};
     </select>
+    <update id="modifyAnnouncement">
+        update "announcement"
+        set title         = #{param1.title},
+            description   = #{param1.description},
+            last_modified = #{param1.createDate}
+        where id = #{id};
+    </update>
+    <update id="deleteAnnouncement">
+        update "announcement"
+        set valid = false
+        where id = #{id};
+    </update>
 </mapper>

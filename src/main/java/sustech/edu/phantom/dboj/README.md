@@ -74,7 +74,7 @@
 
 15. 针对上传的文件，进行安全检查 [half solved]
 
-16. 检查上传文件的后缀名
+16. 检查上传文件的后缀名 [solved]
 
 17. 编辑作业 问题 返回全部信息 
 
@@ -90,6 +90,7 @@
 
 23. assignment 数据 每一个题有多少人ac了，一共要ac多少人，交了没ac，ac了，没交，总数 [算是solved]
 
+24. userGrade 那里，要根据group来筛选 !!!
 
 judge script: text
 

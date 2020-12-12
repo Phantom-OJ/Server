@@ -3,6 +3,7 @@ package sustech.edu.phantom.dboj.mapper;
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.Assignment;
 import sustech.edu.phantom.dboj.form.home.Pagination;
+import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 
 import java.util.List;
 
@@ -98,4 +99,6 @@ public interface AssignmentMapper {
      * @return assignment id list
      */
     List<Integer> get2BClosedId();
+
+    boolean modifyAssignment(@Param("aid") int aid, @Param("param2") UploadAssignmentForm param2);
 }

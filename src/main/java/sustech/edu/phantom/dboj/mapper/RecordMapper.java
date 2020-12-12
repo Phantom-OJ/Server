@@ -7,6 +7,7 @@ import sustech.edu.phantom.dboj.entity.po.Record;
 import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.home.Pagination;
+import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStat;
 
 import java.util.List;
@@ -153,4 +154,6 @@ public interface RecordMapper {
     Integer counterOneAssignment(int aid);
 
     List<AssignmentCount> counterOneAssignmentNotAC(@Param("list") List<Problem> list);
+
+    List<HomeStat> getHomeStat();
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.mapper.AssignmentMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
+import sustech.edu.phantom.dboj.mapper.RecordMapper;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class SchedulingService {
     @Autowired
     ProblemMapper problemMapper;
 
+    @Autowired
+    RecordMapper recordMapper;
+
     public void updateAssignmentInfo() {
         try {
             log.info("update the state of the assignment and problem");
@@ -42,7 +46,7 @@ public class SchedulingService {
         }
     }
 
-    public List<HomeStat> getHomeStat() {
-        return null;
+    public List<HomeStat> getHomeStat(){
+        return recordMapper.getHomeStat();
     }
 }

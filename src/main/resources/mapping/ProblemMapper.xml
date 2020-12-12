@@ -3,9 +3,9 @@
 <mapper namespace="sustech.edu.phantom.dboj.mapper.ProblemMapper">
     <insert id="saveProblem" useGeneratedKeys="true" keyProperty="id">
         insert into "problem" (assignment_id, title, description, full_score, space_limit, time_limit,
-                               index_in_assignment, solution, type)
+                               index_in_assignment, solution, type, number_submit, number_solve)
         VALUES (#{assignmentId}, #{title}, #{description}, #{fullScore}, #{spaceLimit}, #{timeLimit},
-                #{indexInAssignment}, #{solution}, #{type});
+                #{indexInAssignment}, #{solution}, #{type}, 0, 0);
     </insert>
     <select id="queryProblemWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
@@ -103,7 +103,7 @@
     </update>
     <update id="publishProblems">
         <if test="list.size()!=0">
-        update "problem" set status = 'public' where valid and status = 'private'
+            update "problem" set status = 'public' where valid and status = 'private'
             and assignment_id in
             (
             <foreach collection="list" item="l" separator="," index="index" close="">
@@ -113,7 +113,7 @@
     </update>
     <update id="closedProblems">
         <if test="list.size()!=0">
-        update "problem" set status = 'closed' where valid and status = 'public'
+            update "problem" set status = 'closed' where valid and status = 'public'
             and assignment_id in
             (
             <foreach collection="list" item="l" separator="," index="index" close="">
@@ -238,10 +238,21 @@
             and (status = 'public' or status = 'closed')
         </if>;
     </select>
-    <select id="problemGroups">
+    <select id="problemGroups" resultType="java.lang.Integer">
         select group_id
         from problem p
                  join assignment_group ag
                       on p.assignment_id = ag.assignment_id and p.valid and ag.valid and id = #{pid};
     </select>
+    <update id="modifyProblem">
+        update problem
+        set title       = #{param2.title},
+            description = #{param2.description},
+            full_score  = #{param2.fullScore},
+            space_limit = #{param2.spaceLimit},
+            time_limit  = #{param2.timeLimit},
+            solution    = #{param2.solution},
+            type        = #{param2.type}
+        where id = #{pid};
+    </update>
 </mapper>

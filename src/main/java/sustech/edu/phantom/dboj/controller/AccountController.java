@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +19,10 @@ import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.home.RegisterForm;
 import sustech.edu.phantom.dboj.form.home.RstPwdForm;
+import sustech.edu.phantom.dboj.form.modification.ModifyPasswdForm;
 import sustech.edu.phantom.dboj.form.modification.ModifyUsernameForm;
+import sustech.edu.phantom.dboj.form.modification.UserForm;
+import sustech.edu.phantom.dboj.service.AccountService;
 import sustech.edu.phantom.dboj.service.EmailService;
 import sustech.edu.phantom.dboj.service.UserService;
 
@@ -34,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
-@Api(tags = {"需要验证码的方法"})
-public class VerificationController {
+@Api(tags = {"用户修改个人信息/注册"})
+public class AccountController {
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
@@ -44,6 +48,9 @@ public class VerificationController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AccountService accountService;
 
     /**
      * 发送验证码
@@ -171,6 +178,62 @@ public class VerificationController {
             }
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+    }
+
+    /**
+     * 修改个人信息
+     * 修改nickname, state save 和  language
+     *
+     * @param form    修改信息的表单
+     * @param request http request
+     * @return 修改过后的个人信息
+     */
+    @ApiOperation("修改个人信息")
+    @RequestMapping(value = "/modify/basic", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<User>> user(
+            @RequestBody
+            @ApiParam(name = "修改个人信息的表单", value = "json", required = true)
+                    UserForm form,
+            HttpServletRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info(user.toString());
+        ResponseMsg res;
+        try {
+            boolean flag = accountService.modifyPersonalInfo(form, user.getId());
+            if (!flag) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            } else {
+                user.modifyInfo(form);
+                res = ResponseMsg.OK;
+                log.info("Modification of user " + user.getUsername() + " from " + request.getRemoteAddr() + " successfully");
+            }
+        } catch (Exception e) {
+            log.error("Some errors happen in the internal server.");
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(GlobalResponse.<User>builder().msg(res.getMsg()).data(user).build(), res.getStatus());
+    }
+
+    /**
+     * 更改密码
+     *
+     * @param form 修改密码的表单
+     * @return 成功与否的信息
+     */
+    @ApiOperation("修改密码")
+    @RequestMapping(value = "/modify/password", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<String>> modifyPassword(@RequestBody
+                                                                 @ApiParam(name = "修改密码的表单", value = "json", required = true)
+                                                                         ModifyPasswdForm form) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object[] a = accountService.modifyPassword(form, user.getUsername());
+        return new ResponseEntity<>(
+                GlobalResponse
+                        .<String>builder()
+                        .msg((String) a[0])
+                        .build(), (HttpStatus) a[1]);
     }
 
 }

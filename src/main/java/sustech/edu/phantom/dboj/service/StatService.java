@@ -8,6 +8,7 @@ import sustech.edu.phantom.dboj.entity.po.AssignmentCount;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
 import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
+import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;
@@ -118,5 +119,13 @@ public class StatService {
             a.setNoSubmission();
         }
         return assignmentStats;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<HomeStat> getHomeStat() {
+        return recordMapper.getHomeStat();
     }
 }

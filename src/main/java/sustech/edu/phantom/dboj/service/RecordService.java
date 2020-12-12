@@ -115,6 +115,6 @@ public class RecordService {
     }
 
     public List<HomeStat> getHomeStat() {
-        return null;
+        return recordMapper.getHomeStat();
     }
 }

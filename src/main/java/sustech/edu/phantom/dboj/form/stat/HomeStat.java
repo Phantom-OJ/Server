@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 @Data
 @AllArgsConstructor
@@ -18,7 +16,7 @@ import java.util.Date;
 @ApiModel(description = "Home statistics")
 public class HomeStat {
     @ApiModelProperty(value = "date")
-    private Date date;
+    private String date;
     @ApiModelProperty(value = "the number of submission")
     private Integer count;
 }
