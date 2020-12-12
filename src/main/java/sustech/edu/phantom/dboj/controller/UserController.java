@@ -66,36 +66,28 @@ public class UserController {
     @RequestMapping(value = "/problem/{id}", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<Problem>> getOneProblem(
             HttpServletRequest request,
-            @PathVariable @ApiParam(name = "问题id", required = true, type = "int") String id) {
+            @PathVariable @ApiParam(name = "问题id", required = true, type = "int") Integer id) {
         User user;
         Problem p = null;
         ResponseMsg res;
-        int idx;
         boolean isAdmin = false;
         try {
             user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            idx = Integer.parseInt(id);
             isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
-            p = problemService.getOneProblem(idx, user.getId(), isAdmin);
+            p = problemService.getOneProblem(id, user.getId(), isAdmin);
             res = ResponseMsg.OK;
         } catch (ClassCastException e) {
             try {
-                idx = Integer.parseInt(id);
-                p = problemService.getOneProblem(idx, false);
+                p = problemService.getOneProblem(id, isAdmin);
                 res = ResponseMsg.OK;
-            } catch (NumberFormatException e1) {
-                log.error("No user signed in and occurs number format exception from " + request.getRemoteAddr());
-                res = ResponseMsg.BAD_REQUEST;
             } catch (Exception e2) {
                 log.error("No user signed in and occurs internal server error to " + request.getRemoteAddr());
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
             }
 
-        } catch (NumberFormatException e) {
-            res = ResponseMsg.BAD_REQUEST;
-            log.error("Bad request from the " + request.getRemoteAddr());
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }
-
         return new ResponseEntity<>(GlobalResponse.<Problem>builder().msg(res.getMsg()).data(p).build(), res.getStatus());
 //        try {
 //            Problem p = problemService.getOneProblem(id, user.getId());
@@ -116,12 +108,19 @@ public class UserController {
      */
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
     @ApiOperation("提交代码")
-    public Boolean submitCode(@PathVariable int id, @RequestBody CodeForm codeForm/*, @AuthenticationPrincipal User user*/) throws Exception {
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<String>> submitCode(
+            @PathVariable @ApiParam(name = "问题id", required = true, type = "int") Integer id,
+            @RequestBody @ApiParam(name = "代码表单", required = true, type = "CodeForm对象") CodeForm codeForm) throws Exception {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if (user.isInGroup())
+//
+        ResponseMsg res = ResponseMsg.OK;
         //这个方法要用到消息队列
 
 //        try {
         judgeService.judgeCode(id, codeForm, 1);
-        return true;
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
 //        } catch (Exception e) {
 //            return false;
 ////            throw new Exception("You have not signed in.");

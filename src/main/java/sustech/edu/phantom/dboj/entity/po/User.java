@@ -12,7 +12,9 @@ import sustech.edu.phantom.dboj.form.modification.UserForm;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lori
@@ -64,6 +66,7 @@ public class User implements UserDetails {
 
     /**
      * 判断是否有该权限
+     *
      * @param permission permissionEnum字符串
      * @return 是否有权限
      */
@@ -72,9 +75,20 @@ public class User implements UserDetails {
     }
 
     /**
+     * 判断user是否在problem的group里面
+     *
+     * @param groupList group list
+     * @return 是否
+     */
+    public boolean isInGroup(List<Integer> groupList) {
+        List<Integer> groups = this.groupList.stream().map(Group::getId).collect(Collectors.toList());
+        return !Collections.disjoint(groups, groupList);
+    }
+
+    /**
      * 将关键信息隐藏
      */
-    public void hideInfo(){
+    public void hideInfo() {
         setRole(null);
         setState(null);
         setStateSave(null);
@@ -86,6 +100,7 @@ public class User implements UserDetails {
 
     /**
      * 更改信息
+     *
      * @param userForm user变更表单
      */
     public void modifyInfo(UserForm userForm) {

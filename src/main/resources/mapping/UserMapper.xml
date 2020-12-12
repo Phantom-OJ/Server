@@ -80,11 +80,21 @@
         where id = #{id};
     </select>
     <select id="findUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
-        select * from "user_group" where group_id in (
-            <foreach collection="list" item="l" separator="," index="index" close="">
-                #{l}
-            </foreach>
-            )
+        select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+                 join user_group ug on u.id = ug.user_id and u.valid and ug.valid
+        where ug.group_id = #{gid}
+        limit 50;
+    </select>
+    <select id="findNotUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        ((select u1.id, u1.username, u1.nickname, u1.role, u1.avatar
+          from "user" u1)
+         except
+         (select u.id, u.username, u.nickname, u.role, u.avatar
+          from "user" u
+                   join user_group ug on u.id = ug.user_id and u.valid and ug.valid
+          where ug.group_id = #{gid}))
+            limit 50;
     </select>
     <update id="uploadAvatar">
         update "user"
@@ -98,4 +108,38 @@
         </foreach>
         );
     </update>
+    <select id="findUserByFilter" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        select id, username, nickname, role, avatar
+        from "user"
+        where valid
+          and (username like '%' || #{filter} || '%' or cast(id as varchar) like '%' || #{filter} || '%' or
+               role like '%' || #{filter} || '%');
+    </select>
+
+    <select id="findOneUserGroup" resultType="sustech.edu.phantom.dboj.entity.po.Group">
+        select g.id, g.description
+        from "user_group" ug
+                 join "group" g on ug.group_id = g.id and g.valid and ug.valid
+        where user_id = #{uid};
+    </select>
+    <select id="findUserByFilterMixed" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+        join user_group ug on u.id = ug.user_id and ug.valid
+        where u.username like '%' || #{list.username} || '%'
+        <if test="list.group!=0">
+            and ug.group_id = #{list.group}
+        </if>
+        and u.role = #{list.role}
+        except
+        select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+        join user_group ug on u.id = ug.user_id and ug.valid
+        where
+        <if test="list.notGroup!=0">
+            ug.group_id = #{list.notGroup} or
+        </if>
+        u.role = #{list.notRole}
+        limit 50;
+    </select>
 </mapper>

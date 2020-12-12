@@ -108,8 +108,9 @@ public class AssignmentService {
                     count = 1;
                 }
             } catch (NumberFormatException e) {
-                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
-                count = assignmentMapper.queryAssignmentByNameCounter(name.trim(), isAdmin);
+                boolean flag2 = "".equals(name.trim());
+                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(),flag2, isAdmin);
+                count = assignmentMapper.queryAssignmentByNameCounter(name.trim(),flag2, isAdmin);
             }
         }
         for (Assignment a : assignmentList) {

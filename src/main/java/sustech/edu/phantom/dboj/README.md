@@ -72,7 +72,7 @@
 
 14. 针对老师，要显示所有的内容，包含private的内容 [Solved]
 
-15. 针对上传的文件，进行安全检查
+15. 针对上传的文件，进行安全检查 [half solved]
 
 16. 检查上传文件的后缀名
 
@@ -86,11 +86,13 @@
 
 21. problem和assignment的public private closed 权限[算是solved]
 
-22. profile 里面放得分
+22. profile 里面放得分 [solved]
 
-23. assignment 数据 每一个题有多少人ac了，一共要ac多少人，交了没ac，ac了，没交，总数 
+23. assignment 数据 每一个题有多少人ac了，一共要ac多少人，交了没ac，ac了，没交，总数 [算是solved]
 
 
 judge script: text
 
 judge database: json text
+
+==database, schema, imageId==

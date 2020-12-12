@@ -24,6 +24,7 @@ import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Shilong Li (Lori)
  * @version 1.0
@@ -83,10 +84,11 @@ public class BasicController {
      */
     @ApiOperation("获取公告")
     @RequestMapping(value = "/announcement", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<EntityVO<Announcement>>> getAnnouncement(HttpServletRequest request,
-                                                                                  @RequestBody
-                                                                                  @ApiParam(name = "分页过滤信息", value = "json", required = true)
-                                                                                          Pagination pagination) {
+    public ResponseEntity<GlobalResponse<EntityVO<Announcement>>> getAnnouncement(
+            HttpServletRequest request,
+            @RequestBody
+            @ApiParam(name = "分页过滤信息", value = "json", required = true)
+                    Pagination pagination) {
         ResponseMsg res;
         EntityVO<Announcement> list = null;
         try {

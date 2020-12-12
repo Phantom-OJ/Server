@@ -23,7 +23,7 @@ public interface ProblemMapper {
     Integer queryProblemWithoutFilterCounter(Pagination pagination, @Param("flag") boolean isAdmin);
 
 
-    Problem queryCurrentProblem(int id, @Param("flag") boolean isAdmin);
+    Problem queryCurrentProblem(@Param("id") int id, @Param("flag") boolean isAdmin);
 
     /**
      * @param id
@@ -76,10 +76,10 @@ public interface ProblemMapper {
      * @param title      problem title
      * @return list of problems
      */
-    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag") boolean isAdmin);
+    List<Problem> queryProblemsByTagAndName(Pagination pagination, @Param("tags") List<Integer> tags, String title,@Param("flag2")boolean flag2, @Param("flag") boolean isAdmin);
 
 
-    Integer queryProblemsByTagAndNameCounter(Pagination pagination, @Param("tags") List<Integer> tags, String title, @Param("flag") boolean isAdmin);
+    Integer queryProblemsByTagAndNameCounter(@Param("tags") List<Integer> tags, String title,@Param("flag2")boolean flag2, @Param("flag") boolean isAdmin);
 
 
     /**
@@ -110,4 +110,6 @@ public interface ProblemMapper {
      * @return 更新的行数
      */
     int closedProblems(@Param("list") List<Integer> list);
+
+    List<Integer> problemGroups(int pid);
 }

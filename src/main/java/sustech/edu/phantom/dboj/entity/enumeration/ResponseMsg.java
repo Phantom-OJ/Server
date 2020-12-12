@@ -26,6 +26,11 @@ public enum ResponseMsg {
     //上传文件
     EMPTY_FILE("The file is empty", HttpStatus.BAD_REQUEST),
     FAIL("Not found", HttpStatus.NOT_FOUND),
+
+    //全局异常处理
+    PARSE_EXCEPTION("Wrong format of post data", HttpStatus.BAD_REQUEST),
+    PATH_VAR_EXCEPTION("Wrong format of path variable data", HttpStatus.BAD_REQUEST),
+    NOT_EXIST_URL("Not exist such URL", HttpStatus.NOT_FOUND),
     ;
 
     private final String msg;

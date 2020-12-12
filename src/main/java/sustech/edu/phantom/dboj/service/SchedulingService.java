@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.mapper.AssignmentMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
 
@@ -39,5 +40,9 @@ public class SchedulingService {
             log.error("Internal server error when updating the status of the assignment and problem.");
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
+    }
+
+    public List<HomeStat> getHomeStat() {
+        return null;
     }
 }

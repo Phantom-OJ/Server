@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.TagMapper">
     <select id="allTagList" resultType="sustech.edu.phantom.dboj.entity.po.Tag">
-        select distinct id, keyword
+        select distinct id, keyword, description
         from "tag"
         where valid;
     </select>

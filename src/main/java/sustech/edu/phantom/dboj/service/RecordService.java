@@ -9,6 +9,7 @@ import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
 import sustech.edu.phantom.dboj.form.home.Pagination;
+import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.RecordProblemMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
@@ -111,5 +112,9 @@ public class RecordService {
 
     public Integer getUserIdByCodeId(int cid) {
         return recordMapper.getUserIdByCodeId(cid);
+    }
+
+    public List<HomeStat> getHomeStat() {
+        return null;
     }
 }

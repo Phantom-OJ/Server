@@ -31,4 +31,23 @@
         where valid
           and id in (select group_id from user_group where valid and user_id = #{sid});
     </select>
+    <insert id="saveGroup">
+        insert into "group" (description)
+        values (#{description});
+    </insert>
+    <update id="invalidateGroup">
+        update "group"
+        set valid = false
+        where id = #{gid};
+    </update>
+    <update id="invalidateGroupUser">
+        update "user_group"
+        set valid = false
+        where group_id = #{gid};
+    </update>
+    <update id="invalidateGroupAssignment">
+        update "assignment_group"
+        set valid = false
+        where group_id = #{gid};
+    </update>
 </mapper>

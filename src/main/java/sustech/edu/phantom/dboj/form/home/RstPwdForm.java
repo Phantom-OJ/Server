@@ -17,5 +17,5 @@ import lombok.NoArgsConstructor;
 public class RstPwdForm {
     private String username;
     private String newPassword;
-    private String vCode;
+    private String verifyCode;
 }

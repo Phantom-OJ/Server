@@ -18,10 +18,10 @@ import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.service.UploadService;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.awt.*;
+import java.io.*;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -51,7 +51,7 @@ public class FileController {
     public ResponseEntity<GlobalResponse<String>> uploadAvatar(HttpServletRequest request) {
         String resPath = getResourcesPath(null, true);
         MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
-        List<MultipartFile> avatar = params.getFiles("avatar");
+        List<MultipartFile> avatar = params.getFiles("file");
         log.info(avatar.toString());
         MultipartFile file;
         BufferedOutputStream stream;
@@ -61,6 +61,9 @@ public class FileController {
         try {
             for (MultipartFile multipartFile : avatar) {
                 System.err.println(multipartFile.getContentType());
+                if (!multipartFile.getContentType().matches("^image/\\w+$")) {
+                    throw new Exception("Not images!");
+                }
                 file = multipartFile;
                 if (!file.isEmpty()) {
                     log.info("图片不为空，开始上传");
@@ -68,10 +71,12 @@ public class FileController {
                     String fileName = user.getUsername().substring(0, user.getUsername().indexOf("@")) + "." + extName;
                     String filePath = resPath + fileName;
                     log.info(filePath);
-
+                    byte[] bytes = file.getBytes();
+                    if (!isImage(bytes)) {
+                        throw new Exception("Not images!");
+                    }
                     new File(filePath).createNewFile();
 
-                    byte[] bytes = file.getBytes();
                     stream = new BufferedOutputStream(new FileOutputStream(filePath));
                     stream.write(bytes);
                     stream.close();
@@ -84,7 +89,6 @@ public class FileController {
                 break;
             }
             if (uploadService.uploadAvatar(picturePath, user.getId())) {
-                //TODO: 更新图片
                 res = ResponseMsg.OK;
             } else {
                 log.info("Something happens inside the server.");
@@ -231,8 +235,16 @@ public class FileController {
 //        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
 //    }
 
+    /**
+     * 获取路径信息
+     *
+     * @param type 文件类型
+     * @param pic  是否是头像
+     * @return 路径
+     */
     private String getResourcesPath(String type, boolean pic) {
         String osName = System.getProperty("os.name");
+        String usrName = System.getProperty("user.name");
         String path = null;
         if (Pattern.matches("Linux.*", osName) || Pattern.matches("Mac.*", osName)) {
             if (pic) {
@@ -242,9 +254,9 @@ public class FileController {
             }
         } else if (Pattern.matches("Windows.*", osName)) {
             if (pic) {
-                path = UPLOAD_FOLDER_WINDOWS + "avatar\\";
+                path = UPLOAD_FOLDER_WINDOWS + usrName + "\\Desktop\\avatar\\";
             } else {
-                path = UPLOAD_FOLDER_WINDOWS + "data\\" + type + "\\";
+                path = UPLOAD_FOLDER_WINDOWS + usrName + "\\Desktop\\data\\" + type + "\\";
             }
         }
         try {
@@ -258,4 +270,82 @@ public class FileController {
         }
         return path;
     }
+
+    private static boolean isBMP(byte[] buf) {
+        byte[] markBuf = "BM".getBytes();  //BMP图片文件的前两个字节
+        return compare(buf, markBuf);
+    }
+
+    private static boolean isICON(byte[] buf) {
+        byte[] markBuf = {0, 0, 1, 0, 1, 0, 32, 32};
+        return compare(buf, markBuf);
+    }
+
+    private static boolean isWEBP(byte[] buf) {
+        byte[] markBuf = "RIFF".getBytes(); //WebP图片识别符
+        return compare(buf, markBuf);
+    }
+
+    private static boolean isGIF(byte[] buf) {
+
+        byte[] markBuf1 = "GIF89a".getBytes(); //GIF识别符
+        byte[] markBuf2 = "GIF87a".getBytes();
+        return compare(buf, markBuf1) || compare(buf, markBuf2);
+    }
+
+
+    private static boolean isPNG(byte[] buf) {
+
+        byte[] markBuf = {(byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}; //PNG识别符
+        // new String(buf).indexOf("PNG")>0 //也可以使用这种方式
+        return compare(buf, markBuf);
+    }
+
+    private static boolean isJPEGHeader(byte[] buf) {
+        byte[] markBuf = {(byte) 0xff, (byte) 0xd8}; //JPEG开始符
+        return compare(buf, markBuf);
+    }
+
+    private static boolean isJPEGFooter(byte[] buf)//JPEG结束符
+    {
+        byte[] markBuf = {(byte) 0xff, (byte) 0xd9};
+        return compare(buf, markBuf);
+    }
+
+    private static boolean compare(byte[] buf, byte[] markBuf) {
+        for (int i = 0; i < markBuf.length; i++) {
+            byte b = markBuf[i];
+            byte a = buf[i];
+            if (a != b) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isImage(byte[] imageContent) {
+        if (imageContent == null || imageContent.length == 0) {
+            return false;
+        }
+        Image img;
+        try (InputStream is = new ByteArrayInputStream(imageContent)) {
+            img = ImageIO.read(is);
+            return img != null && img.getWidth(null) > 0
+                    && img.getHeight(null) > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public static byte[] subBytes(byte[] src, int begin, int count) {
+        byte[] bs = new byte[count];
+        System.arraycopy(src, begin, bs, 0, count);
+        return bs;
+    }
+
+    public static boolean isPic(byte[] imageBytes) {
+        byte[] start = subBytes(imageBytes, 0, 8);
+        byte[] end = subBytes(imageBytes, imageBytes.length - 2, 2);
+        return false;
+    }
+
 }

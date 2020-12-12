@@ -32,8 +32,6 @@ public class UploadAssignmentForm {
     private String status;
     @ApiModelProperty(value = "total score of the assignment")
     private Integer fullScore;
-    @ApiModelProperty(value = "assignment sample database path")
-    private String sampleDatabasePath;
     @ApiModelProperty(value = "assignment problem list")
     private List<UploadProblemForm> uploadProblemFormList;
     @ApiModelProperty(value = "assignment groups")

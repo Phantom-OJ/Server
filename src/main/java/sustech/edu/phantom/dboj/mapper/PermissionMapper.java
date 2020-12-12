@@ -12,4 +12,10 @@ public interface PermissionMapper {
     List<String> getUserPermission(String role);
 
     int save(@Param("list") List<Permission> list);
+
+    List<Permission> getPermissions();
+
+    int savePermission(Permission permission);
+
+    int invalidatePermission(int id);
 }

@@ -102,8 +102,8 @@
         where id = #{id};
     </update>
     <update id="publishProblems">
-        update "problem" set status = 'public' where valid and status = 'private'
         <if test="list.size()!=0">
+        update "problem" set status = 'public' where valid and status = 'private'
             and assignment_id in
             (
             <foreach collection="list" item="l" separator="," index="index" close="">
@@ -112,8 +112,8 @@
         </if>
     </update>
     <update id="closedProblems">
-        update "problem" set status = 'closed' where valid and status = 'public'
         <if test="list.size()!=0">
+        update "problem" set status = 'closed' where valid and status = 'public'
             and assignment_id in
             (
             <foreach collection="list" item="l" separator="," index="index" close="">
@@ -151,7 +151,7 @@
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
         </foreach>
-        ))offset #{param1.offset} limit #{param1.limit};
+        ));
     </select>
     <select id="queryProblemsByTagAndName" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
@@ -170,11 +170,16 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        and (id in (select distinct problem_id from "problem_tag" where valid and (tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
         </foreach>)
-        or title like '%'||#{title}||'%'))
+        <if test="!flag2">
+            or title like '%'||#{title}||'%'
+        </if>
+        )
+        )
+        )
         order by id offset #{param1.offset} limit #{param1.limit};
     </select>
     <select id="queryProblemsByTagAndNameCounter" resultType="java.lang.Integer">
@@ -184,12 +189,16 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and (id in (select distinct problem_id from "problem_tag" where valid and tag_id in (
+        and (id in (select distinct problem_id from "problem_tag" where valid and (tag_id in (
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
         </foreach>)
-        or title like '%'||#{title}||'%'))
-        offset #{param1.offset} limit #{param1.limit};
+        <if test="!flag2">
+            or title like '%'||#{title}||'%'
+        </if>
+        )
+        )
+        );
     </select>
     <select id="queryProblemsByName" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
@@ -219,8 +228,7 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and title like '%' || #{title} || '%'
-        offset #{param1.offset} limit #{param1.limit};
+        and title like '%' || #{title} || '%';
     </select>
     <select id="queryProblemWithoutFilterCounter" resultType="java.lang.Integer">
         select count(*)
@@ -228,8 +236,12 @@
         where valid
         <if test="!flag">
             and (status = 'public' or status = 'closed')
-        </if>
-        offset #{param1.offset} limit #{param1.limit};
+        </if>;
     </select>
-
+    <select id="problemGroups">
+        select group_id
+        from problem p
+                 join assignment_group ag
+                      on p.assignment_id = ag.assignment_id and p.valid and ag.valid and id = #{pid};
+    </select>
 </mapper>
