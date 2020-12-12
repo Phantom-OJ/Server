@@ -124,23 +124,23 @@ public class RequireController {
     }
 
 
-    @ApiOperation("获取所有用户信息")
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public ResponseEntity<GlobalResponse<List<User>>> getUsers(
-            HttpServletRequest request,
-            @RequestBody @ApiParam(name = "过滤器", value = "java.lang.String", required = true) String filter
-    ) {
-        ResponseMsg res;
-        List<User> users = null;
-        try {
-            users = requireService.getUsers(filter);
-            res = ResponseMsg.OK;
-        } catch (Exception e) {
-            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
-            res = ResponseMsg.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
-    }
+//    @ApiOperation("获取所有用户信息")
+//    @RequestMapping(value = "/user", method = RequestMethod.POST)
+//    public ResponseEntity<GlobalResponse<List<User>>> getUsers(
+//            HttpServletRequest request,
+//            @RequestBody @ApiParam(name = "过滤器", value = "java.lang.String", required = true) String filter
+//    ) {
+//        ResponseMsg res;
+//        List<User> users = null;
+//        try {
+//            users = requireService.getUsers(filter);
+//            res = ResponseMsg.OK;
+//        } catch (Exception e) {
+//            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
+//            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//        }
+//        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
+//    }
 
     @ApiOperation("获取全部判题数据库")
     @RequestMapping(value = "/judgedb", method = RequestMethod.GET)
@@ -252,7 +252,7 @@ public class RequireController {
     }
 
     @ApiOperation("获取人员接口")
-    @RequestMapping(value = "/info", method = RequestMethod.POST)
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<List<User>>> getUserInfo(
             HttpServletRequest request,
             @RequestBody @ApiParam(name = "筛选过滤器", value = "GroupRoleForm", required = true) GroupRoleForm groupRoleForm) {

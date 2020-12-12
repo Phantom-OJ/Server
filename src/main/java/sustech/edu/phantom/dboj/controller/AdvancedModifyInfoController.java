@@ -191,8 +191,6 @@ public class AdvancedModifyInfoController {
 //                } else {
 //                    res = ResponseMsg.FAIL;
 //                }
-//            } catch (NumberFormatException e) {
-//                res = ResponseMsg.BAD_REQUEST;
 //            } catch (Exception e) {
 //                res = ResponseMsg.INTERNAL_SERVER_ERROR;
 //            }

@@ -8,7 +8,7 @@
         start_time,
         end_time,
         status,
-        full_score,
+        full_score
         from "assignment"
         where valid
         <if test="!flag">
@@ -32,7 +32,7 @@
         start_time,
         end_time,
         status,
-        full_score,
+        full_score
         from "assignment"
         where valid
         <if test="!flag">
@@ -80,13 +80,13 @@
         start_time,
         end_time,
         status,
-        full_score,
+        full_score
         from "assignment"
-        where id = #{aid}
+        where id = #{aid} and valid
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and valid;
+        ;
     </select>
     <select id="get2BPublicId" resultType="java.lang.Integer">
         select id

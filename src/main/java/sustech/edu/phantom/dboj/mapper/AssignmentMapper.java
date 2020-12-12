@@ -16,7 +16,7 @@ public interface AssignmentMapper {
      * @param pagination 分页信息
      * @return 作业 list
      */
-    List<Assignment> queryAssignmentsWithoutFilter(Pagination pagination, @Param("flag") boolean isAdmin);
+    List<Assignment> queryAssignmentsWithoutFilter(@Param("param1") Pagination pagination, @Param("flag") boolean isAdmin);
 
     /**
      * 跟上面一样<br></br>
@@ -30,11 +30,11 @@ public interface AssignmentMapper {
     /**
      * 返回分页的作业信息，过滤器为assignment title
      *
-     * @param pagination 分页信息
+     * @param param1 分页信息
      * @param name       assignment title
      * @return 作业信息
      */
-    List<Assignment> queryAssignmentByName(Pagination pagination, String name,@Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
+    List<Assignment> queryAssignmentByName(@Param("param1") Pagination param1, @Param("name") String name,@Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
 
     /**
      * 返回上面方法得到作业信息的总数
@@ -43,7 +43,7 @@ public interface AssignmentMapper {
      * @param isAdmin 是否有更高权限
      * @return 数量
      */
-    Integer queryAssignmentByNameCounter(String name,@Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
+    Integer queryAssignmentByNameCounter(@Param("name") String name,@Param("flag2") boolean flag2, @Param("flag") boolean isAdmin);
 
     /**
      * 返回所有的作业
@@ -58,7 +58,7 @@ public interface AssignmentMapper {
      * @param aid assignment id
      * @return 对应的assignment
      */
-    Assignment getOneAssignment(int aid, @Param("flag") boolean isAdmin);
+    Assignment getOneAssignment(@Param("aid") int aid, @Param("flag") boolean isAdmin);
 
 
     /**

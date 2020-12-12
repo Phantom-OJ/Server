@@ -125,17 +125,21 @@
     <select id="findUserByFilterMixed" resultType="sustech.edu.phantom.dboj.entity.po.User">
         select u.id, u.username, u.nickname, u.role, u.avatar
         from "user" u
-                 join user_group ug on u.id = ug.user_id and ug.valid
+        join user_group ug on u.id = ug.user_id and ug.valid
         where u.username like '%' || #{list.username} || '%'
-          and ug.group_id = #{list.group}
-          and u.role like '%' || #{list.role} || '%'
-            except
+        <if test="list.group!=0">
+            and ug.group_id = #{list.group}
+        </if>
+        and u.role = #{list.role}
+        except
         select u.id, u.username, u.nickname, u.role, u.avatar
         from "user" u
-                 join user_group ug on u.id = ug.user_id and ug.valid
-        where u.username like '%' || #{list.username} || '%'
-          and ug.group_id = #{list.notGroup}
-          and u.role like '%' || #{list.notRole} || '%'
+        join user_group ug on u.id = ug.user_id and ug.valid
+        where
+        <if test="list.notGroup!=0">
+            ug.group_id = #{list.notGroup} or
+        </if>
+        u.role = #{list.notRole}
         limit 50;
     </select>
 </mapper>

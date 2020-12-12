@@ -137,28 +137,22 @@ public class QueryController {
     @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
     public ResponseEntity<GlobalResponse<Assignment>> getOneAssignment(
             HttpServletRequest request,
-            @PathVariable @ApiParam(name = "作业id", required = true, type = "int") String id) {
-        int idx;
+            @PathVariable @ApiParam(name = "作业id", required = true, type = "int") Integer id) {
         ResponseMsg res;
         Assignment assignment = null;
         try {
-            idx = Integer.parseInt(id);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             boolean isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
-            Assignment a = assignmentService.getOneAssignment(idx, true, user.getId(), isAdmin);
+            Assignment a = assignmentService.getOneAssignment(id, true, user.getId(), isAdmin);
             if (a == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
                 res = ResponseMsg.OK;
                 assignment = a;
             }
-        } catch (NumberFormatException e) {
-            res = ResponseMsg.BAD_REQUEST;
-            log.error("The visit from the " + request.getRemoteAddr() + " has wrong URL.");
         } catch (ClassCastException e) {
-            idx = Integer.parseInt(id);
             try {
-                Assignment a = assignmentService.getOneAssignment(idx, false, 0, false);
+                Assignment a = assignmentService.getOneAssignment(id, false, 0, false);
                 if (a == null) {
                     res = ResponseMsg.NOT_FOUND;
                 } else {

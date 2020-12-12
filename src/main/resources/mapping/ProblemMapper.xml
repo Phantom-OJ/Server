@@ -151,7 +151,7 @@
         <foreach collection="tags" index="index" item="tag" separator="," close="">
             #{tag}
         </foreach>
-        ))offset #{param1.offset} limit #{param1.limit};
+        ));
     </select>
     <select id="queryProblemsByTagAndName" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
@@ -228,8 +228,7 @@
         <if test="!flag">
             and (status = 'public' or status = 'closed')
         </if>
-        and title like '%' || #{title} || '%'
-        offset #{param1.offset} limit #{param1.limit};
+        and title like '%' || #{title} || '%';
     </select>
     <select id="queryProblemWithoutFilterCounter" resultType="java.lang.Integer">
         select count(*)
@@ -237,8 +236,7 @@
         where valid
         <if test="!flag">
             and (status = 'public' or status = 'closed')
-        </if>
-        offset #{param1.offset} limit #{param1.limit};
+        </if>;
     </select>
     <select id="problemGroups">
         select group_id

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
 import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
+import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
 import sustech.edu.phantom.dboj.service.StatService;
 
@@ -36,6 +38,9 @@ import java.util.List;
 public class StatController {
     @Autowired
     StatService statService;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 个人信息界面overview
@@ -148,5 +153,21 @@ public class StatController {
             }
         }
         return new ResponseEntity<>(GlobalResponse.<List<AssignmentStat>>builder().msg(res.getMsg()).data(assignmentStats).build(), res.getStatus());
+    }
+
+    @ApiOperation("获取主页数据")
+    @RequestMapping(value = "/home/statistics", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<List<HomeStat>>> getHomeStat(HttpServletRequest request) {
+        ResponseMsg res;
+        List<HomeStat> homeStats = null;
+        try {
+            homeStats = (List<HomeStat>) redisTemplate.opsForValue().get("Home statistics");
+            res = ResponseMsg.OK;
+            log.info("success getting info from " + request.getRemoteAddr());
+        } catch (Exception e) {
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            log.error("Internal server error happens in getting statistics.");
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<HomeStat>>builder().msg(res.getMsg()).data(homeStats).build(), res.getStatus());
     }
 }

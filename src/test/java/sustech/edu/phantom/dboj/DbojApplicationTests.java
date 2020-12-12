@@ -13,6 +13,7 @@ import sustech.edu.phantom.dboj.controller.FileController;
 import sustech.edu.phantom.dboj.entity.po.Grade;
 import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.form.home.Pagination;
+import sustech.edu.phantom.dboj.form.search.GroupRoleForm;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
 import sustech.edu.phantom.dboj.mapper.UserMapper;
@@ -26,7 +27,7 @@ import java.util.Map;
 @SpringBootTest
 @MapperScan("sustech.edu.phantom.dboj")
 public class DbojApplicationTests {
-//    @Autowired
+    //    @Autowired
 //    TestService testService;
     @Autowired
     GradeMapper gradeMapper;
@@ -58,13 +59,13 @@ public class DbojApplicationTests {
 
     @Test
 
-    public void  testGradeMapper(){
-        Grade grade=Grade.builder().userId(1).problemId(1).score(100).build();
-    gradeMapper.saveOneGrade(grade);
-    Grade grade1=gradeMapper.getOneGrade(1,1);
-        System.out.println("查询结果"+grade1.toString());
+    public void testGradeMapper() {
+        Grade grade = Grade.builder().userId(1).problemId(1).score(100).build();
+        gradeMapper.saveOneGrade(grade);
+        Grade grade1 = gradeMapper.getOneGrade(1, 1);
+        System.out.println("查询结果" + grade1.toString());
         //grade1.setScore(3);
-        gradeMapper.updateOneGrade(1,1,123);
+        gradeMapper.updateOneGrade(1, 1, 123);
     }
 
 
@@ -136,8 +137,8 @@ public class DbojApplicationTests {
     }
 
 
+    static String answer = "SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'";
 
-    static String answer="SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'";
     @Test
     public void judgeCode() {
         CodeForm codeForm = new CodeForm();
@@ -146,12 +147,13 @@ public class DbojApplicationTests {
         codeForm.setSubmitTime(12345L);
         System.out.println(judgeService);
     }
+
     @Test
-    public void getAnn(){
+    public void getAnn() {
         Pagination pagination = new Pagination();
         pagination.setStart(1);
         pagination.setEnd(9);
-        pagination.setFilter(new HashMap<String,Object>());
+        pagination.setFilter(new HashMap<String, Object>());
         pagination.setParameters();
         System.out.println(announcementService.announcementEntityVO(pagination));
 //        ResponseEntity<>(GlobalResponse.<EntityVO<Announcement>>builder()
@@ -164,7 +166,8 @@ public class DbojApplicationTests {
     public void test1111() {
 //        System.out.println(fileController.getOfficeHome());
 //        assert recordMapper.getProblemResultSet(5) != null;
-        assert userMapper.findUserById(66)== null;
+//        assert userMapper.findUserById(66)== null;
 //        System.out.println(recordMapper.getProblemResultSet(5));
+        System.out.println(userMapper.findUserByFilterMixed(GroupRoleForm.builder().group(0).notGroup(1).notRole("").role("").username("").build()));
     }
 }

@@ -23,7 +23,7 @@ public interface ProblemMapper {
     Integer queryProblemWithoutFilterCounter(Pagination pagination, @Param("flag") boolean isAdmin);
 
 
-    Problem queryCurrentProblem(int id, @Param("flag") boolean isAdmin);
+    Problem queryCurrentProblem(@Param("id") int id, @Param("flag") boolean isAdmin);
 
     /**
      * @param id

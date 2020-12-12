@@ -21,7 +21,7 @@ spring:
       max-open-prepared-statements: 20
       max-pool-prepared-statement-per-connection-size: 20
       filters: stat
-      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;mergesql=false
       use-global-data-source-stat: true
 #      filter:
 #        log4j:
@@ -62,6 +62,6 @@ mybatis:
 
 filerootpath:
   windows: C:\Users\
-  linux: /home/phantom/ooadproject/backend/resources/
+  linux: /resources/
 #logging:
 #  config: classpath:log4j2.yml
