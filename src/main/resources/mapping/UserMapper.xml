@@ -88,13 +88,13 @@
     </select>
     <select id="findNotUserByGroup" resultType="sustech.edu.phantom.dboj.entity.po.User">
         ((select u1.id, u1.username, u1.nickname, u1.role, u1.avatar
-        from "user" u1)
-            except
-        (select u.id, u.username, u.nickname, u.role, u.avatar
-        from "user" u
-                 join user_group ug on u.id = ug.user_id and u.valid and ug.valid
-        where ug.group_id = #{gid}))
-        limit 50;
+          from "user" u1)
+         except
+         (select u.id, u.username, u.nickname, u.role, u.avatar
+          from "user" u
+                   join user_group ug on u.id = ug.user_id and u.valid and ug.valid
+          where ug.group_id = #{gid}))
+            limit 50;
     </select>
     <update id="uploadAvatar">
         update "user"
@@ -121,5 +121,21 @@
         from "user_group" ug
                  join "group" g on ug.group_id = g.id and g.valid and ug.valid
         where user_id = #{uid};
+    </select>
+    <select id="findUserByFilterMixed" resultType="sustech.edu.phantom.dboj.entity.po.User">
+        select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+                 join user_group ug on u.id = ug.user_id and ug.valid
+        where u.username like '%' || #{list.username} || '%'
+          and ug.group_id = #{list.group}
+          and u.role like '%' || #{list.role} || '%'
+            except
+        select u.id, u.username, u.nickname, u.role, u.avatar
+        from "user" u
+                 join user_group ug on u.id = ug.user_id and ug.valid
+        where u.username like '%' || #{list.username} || '%'
+          and ug.group_id = #{list.notGroup}
+          and u.role like '%' || #{list.notRole} || '%'
+        limit 50;
     </select>
 </mapper>

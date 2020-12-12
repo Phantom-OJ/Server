@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.po.*;
+import sustech.edu.phantom.dboj.form.search.GroupRoleForm;
 import sustech.edu.phantom.dboj.mapper.*;
 
 import java.util.List;
@@ -130,6 +131,10 @@ public class RequireService {
 
     public List<Tag> getTag() {
         return tagMapper.allTagList();
+    }
+
+    public List<User> getUserByFilter(GroupRoleForm form) {
+        return userMapper.findUserByFilterMixed(form);
     }
 
 }
