@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import sustech.edu.phantom.dboj.service.SchedulingService;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 这个类是springboot定时任务
  */
@@ -28,6 +30,6 @@ public class DatabaseSchedulingUtil {
     @Scheduled(cron = "1 0 0 * * ?")
     public void getHomeStat() {
         log.info("Getting home statistics every day!!!!!");
-
+        redisTemplate.opsForValue().set("test for lunch", "hahhahhahahahhah", 5 * 60, TimeUnit.SECONDS);
     }
 }
