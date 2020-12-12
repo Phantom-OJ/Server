@@ -13,6 +13,7 @@ import sustech.edu.phantom.dboj.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Shilong Li (Lori)
@@ -23,7 +24,6 @@ import java.util.Map;
 @Transactional(rollbackFor = Exception.class)
 @Slf4j
 public class AdvancedInfoModificationService {
-    private final static String[] ROLE_LIST = {"ROLE_STUDENT", "ROLE_SA", "ROLE_TEACHER"};
     @Autowired
     UserMapper userMapper;
 
@@ -35,9 +35,12 @@ public class AdvancedInfoModificationService {
 
 
     public void grantUser(Map<String, List<Integer>> hm) {
+        var roleList = permissionMapper.getPermissions().stream().map(Permission::getRole).distinct()
+                .collect(Collectors.toList());
+        roleList.add("ROLE_STUDENT");
         try {
             for (Map.Entry<String, List<Integer>> entry : hm.entrySet()) {
-                if (ArrayUtils.contains(ROLE_LIST, entry.getKey())) {
+                if (roleList.contains(entry.getKey())) {
                     userMapper.grantUser(entry.getKey(), entry.getValue());
                 } else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
