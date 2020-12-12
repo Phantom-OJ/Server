@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +38,9 @@ public class AdvancedModifyInfoController {
 
     @Autowired
     AdvancedInfoModificationService advancedInfoModificationService;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     @ApiOperation("添加权限信息")
     @RequestMapping(value = "/permission", method = RequestMethod.PUT)

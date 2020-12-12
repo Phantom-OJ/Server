@@ -9,7 +9,6 @@
         end_time,
         status,
         full_score,
-        sample_database_path
         from "assignment"
         where valid
         <if test="!flag">
@@ -34,7 +33,6 @@
         end_time,
         status,
         full_score,
-        sample_database_path
         from "assignment"
         where valid
         <if test="!flag">
@@ -65,7 +63,6 @@
         end_time,
         status,
         full_score,
-        sample_database_path
         from "assignment"
         where valid
         <if test="!flag">
@@ -73,8 +70,8 @@
         </if>;
     </select>
     <insert id="saveAssignment" useGeneratedKeys="true" keyProperty="id">
-        insert into "assignment" (title, description, start_time, end_time, full_score, sample_database_path)
-        VALUES (#{title}, #{description}, #{startTime}, #{endTime}, #{fullScore}, #{sampleDatabasePath});
+        insert into "assignment" (title, description, start_time, end_time, full_score)
+        VALUES (#{title}, #{description}, #{startTime}, #{endTime}, #{fullScore});
     </insert>
     <select id="getOneAssignment" resultType="sustech.edu.phantom.dboj.entity.po.Assignment">
         select id,
@@ -84,7 +81,6 @@
         end_time,
         status,
         full_score,
-        sample_database_path
         from "assignment"
         where id = #{aid}
         <if test="!flag">
@@ -112,10 +108,10 @@
         where id = #{aid};
     </update>
     <update id="publishAssignment">
-        update "assignment"
-        set status = 'public'
-        where valid
         <if test="list.size()!=0">
+            update "assignment"
+            set status = 'public'
+            where valid
             and
             id in (
             <foreach collection="list" index="index" separator="," item="l" close="">
@@ -124,10 +120,10 @@
         </if>
     </update>
     <update id="closeAssignment">
-        update "assignment"
-        set status = 'closed'
-        where valid
         <if test="list.size()!=0">
+            update "assignment"
+            set status = 'closed'
+            where valid
             and id in(
             <foreach collection="list" index="index" separator="," item="l" close="">
                 #{l}

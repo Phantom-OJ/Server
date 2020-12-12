@@ -114,6 +114,9 @@ public class StatService {
                 }
             }
         }
+        for (AssignmentStat a : assignmentStats) {
+            a.setNoSubmission();
+        }
         return assignmentStats;
     }
 

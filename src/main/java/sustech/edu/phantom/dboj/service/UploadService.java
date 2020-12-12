@@ -131,7 +131,6 @@ public class UploadService {
                 .endTime(form.getEndTime())
                 .status(form.getStatus())
                 .fullScore(form.getFullScore())
-                .sampleDatabasePath(form.getSampleDatabasePath())
                 .build();
         try {
             if (assignmentMapper.saveAssignment(a) > 0) {

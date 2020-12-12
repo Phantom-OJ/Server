@@ -102,8 +102,8 @@
         where id = #{id};
     </update>
     <update id="publishProblems">
-        update "problem" set status = 'public' where valid and status = 'private'
         <if test="list.size()!=0">
+        update "problem" set status = 'public' where valid and status = 'private'
             and assignment_id in
             (
             <foreach collection="list" item="l" separator="," index="index" close="">
@@ -112,8 +112,8 @@
         </if>
     </update>
     <update id="closedProblems">
-        update "problem" set status = 'closed' where valid and status = 'public'
         <if test="list.size()!=0">
+        update "problem" set status = 'closed' where valid and status = 'public'
             and assignment_id in
             (
             <foreach collection="list" item="l" separator="," index="index" close="">

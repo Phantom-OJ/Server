@@ -32,8 +32,6 @@ public class Assignment {
     private String status;
     @ApiModelProperty(value = "assignment full score", example = "100")
     private Integer fullScore;
-    @ApiModelProperty(value = "assignment title",example = "jdbc:postgresql://localhost:5432/xxxxx")
-    private String sampleDatabasePath;
     @ApiModelProperty(value = "groups that one assignment belongs to")
     private List<Group> groupList;
     @ApiModelProperty(value = "problems that one assignment has")

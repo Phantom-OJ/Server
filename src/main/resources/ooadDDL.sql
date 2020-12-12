@@ -41,7 +41,8 @@ create table if not exists "record_problem_judge_point"
     time              bigint  not null,
     space             bigint  not null,
     result            char(3) not null,
-    description       text
+    description       text,
+    valid             bool    not null default true
 );
 create table if not exists problem
 (
@@ -118,7 +119,6 @@ create table if not exists "assignment"
     end_time             bigint      not null,
     status               varchar(45) not null default 'private',
     full_score           int         not null,
-    sample_database_path text        not null,
     valid                bool        not null default true
 );
 create table if not exists "code"

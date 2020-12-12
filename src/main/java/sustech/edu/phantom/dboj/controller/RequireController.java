@@ -13,6 +13,7 @@ import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
+import sustech.edu.phantom.dboj.form.search.GroupRoleForm;
 import sustech.edu.phantom.dboj.service.GroupService;
 import sustech.edu.phantom.dboj.service.RequireService;
 
@@ -95,6 +96,25 @@ public class RequireController {
         List<User> users = null;
         try {
             users = requireService.getUsersByGroup(id);
+            res = ResponseMsg.OK;
+        } catch (Exception e) {
+            log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
+            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
+    }
+
+
+    @ApiOperation("获取不在某个群组的所有人")
+    @RequestMapping(value = "/notgroup/{id}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<List<User>>> getUserNotInGroup(
+            HttpServletRequest request,
+            @PathVariable
+            @ApiParam(name = "群组id", value = "java.lang.Integer", required = true) Integer id){
+        ResponseMsg res;
+        List<User> users = null;
+        try {
+            users = requireService.getUserNotInGroup(id);
             res = ResponseMsg.OK;
         } catch (Exception e) {
             log.error("There are some errors happening when visiting from " + request.getRemoteAddr());
@@ -229,6 +249,29 @@ public class RequireController {
             res = ResponseMsg.OK;
         }
         return new ResponseEntity<>(GlobalResponse.<List<Permission>>builder().msg(res.getMsg()).data(permissionList).build(), res.getStatus());
+    }
+
+    @ApiOperation("获取人员接口")
+    @RequestMapping(value = "/info", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<List<User>>> getUserInfo(
+            HttpServletRequest request,
+            @RequestBody @ApiParam(name = "筛选过滤器", value = "GroupRoleForm", required = true) GroupRoleForm groupRoleForm) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseMsg res;
+        List<User> users = null;
+        if (!user.containPermission(PermissionEnum.VIEW_GROUPS)) {
+            res = ResponseMsg.FORBIDDEN;
+            log.error("Low privilege from the request");
+        } else {
+            try {
+                users = requireService.getUserByFilter(groupRoleForm);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                log.error("Internal server error from request " + request.getRemoteAddr());
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            }
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<User>>builder().msg(res.getMsg()).data(users).build(), res.getStatus());
     }
 
 }

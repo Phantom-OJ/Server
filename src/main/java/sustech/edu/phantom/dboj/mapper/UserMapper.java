@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.Group;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.form.modification.UserForm;
+import sustech.edu.phantom.dboj.form.search.GroupRoleForm;
 
 import java.util.List;
 
@@ -69,6 +70,8 @@ public interface UserMapper {
 
     List<User> findUserByGroup(int gid);
 
+    List<User> findNotUserByGroup(int gid);
+
     int uploadAvatar(String filePath, int uid);
 
     int grantUser(@Param("list") String role, List<Integer> list);
@@ -76,4 +79,6 @@ public interface UserMapper {
     List<User> findUserByFilter(String filter);
 
     List<Group> findOneUserGroup(int uid);
+
+    List<User> findUserByFilterMixed(@Param("list") GroupRoleForm list);
 }
