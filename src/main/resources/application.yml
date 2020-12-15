@@ -5,8 +5,8 @@ spring:
   datasource:
     druid:
       url: jdbc:postgresql://localhost:5432/testsec?useAffectedRows=true
-      username: checker
-      password: lsl213
+      username: postgres
+      password: abc123
       driver-class-name: org.postgresql.Driver
       initial-size: 8
       min-idle: 1
@@ -51,7 +51,7 @@ spring:
   redis:
     timeout: 5000
     database: 0
-    host: localhost
+    host: 10.20.87.51
     port: 6379
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml

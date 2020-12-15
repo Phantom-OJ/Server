@@ -14,8 +14,11 @@ public interface JudgePointMapper {
      */
     //TODO:更改数据库取出值
     List<JudgePoint> getAllJudgePointsOfProblem(int id);
-//TODO:更改数据库取出值
+//TODO:更改数据库取出
     Integer saveOneProblemJudgePoints(@Param("list") List<JudgePoint> list);
+
+    //TODO:更改数据库取出值
+    List<JudgePoint> getAllJudgePointsOfProblemWithDialect(int id,String dialect);
 
     int invalidateJudgePoint(int id);
 

@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import sustech.edu.phantom.dboj.basicJudge.JudgeResultMessage;
+import sustech.edu.phantom.dboj.basicJudge.PollingMessage;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.Code;
@@ -90,23 +92,37 @@ public class UserController {
      */
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
     @ApiOperation("提交代码")
-    @PreAuthorize("hasRole('ROLE_STUDENT')")
+//    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> submitCode(
             @PathVariable @ApiParam(name = "问题id", required = true, type = "int") Integer id,
             @RequestBody @ApiParam(name = "代码表单", required = true, type = "CodeForm对象") CodeForm codeForm) throws Exception {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        if (user.isInGroup())
 //
         ResponseMsg res = ResponseMsg.OK;
         //这个方法要用到消息队列
 
 //        try {
-        judgeService.judgeCode(id, codeForm, 1);
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
+
+        Integer codeId = judgeService.judgeCode(id, codeForm, 1);
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(String.valueOf(codeId)).build(), res.getStatus());
 //        } catch (Exception e) {
 //            return false;
 ////            throw new Exception("You have not signed in.");
 //        }
+    }
+
+
+    @RequestMapping(value = "/polling/{codeId}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<PollingMessage>> polling(@PathVariable String codeId) {
+        ResponseMsg res = ResponseMsg.OK;
+        PollingMessage pollingMessage = judgeService.getJudgeStatus(codeId);
+        return new ResponseEntity<>(GlobalResponse.<PollingMessage>builder()
+                .msg(res.getMsg())
+                .data(pollingMessage)
+                .build(),
+                res.getStatus());
+
     }
 
 

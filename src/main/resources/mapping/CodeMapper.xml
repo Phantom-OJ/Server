@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.CodeMapper">
     <insert id="saveCode" keyProperty="id" useGeneratedKeys="true">
-        insert into "code" (code, code_length, submit_time)
-        values (#{code}, #{codeLength}, #{submitTime});
+        insert into "code" (code, code_length, submit_time,dialect)
+        values (#{code}, #{codeLength}, #{submitTime},#{dialect});
     </insert>
     <select id="queryCode" resultType="sustech.edu.phantom.dboj.entity.po.Code">
-        select id, code, code_length, submit_time
+        select id, code, code_length, submit_time ,dialect
         from "code"
         where valid
           and id = #{id};

@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.RecordProblemJudgePoint;
 
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * @author Lori
  */
+
 public interface RecordProblemMapper {
     /**
      * 获取一个record的所有判题点的数据

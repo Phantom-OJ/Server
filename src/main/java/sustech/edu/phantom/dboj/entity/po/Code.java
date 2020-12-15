@@ -21,4 +21,5 @@ public class Code {
     private Integer codeLength;
     @ApiModelProperty(value = "submission timestamp")
     private Long submitTime;
+    private String dialect;
 }

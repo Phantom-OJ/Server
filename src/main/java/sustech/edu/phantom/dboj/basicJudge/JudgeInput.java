@@ -25,7 +25,7 @@ public class JudgeInput implements Serializable {
     String userInput;
     //DDL
     String afterInput;
-    ArrayList<String> standardAnswer;
+    String standardAnswer;
     Long timeLimit;
     HashMap<String,Object> additionFields;
 

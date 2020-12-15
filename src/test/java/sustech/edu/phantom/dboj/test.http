@@ -102,3 +102,8 @@ POST http://localhost:8080/api/beacon
 Content-Type: text/plain
 
 lslnb
+
+###
+GET http://localhost:8080/api/polling/119
+
+###
