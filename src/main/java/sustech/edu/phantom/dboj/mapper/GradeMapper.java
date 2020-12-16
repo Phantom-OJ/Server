@@ -2,6 +2,7 @@ package sustech.edu.phantom.dboj.mapper;
 
 import sustech.edu.phantom.dboj.entity.po.Grade;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
+import sustech.edu.phantom.dboj.form.stat.AssignmentScore;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface GradeMapper {
      * @return list of user grade
      */
     List<UserGrade> getUserGrade(int uid);
+
+    List<AssignmentScore> getOneAssignmentScore(int aid);
 }

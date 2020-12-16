@@ -18,6 +18,7 @@ import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
+import sustech.edu.phantom.dboj.form.stat.AssignmentScore;
 import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
 import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
@@ -25,6 +26,7 @@ import sustech.edu.phantom.dboj.service.StatService;
 import sustech.edu.phantom.dboj.utils.PreLoadUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -167,5 +169,26 @@ public class StatController {
             log.error("Internal server error happens in getting statistics.");
         }
         return new ResponseEntity<>(GlobalResponse.<List<HomeStat>>builder().msg(res.getMsg()).data(homeStats).build(), res.getStatus());
+    }
+
+    @ApiOperation("获取一个作业中所有用户得分")
+    @RequestMapping(value = "/assignment/{id}/scores", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    public ResponseEntity<GlobalResponse<List<AssignmentScore>>> getOneAssignmentScores(HttpServletRequest request, @PathVariable Integer id) {
+        ResponseMsg res;
+        List<AssignmentScore> assignmentScores = null;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_SUBMISSIONS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                assignmentScores = statService.getOneAssignmentScore(id);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+                log.error(Arrays.toString(e.getStackTrace()));
+            }
+        }
+        return new ResponseEntity<>(GlobalResponse.<List<AssignmentScore>>builder().msg(res.getMsg()).data(assignmentScores).build(), res.getStatus());
     }
 }
