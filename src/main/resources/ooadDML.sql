@@ -1,12 +1,12 @@
 begin transaction;
 
-insert into "user" (username, password, nickname)
-values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qBibXqf4uhbQK.7buetZKN6', 'god1'),
-       ('11813207@mail.sustech.edu.cn', '$2a$10$lbvy1xOwq0zHU.nsoxZmWeoYGmsrCI1545oh3Ahvh0VAnkTR/Nk2q', 'god2'),
-       ('11812318@mail.sustech.edu.cn', '$2a$10$kP9KNT/Hb.QOrCaEItzMRuKrfhWOOttUt2R/46.XjHdjPX7FGqcjm', 'god3'),
-       ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', 'god4'),
-       ('leemdragon233@yahoo.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god5'),
-       ('leemdragon233@gmail.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god6');
+insert into "user" (username, password, nickname,role)
+values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qBibXqf4uhbQK.7buetZKN6', 'god1','ROLE_TEACHER'),
+       ('11813207@mail.sustech.edu.cn', '$2a$10$lbvy1xOwq0zHU.nsoxZmWeoYGmsrCI1545oh3Ahvh0VAnkTR/Nk2q', 'god2','ROLE_TEACHER'),
+       ('11812318@mail.sustech.edu.cn', '$2a$10$kP9KNT/Hb.QOrCaEItzMRuKrfhWOOttUt2R/46.XjHdjPX7FGqcjm', 'god3','ROLE_TEACHER'),
+       ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', 'god4','ROLE_TEACHER'),
+       ('leemdragon233@yahoo.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god5','ROLE_STUDENT'),
+       ('leemdragon233@gmail.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god6','ROLE_STUDENT');
 insert into "tag" (keyword, description)
 VALUES ('k1', 'd1'),
        ('k2', 'd2'),
@@ -231,7 +231,7 @@ SELECT * FROM t WHERE id = 1;
 SELECT * FROM t WHERE id = 1;
 ```', 'public', 'select', 1);
 
-INSERT INTO public.assignment (title, description, start_time, end_time, status, full_score, sample_database_path,
+INSERT INTO public.assignment (title, description, start_time, end_time, status, full_score,
                                valid)
 VALUES ('title1', '# Computer Network hw1
 
@@ -239,10 +239,10 @@ $$
 d_{pw} = d_t+d_{sf}+d_p = \frac{x}{b}+kd+(k-1)\cdot \frac{p}{b}
 $$
 ',
-        1605546219888, 1605546251315, 'Running', 100, '/home/adoj/a1/s1.sql', true);
+        1605546219888, 1605546251315, 'Running', 100, true);
 
-insert into public.assignment (title, description, start_time, end_time, full_score, sample_database_path)
-VALUES ('title2', 'description2', 1, 2, 100, '/home/adoj/a1/s2.sql');
+insert into public.assignment (title, description, start_time, end_time, full_score)
+VALUES ('title2', 'description2', 1, 2, 100);
 
 
 

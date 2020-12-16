@@ -1,4 +1,4 @@
-insert into public.assignment (title, description, start_time, end_time, status, full_score, sample_database_path)
+insert into public.assignment (title, description, start_time, end_time, status, full_score)
     values (
         'Assignment1: Simple Table Query',
         '### Rules:
@@ -12,8 +12,7 @@ All the questions and the sample result sets in this assignment are based on **f
         1606798800000,
         1608440400000,
         'public',
-        100,
-        ''
+        100
     );
 insert into public.assignment_group (assignment_id, group_id) values (3, 1);
 insert into public.assignment_group (assignment_id, group_id) values (3, 2);
