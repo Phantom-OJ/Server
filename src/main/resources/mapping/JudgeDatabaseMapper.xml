@@ -18,7 +18,7 @@
         where id = #{id}
           and valid;
     </select>
-    <insert id="saveJudgeDatabase">
+    <insert id="saveJudgeDatabase" useGeneratedKeys="true" keyProperty="id">
         insert into "judge_database" (database_url, keyword, dialect)
         values (#{databaseUrl}, #{keyword}, #{dialect});
     </insert>

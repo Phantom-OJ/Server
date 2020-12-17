@@ -160,7 +160,7 @@ public class UploadService {
                         }
                         List<JudgePoint> judgePoints = new ArrayList<>();
                         for (UploadJudgePointForm j : p.getJudgePointList()) {
-                            j.setProblemId(pid);
+                            j.setProblemId(tmp.getId());
                             judgePoints.add(new JudgePoint(j));
                         }
                         if (judgePointMapper.saveOneProblemJudgePoints(judgePoints) == 0) {

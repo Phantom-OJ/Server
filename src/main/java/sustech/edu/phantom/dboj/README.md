@@ -97,3 +97,7 @@ judge script: text
 judge database: json text
 
 ==database, schema, imageId==
+
+管理员看不见别人的代码forbidden掉了
+
+上传作业的问题

@@ -22,6 +22,7 @@ public class JudgePoint {
 //    private Boolean valid;
 
     public JudgePoint(UploadJudgePointForm form) {
+        problemId = form.getProblemId();
         beforeSql = form.getBeforeSql();
         afterSql = form.getAfterSql();
         judgeScriptId = form.getJudgeScriptId();

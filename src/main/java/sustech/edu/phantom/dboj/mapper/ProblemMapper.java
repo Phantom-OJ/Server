@@ -42,7 +42,7 @@ public interface ProblemMapper {
      * @param id
      * @return
      */
-    List<Problem> oneAssignmentProblems(int id);
+    List<Problem> oneAssignmentProblems(@Param("id") int id,@Param("isAdmin") boolean isAdmin);
 
     /**
      * @param id tag id
