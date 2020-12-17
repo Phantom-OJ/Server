@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.ProblemMapper">
-    <insert id="saveProblem" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveProblem" useGeneratedKeys="true" keyProperty="id"
+            parameterType="sustech.edu.phantom.dboj.entity.po.Problem">
         insert into "problem" (assignment_id, title, description, full_score, space_limit, time_limit,
-                               index_in_assignment, solution, type, number_submit, number_solve)
+                               index_in_assignment, solution, type, number_submit, number_solve, status)
         VALUES (#{assignmentId}, #{title}, #{description}, #{fullScore}, #{spaceLimit}, #{timeLimit},
-                #{indexInAssignment}, #{solution}, #{type}, 0, 0);
+                #{indexInAssignment}, #{solution}, #{type}, 0, 0, #{status});
     </insert>
     <select id="queryProblemWithoutFilter" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
@@ -59,19 +60,21 @@
     </update>
     <select id="oneAssignmentProblems" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
         select id,
-               assignment_id,
-               title,
-               description,
-               full_score,
-               space_limit,
-               time_limit,
-               number_submit,
-               number_solve,
-               index_in_assignment,
-               solution
+        assignment_id,
+        title,
+        description,
+        full_score,
+        space_limit,
+        time_limit,
+        number_submit,
+        number_solve,
+        index_in_assignment,
+        solution
         from "problem"
         where assignment_id = #{id}
-          and (status = 'public' or status = 'closed')
+        <if test="!isAdmin">
+            and (status = 'public' or status = 'closed')
+        </if>
         order by index_in_assignment;
     </select>
     <select id="oneTagProblems" resultType="sustech.edu.phantom.dboj.entity.po.Problem">
@@ -265,6 +268,7 @@
                solution,
                type
         from problem
-        where assignment_id = #{aid} and valid;
+        where assignment_id = #{aid}
+          and valid;
     </select>
 </mapper>

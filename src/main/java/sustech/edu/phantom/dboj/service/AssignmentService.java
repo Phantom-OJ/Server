@@ -54,7 +54,7 @@ public class AssignmentService {
      */
     public Assignment getOneAssignment(int aid, boolean isUser, int userId, boolean isAdmin) {
         Assignment a = assignmentMapper.getOneAssignment(aid, isAdmin);
-        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid);
+        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid,isAdmin);
         setSolvedAndTags(problemList, isUser, userId, isAdmin);
         a.setProblemList(problemList);
         a.setGroupList(groupMapper.getAssignmentGroup(aid));
@@ -115,7 +115,7 @@ public class AssignmentService {
         }
         for (Assignment a : assignmentList) {
             a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
-            a.setProblemList(problemMapper.oneAssignmentProblems(a.getId()));
+            a.setProblemList(problemMapper.oneAssignmentProblems(a.getId(),isAdmin));
         }
         return EntityVO.<Assignment>builder().entities(assignmentList).count(count).build();
     }

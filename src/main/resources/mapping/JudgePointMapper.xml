@@ -38,7 +38,7 @@
             <foreach collection="list" index="index" item="l" separator="," close=";">
                 (#{l.problemId}, #{l.beforeSql}, #{l.afterSql}, #{l.judgeScriptId}, #{l.answer},
                 #{l.judgeDatabaseId},#{l.dialect})
-            </foreach>;
+            </foreach>
         </if>
     </insert>
     <update id="invalidateJudgePoint">

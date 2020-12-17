@@ -88,7 +88,7 @@ public class StatService {
     }
 
     public List<AssignmentStat> getOneAssignmentStat(int aid) {
-        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid);
+        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid,true);
         List<AssignmentCount> ACList = recordMapper.counterOneAssignmentAC(problemList);
         List<AssignmentCount> NotACList = recordMapper.counterOneAssignmentNotAC(problemList);
         Integer total = recordMapper.counterOneAssignment(aid);

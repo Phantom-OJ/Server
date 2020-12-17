@@ -102,7 +102,7 @@ public class UploadController {
 
 
     @ApiOperation("上传判题脚本")
-    @RequestMapping(value = "/judgescipt", method = RequestMethod.POST)
+    @RequestMapping(value = "/judgescript", method = RequestMethod.POST)
     public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(
             HttpServletRequest request,
             @RequestBody JudgeScript judgeScript) {
