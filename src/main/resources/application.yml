@@ -53,6 +53,7 @@ spring:
     database: 0
     host: 10.20.87.51
     port: 6379
+
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: sustech.edu.phantom.dboj.entity.*

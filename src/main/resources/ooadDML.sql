@@ -79,6 +79,7 @@ VALUES (1, null, null, 1, '"title|country|year_released"
 "The Commitments|ie|1991"
 "The Miracle|gb|1991"
  ', 1, true, 'pgsql');
+
 INSERT INTO public.judge_point (problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id,
                                 valid, dialect)
 VALUES (1,

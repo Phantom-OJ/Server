@@ -1,6 +1,6 @@
 insert into public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                             number_solve, index_in_assignment, solution, status, type, judge_script_id)
-values (3,
+values (1,
         'problem1',
         'List the non-US movies released in 1991 and with titles begin with "The".',
         20,
@@ -32,7 +32,7 @@ SELECT title, country, year_released FROM movies WHERE country <> ''us'' AND yea
 
 insert into public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                             number_solve, index_in_assignment, solution, status, type, judge_script_id)
-values (3,
+values (1,
         'problem2',
         'How many actors have acted more than 30 movies.',
         20,
@@ -58,7 +58,7 @@ where c > 30;
 
 insert into public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                             number_solve, index_in_assignment, solution, status, type, judge_script_id)
-values (3,
+values (1,
         'problem3',
         'What is the percentage of American films in all films in the 1970s. (The result should be
 expressed percentage and approximated to 2 decimal places)',
@@ -82,7 +82,7 @@ and year_released < 1980;
 
 insert into public.problem (assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                             number_solve, index_in_assignment, solution, status, type, judge_script_id)
-values (3,
+values (1,
         'problem4',
         'List the names of the known directors of 2016 films by ascending order (no need to display anything about the film). The film only from following regions: kr, hk, gb, ph. If the film is Korean(kr) or HONG KONG(hk), the name should be displayed as surname followed by first name, otherwise it must be first name followed by surname.
 
@@ -112,20 +112,3 @@ order by director;
         'public',
         'select',
         null);
-
-insert into problem_tag (problem_id, tag_id)
-values (5, 7);
-insert into problem_tag (problem_id, tag_id)
-values (5, 5);
-insert into problem_tag (problem_id, tag_id)
-values (6, 5);
-insert into problem_tag (problem_id, tag_id)
-values (6, 8);
-insert into problem_tag (problem_id, tag_id)
-values (7, 5);
-insert into problem_tag (problem_id, tag_id)
-values (7, 8);
-insert into problem_tag (problem_id, tag_id)
-values (8, 6);
-insert into problem_tag (problem_id, tag_id)
-values (8, 9);

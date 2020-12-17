@@ -64,13 +64,12 @@ content-type: application/json
 <> 2020-11-22T160841.500.json
 
 ###
-POST http://localhost:8080/api/signup
+POST http://localhost:8080/api/login
 content-type: application/json
 
 {
   "username": "11811620@mail.sustech.edu.cn",
-  "password": "11811620",
-  "vcode": "449432"
+  "password": "11811620"
 }
 
 ###

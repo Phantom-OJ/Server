@@ -1,4 +1,4 @@
-create table judge_database
+create table if not exists judge_database
 (
     id           serial                not null
         constraint judge_database_pkey
@@ -11,8 +11,6 @@ create table judge_database
     dialect      char(10) default 'pgsql'::bpchar not null
 );
 
-alter table judge_database
-    owner to postgres;
 
 INSERT INTO public.judge_database (id, keyword, database_url, valid, dialect)
 VALUES (1, 'k1', '{"host":"localhost","database":"postgres","image_id":"judgedb:2.0"}

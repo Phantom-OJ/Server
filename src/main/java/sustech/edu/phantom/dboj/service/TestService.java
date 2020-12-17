@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -77,24 +78,27 @@ public class TestService implements Runnable{
     @SneakyThrows
     @Override
     public void run() {
+
         Gson gson=new Gson();
         while (true){
-            List<String> s;
+            String s=null;
             try {
-
                 System.out.println("服务运行中...");
-                 jedis.connect();
-                 s=jedis.brpop(0,"result");
+                redisTemplate.setValueSerializer(new StringRedisSerializer());
+                s= (String) redisTemplate.opsForList().rightPop("result",60L,TimeUnit.SECONDS);
+                if(s!=null){
+                System.err.println("报文；"+s);
+                JudgeResultMessage judgeResultMessage = gson.fromJson(s, JudgeResultMessage.class);
+                updateAfterJudge(judgeResultMessage);
+                }
             }catch (Exception e){
                 e.printStackTrace();
+                System.err.println("结果报文:"+s);
                 Thread.sleep(1L);
-                continue;
             }
-                for (int i = 1; i < s.size(); i++) {
-                    System.err.println("报文；"+s);
-                    JudgeResultMessage judgeResultMessage = gson.fromJson(s.get(i), JudgeResultMessage.class);
-                    updateAfterJudge(judgeResultMessage);
-                }
+              //  for (int i = 1; i < s.size(); i++) {
+
+             //   }
             }
 
     }

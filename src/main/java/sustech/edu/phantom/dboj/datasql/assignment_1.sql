@@ -1,5 +1,5 @@
-insert into public.assignment (title, description, start_time, end_time, status, full_score)
-    values (
+insert into public.assignment (id,title, description, start_time, end_time, status, full_score)
+    values (3,
         'Assignment1: Simple Table Query',
         '### Rules:
 
@@ -18,3 +18,5 @@ insert into public.assignment_group (assignment_id, group_id) values (3, 1);
 insert into public.assignment_group (assignment_id, group_id) values (3, 2);
 insert into public.assignment_group (assignment_id, group_id) values (3, 3);
 insert into public.assignment_group (assignment_id, group_id) values (3, 4);
+
+
