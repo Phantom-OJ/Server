@@ -141,18 +141,16 @@ public class UserController {
             HttpServletRequest request,
             @PathVariable
             @ApiParam(name = "代码id", required = true)
-                    String id) {
+                    Integer id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int idx;
         ResponseMsg res;
         Code code = null;
         try {
-            idx = Integer.parseInt(id);
-            Code c = codeService.queryCode(idx);
+            Code c = codeService.queryCode(id);
             if (c == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
-                if (user.getId().equals(recordService.getUserIdByCodeId(idx))
+                if (user.getId().equals(recordService.getUserIdByCodeId(id))
                         && user.containPermission(PermissionEnum.VIEW_CODES)) {
                     code = c;
                     res = ResponseMsg.OK;
@@ -160,9 +158,6 @@ public class UserController {
                     res = ResponseMsg.FORBIDDEN;
                 }
             }
-        } catch (NumberFormatException e) {
-            log.error("Errors in request URL from " + request.getRemoteAddr());
-            res = ResponseMsg.BAD_REQUEST;
         } catch (Exception e) {
             res = ResponseMsg.INTERNAL_SERVER_ERROR;
         }

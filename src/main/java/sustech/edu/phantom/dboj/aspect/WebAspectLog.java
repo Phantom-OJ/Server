@@ -40,7 +40,7 @@ public class WebAspectLog {
         Long time = System.currentTimeMillis() - start;
 
         //记录返回参数
-        data.put("result", result);
+//        data.put("result", result);
 
         //设置消耗总时间
         data.put("consumeTime", time);

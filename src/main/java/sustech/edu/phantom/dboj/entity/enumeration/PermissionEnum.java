@@ -9,7 +9,7 @@ public enum PermissionEnum {
     //sa
     VIEW_SUBMISSIONS("view all submissions"),
     PROVIDE_SOLUTION("provide the solution"),
-    CREATE_ANNOUNCEMENT("publish the announcement"),
+    CREATE_ANNOUNCEMENT("manage the announcement"),
     VIEW_GROUPS("view all groups"),
     VIEW_ASSIGNMENTS("view all assignments"),
     VIEW_CODES("view all codes"),

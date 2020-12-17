@@ -7,10 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.po.AssignmentCount;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
-import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
-import sustech.edu.phantom.dboj.form.stat.HomeStat;
-import sustech.edu.phantom.dboj.form.stat.ProblemStat;
-import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
+import sustech.edu.phantom.dboj.form.stat.*;
 import sustech.edu.phantom.dboj.mapper.GradeMapper;
 import sustech.edu.phantom.dboj.mapper.ProblemMapper;
 import sustech.edu.phantom.dboj.mapper.RecordMapper;
@@ -127,5 +124,9 @@ public class StatService {
      */
     public List<HomeStat> getHomeStat() {
         return recordMapper.getHomeStat();
+    }
+
+    public List<AssignmentScore> getOneAssignmentScore(int aid) {
+        return gradeMapper.getOneAssignmentScore(aid);
     }
 }
