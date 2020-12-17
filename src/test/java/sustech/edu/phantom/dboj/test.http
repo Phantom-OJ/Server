@@ -92,6 +92,35 @@ content-type: application/json
   "dialect": "pgsql",
   "submitTime": 12345
 }
+###
+POST http://localhost:8080/api/problem/2/submit
+content-type: application/json
+
+{
+"code": "SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'",
+"dialect": "mysql",
+"submitTime": 12345
+}
+###
+POST http://localhost:8080/api/problem/2/submit
+content-type: application/json
+
+{
+"code": "SELECT title, country, year_released FROM movies WHERE country <>'us' AND year_released = 1991 AND title LIKE 'The%'",
+"dialect": "sqlite",
+"submitTime": 12345
+}
+###
+POST http://localhost:8080/api/problem/2/submit
+content-type: application/json
+
+{
+"code": "drop table movies",
+"dialect": "sqlite",
+"submitTime": 12345
+}
+
+
 
 ###
 ###
@@ -104,6 +133,6 @@ Content-Type: text/plain
 lslnb
 
 ###
-GET http://localhost:8080/api/polling/119
+GET http://localhost:8080/api/polling/1
 
 ###

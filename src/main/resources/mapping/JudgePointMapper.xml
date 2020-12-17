@@ -2,27 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.JudgePointMapper">
     <select id="getAllJudgePointsOfProblem" resultType="sustech.edu.phantom.dboj.entity.po.JudgePoint">
-        select id, problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id,dialect
+        select id,
+               problem_id,
+               before_sql,
+               after_sql,
+               judge_script_id,
+               answer,
+               judge_database_id,
+               dialect
         from "judge_point"
         where problem_id = #{id}
           and valid
         order by id;
     </select>
     <select id="getAllJudgePointsOfProblemWithDialect" resultType="sustech.edu.phantom.dboj.entity.po.JudgePoint">
-        select id, problem_id, before_sql, after_sql, judge_script_id, answer, judge_database_id,dialect
+        select id,
+               problem_id,
+               before_sql,
+               after_sql,
+               judge_script_id,
+               answer,
+               judge_database_id,
+               dialect
         from "judge_point"
-        where problem_id = #{id} and dialect= #{dialect}
+        where problem_id = #{id}
+          and dialect = #{dialect}
           and valid
         order by id;
     </select>
     <insert id="saveOneProblemJudgePoints">
-        insert into "judge_point" (problem_id, before_sql, after_sql, judge_script_id, answer,
-        judge_database_id,dialect)
-        VALUES
-        <foreach collection="list" index="index" item="l" separator="," close=";">
-            (#{l.problemId}, #{l.beforeSql}, #{l.afterSql}, #{l.judgeScriptId}, #{l.answer},
-            #{l.judgeDatabaseId},#{l.dialect})
-        </foreach>
+        <if test="list.size()!=0">
+            insert into "judge_point" (problem_id, before_sql, after_sql, judge_script_id, answer,
+            judge_database_id,dialect)
+            VALUES
+            <foreach collection="list" index="index" item="l" separator="," close=";">
+                (#{l.problemId}, #{l.beforeSql}, #{l.afterSql}, #{l.judgeScriptId}, #{l.answer},
+                #{l.judgeDatabaseId},#{l.dialect})
+            </foreach>;
+        </if>
     </insert>
     <update id="invalidateJudgePoint">
         update judge_point

@@ -16,6 +16,7 @@ import sustech.edu.phantom.dboj.basicJudge.PollingMessage;
 import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.mapper.*;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -78,22 +79,26 @@ public class TestService implements Runnable{
     public void run() {
         Gson gson=new Gson();
         while (true){
+            List<String> s;
             try {
-                jedis.connect();
+
                 System.out.println("服务运行中...");
-                List<String> s = jedis.brpop(0, "judge_result_list");
+                 jedis.connect();
+                 s=jedis.brpop(0,"result");
+            }catch (Exception e){
+                e.printStackTrace();
+                Thread.sleep(1L);
+                continue;
+            }
                 for (int i = 1; i < s.size(); i++) {
+                    System.err.println("报文；"+s);
                     JudgeResultMessage judgeResultMessage = gson.fromJson(s.get(i), JudgeResultMessage.class);
                     updateAfterJudge(judgeResultMessage);
                 }
-                Thread.sleep(1L);
             }
-            catch (Exception e){
-                e.printStackTrace();
-                }
 
     }
-    }
+
 
     public void sendRecord(String codeId){
         PollingMessage pollingMessage=PollingMessage.builder()

@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import sustech.edu.phantom.dboj.basicJudge.*;
-import sustech.edu.phantom.dboj.entity.po.Code;
-import sustech.edu.phantom.dboj.entity.po.JudgePoint;
-import sustech.edu.phantom.dboj.entity.po.Problem;
-import sustech.edu.phantom.dboj.entity.po.Record;
+import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.mapper.*;
@@ -110,6 +107,7 @@ public class JudgeService {
 
         System.out.println(code.getId());
         //
+        System.out.println(problemId);
 
         System.out.println(problem);
 
@@ -121,9 +119,10 @@ public class JudgeService {
         * JudgePoint转化为JudgeInput*/
         for (JudgePoint j : judgePointList) {
             String answer = j.getAnswer();
-            String dbPath = judgeDatabaseMapper.getJudgeDatabaseById(j.getJudgeDatabaseId()).getDatabaseUrl();
+            JudgeDatabase judgeDatabase=judgeDatabaseMapper.getJudgeDatabaseById(j.getJudgeDatabaseId());
+            String dbPath = judgeDatabase.getDatabaseUrl();
             JudgeInput currentInput = JudgeInput.builder()
-                    .JudgeDatabase(dbPath)
+                    .JudgeDatabase(gson.fromJson(dbPath,HashMap.class))
                     .beforeInput(j.getBeforeSql())
                     .userInput(codeForm.getCode())
                     .afterInput(j.getAfterSql())

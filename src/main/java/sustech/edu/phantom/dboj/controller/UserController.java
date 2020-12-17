@@ -92,7 +92,7 @@ public class UserController {
      */
     @RequestMapping(value = "/problem/{id}/submit", method = RequestMethod.POST)
     @ApiOperation("提交代码")
-//    @PreAuthorize("hasRole('ROLE_STUDENT')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> submitCode(
             @PathVariable @ApiParam(name = "问题id", required = true, type = "int") Integer id,
             @RequestBody @ApiParam(name = "代码表单", required = true, type = "CodeForm对象") CodeForm codeForm) throws Exception {
@@ -103,8 +103,8 @@ public class UserController {
         //这个方法要用到消息队列
 
 //        try {
-
-        Integer codeId = judgeService.judgeCode(id, codeForm, 1);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer codeId = judgeService.judgeCode(id, codeForm, user.getId());
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(String.valueOf(codeId)).build(), res.getStatus());
 //        } catch (Exception e) {
 //            return false;

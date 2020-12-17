@@ -17,9 +17,11 @@
               and valid);
     </select>
     <insert id="saveOneProblemTags">
-        insert into "problem_tag" (problem_id, tag_id) VALUES
-        <foreach collection="list" index="index" item="l" separator="," close=";">
-            (#{pid},#{l})
-        </foreach>
+        <if test="list.size()!=0">
+            insert into "problem_tag" (problem_id, tag_id) VALUES
+            <foreach collection="list" index="index" item="l" separator="," close=";">
+                (#{pid},#{l})
+            </foreach>;
+        </if>
     </insert>
 </mapper>

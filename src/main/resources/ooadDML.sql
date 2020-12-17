@@ -147,6 +147,13 @@ $$
 d_{cs} = \frac{x}{b}+kd+s
 $$',
         20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select', 1);
+
+insert into problem(assignment_id, title, description, full_score, space_limit, time_limit,  index_in_assignment, solution, type)
+values (2,'exercise 3','Spanish films that contain neither a (in any case) nor o (in any case) in their title',100,256,10000,3,'not given','select');
+
+insert into problem(assignment_id, title, description, full_score, space_limit, time_limit,  index_in_assignment, solution, type)
+values (2,'exercise 3','American films that were released the year you were born',100,256,10000,2,'not given','select');
+
 insert into problem(assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                     number_solve, index_in_assignment, solution, status, type, judge_script_id)
 VALUES (2, 'p2.1', 'd2.1', 20, 256, 3000, 0, 0, 1, '### MySQL
@@ -231,7 +238,7 @@ SELECT * FROM t WHERE id = 1;
 SELECT * FROM t WHERE id = 1;
 ```', 'public', 'select', 1);
 
-INSERT INTO public.assignment (title, description, start_time, end_time, status, full_score, sample_database_path,
+INSERT INTO public.assignment (title, description, start_time, end_time, status, full_score,
                                valid)
 VALUES ('title1', '# Computer Network hw1
 
@@ -239,10 +246,10 @@ $$
 d_{pw} = d_t+d_{sf}+d_p = \frac{x}{b}+kd+(k-1)\cdot \frac{p}{b}
 $$
 ',
-        1605546219888, 1605546251315, 'Running', 100, '/home/adoj/a1/s1.sql', true);
+        1605546219888, 1605546251315, 'Running', 100, true);
 
-insert into public.assignment (title, description, start_time, end_time, full_score, sample_database_path)
-VALUES ('title2', 'description2', 1, 2, 100, '/home/adoj/a1/s2.sql');
+insert into public.assignment (title, description, start_time, end_time, full_score)
+VALUES ('title2', 'description2', 1, 2, 100);
 
 
 
