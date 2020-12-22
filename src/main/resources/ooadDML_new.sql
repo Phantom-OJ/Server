@@ -383,11 +383,11 @@ insert into tag (keyword, description) VALUES ('hard', 'Difficult circumstances 
 
 INSERT INTO public.judge_database (id, keyword, database_url, valid, dialect)
 VALUES (1, 'k1', '{"host":"localhost","database":"postgres","image_id":"judgedb:2.0"}
-', true, 'pgsql     ');
+', true, 'pgsql');
 INSERT INTO public.judge_database (id, keyword, database_url, valid, dialect)
-VALUES (4, 'k2', '{"host":"localhost","database":"trigger_db","image_id":"judgedb:2.0"}', true, 'pgsql     ');
+VALUES (4, 'k2', '{"host":"localhost","database":"trigger_db","image_id":"judgedb:2.0"}', true, 'pgsql');
 INSERT INTO public.judge_database (id, keyword, database_url, valid, dialect)
-VALUES (2, 'mysql', '{"host":"localhost","database":"filmdb","image_id":"judge-mysql:1.0"}', true, 'mysql     ');
+VALUES (2, 'mysql', '{"host":"localhost","database":"filmdb","image_id":"judge-mysql:1.0"}', true, 'mysql');
 INSERT INTO public.judge_database (id, keyword, database_url, valid, dialect)
-VALUES (3, 'sqlite', '{"host":"localhost","database":"filmdb","image_id":"judge-mysql:1.0"}', true, 'sqlite    ');
+VALUES (3, 'sqlite', '{"filepath":"resources//filmdb.sqlite"}', true, 'sqlite');
 commit;

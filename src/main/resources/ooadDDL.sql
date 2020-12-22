@@ -23,7 +23,7 @@ create table if not exists "record"
     user_id     int         not null,
     problem_id  int         not null,
     score       int         not null default 0,
-    result      char(3)     not null,
+    result      varchar(10) not null,
     space       int         not null,
     time        int         not null,
     dialect     varchar(45) not null,
@@ -35,14 +35,14 @@ create table if not exists "record"
 create table if not exists "record_problem_judge_point"
 (
     id                serial primary key,
-    record_id         int     not null,
-    problem_id        int     not null,
-    judge_point_index int     not null,
-    time              bigint  not null,
-    space             bigint  not null,
-    result            char(3) not null,
+    record_id         int         not null,
+    problem_id        int         not null,
+    judge_point_index int         not null,
+    time              bigint      not null,
+    space             bigint      not null,
+    result            varchar(10) not null,
     description       text,
-    valid             bool    not null default true
+    valid             bool        not null default true
 );
 create table if not exists problem
 (
@@ -83,7 +83,7 @@ create table if not exists "judge_point"
     judge_database_id int      not null,
     valid             bool     not null default true,
     dialect           char(10) not null default 'pgsql',
-    judge_script_id     int
+    judge_script_id   int
 );
 
 create table if not exists "permission"
@@ -112,23 +112,23 @@ create table if not exists "judge_script"
 );
 create table if not exists "assignment"
 (
-    id                   serial primary key,
-    title                text        not null,
-    description          text        not null,
-    start_time           bigint      not null,
-    end_time             bigint      not null,
-    status               varchar(45) not null default 'private',
-    full_score           int         not null,
-    valid                bool        not null default true
+    id          serial primary key,
+    title       text        not null,
+    description text        not null,
+    start_time  bigint      not null,
+    end_time    bigint      not null,
+    status      varchar(45) not null default 'private',
+    full_score  int         not null,
+    valid       bool        not null default true
 );
 create table if not exists "code"
 (
     id          serial primary key,
     code        text,
-    code_length int      not null,
-    submit_time bigint   not null default floor(
+    code_length int         not null,
+    submit_time bigint      not null default floor(
             extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))),
-    valid       bool     not null default true,
+    valid       bool        not null default true,
     dialect     varchar(10) not null default 'pgsql'
 );
 create table if not exists "tag"
