@@ -133,7 +133,22 @@ public class JudgeService {
             judgeInputList.add(currentInput);
             System.out.println("测试点报文：" + currentInput);
         }
+        Record record =Record.builder()
+                .codeId(code.getId())
+                .userId(userId)
+                .problemId(problem.getId())
+                .codeLength(code.getCodeLength())
+                .submitTime(code.getSubmitTime()).
+                        score(0).
+                        result("Pending").
+                        space(100L).
+                        time(0L)
+                .dialect(code.getDialect()).
+                        build();
+        recordMapper.saveRecord(record);
+
          JudgeInputMessage message =JudgeInputMessage.builder()
+                 .recordId(record.getId())
                 .judgeInputs(judgeInputList)
                 .codeId(code.getId())
                 .problemId(problemId)
@@ -142,7 +157,7 @@ public class JudgeService {
                  .build();
         String currentInput=gson.toJson(message);
         System.out.println(redisTemplate.opsForList().leftPush("judgelist",currentInput));
-        return code.getId();
+        return record.getId();
 
     }
 

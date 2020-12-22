@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import sustech.edu.phantom.dboj.controller.AvatarController;
 import sustech.edu.phantom.dboj.entity.po.Grade;
+import sustech.edu.phantom.dboj.entity.po.Record;
 import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.form.search.GroupRoleForm;
@@ -160,6 +161,24 @@ public class DbojApplicationTests {
 //                .msg("Success")
 //                .data(announcementService.announcementEntityVO(pagination))
 //                .build(), HttpStatus.OK);
+    }
+    @Test
+    public void updateRecord(){
+        Record record=Record.builder().
+                id(13).
+                codeId(1).
+                codeLength(123).
+                dialect("zjxnb").
+                problemId(123)
+                .result("nb")
+                .score(100)
+                .space(321L)
+                .submitTime(123231L)
+                .userId(321123)
+                .time(666L)
+                .build();
+        int rs=recordMapper.updateRecord(record);
+        System.out.println("返回值:"+rs);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.AssignmentCount;
 import sustech.edu.phantom.dboj.entity.po.Problem;
@@ -29,6 +30,8 @@ public interface RecordMapper {
      * @return
      */
     int saveRecord(Record record);
+
+    int updateRecord(Record record);
 
     /**
      * 使记录失效

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 @Builder
 public class JudgeInputMessage {
     ArrayList<JudgeInput> judgeInputs;
+    Integer recordId;
     Integer codeId;
     Integer problemId;
     Integer userId;

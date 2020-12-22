@@ -13,6 +13,7 @@ import java.util.ArrayList;
 @Builder
 public class JudgeResultMessage {
     ArrayList<JudgeResult> judgeResults;
+    Integer recordId;
     Integer codeId;
     Integer problemId;
     Integer userId;
