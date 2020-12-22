@@ -26,6 +26,23 @@
         VALUES (#{codeId}, #{userId}, #{problemId}, #{result}, #{score}, #{space}, #{time}, #{dialect},
                 #{codeLength}, #{submitTime});
     </insert>
+    <update id="updateRecord" keyProperty="id" useGeneratedKeys="true">
+        update "record"
+        <set>
+                code_id=#{codeId},
+            user_id=#{userId},
+            problem_id=#{problemId},
+            score=#{score},
+            result=#{result},
+            space=#{space},
+            time=#{time},
+            dialect=#{dialect},
+            code_length=#{codeLength},
+            submit_time=#{submitTime}
+        </set>
+        where id = #{id}
+
+    </update>
     <update id="invalidateRecord">
         update "record"
         set valid = false

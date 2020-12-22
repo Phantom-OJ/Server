@@ -113,10 +113,10 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/polling/{codeId}", method = RequestMethod.GET)
-    public ResponseEntity<GlobalResponse<PollingMessage>> polling(@PathVariable String codeId) {
+    @RequestMapping(value = "/polling/{recordId}", method = RequestMethod.GET)
+    public ResponseEntity<GlobalResponse<PollingMessage>> polling(@PathVariable String recordId) {
         ResponseMsg res = ResponseMsg.OK;
-        PollingMessage pollingMessage = judgeService.getJudgeStatus(codeId);
+        PollingMessage pollingMessage = judgeService.getJudgeStatus(recordId);
         return new ResponseEntity<>(GlobalResponse.<PollingMessage>builder()
                 .msg(res.getMsg())
                 .data(pollingMessage)

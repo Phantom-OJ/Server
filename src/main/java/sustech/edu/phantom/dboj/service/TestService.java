@@ -1,12 +1,16 @@
 package sustech.edu.phantom.dboj.service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import redis.clients.jedis.Jedis;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResult;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResultMessage;
@@ -14,12 +18,16 @@ import sustech.edu.phantom.dboj.basicJudge.PollingMessage;
 import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.mapper.*;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static sustech.edu.phantom.dboj.service.JudgeService.codeToString;
 
 @Service
+@Slf4j
 public class TestService implements Runnable{
 
 
@@ -66,6 +74,7 @@ public class TestService implements Runnable{
             return PollingMessage.createErrorMessage();
         }
         return thegson.fromJson(p,PollingMessage.class);
+
     }
 
 
@@ -77,7 +86,7 @@ public class TestService implements Runnable{
         while (true){
             String s=null;
             try {
-                System.out.println("服务运行中...");
+                //System.out.println("服务运行中...");
                 redisTemplate.setValueSerializer(new StringRedisSerializer());
                 s= (String) redisTemplate.opsForList().rightPop("result",60L,TimeUnit.SECONDS);
                 if(s!=null){
@@ -86,8 +95,8 @@ public class TestService implements Runnable{
                 updateAfterJudge(judgeResultMessage);
                 }
             }catch (Exception e){
-               // e.printStackTrace();
-               // System.err.println("结果报文:"+s);
+               log.debug(e.toString());
+               log.debug("结果报文:"+s);
                 Thread.sleep(1L);
             }
               //  for (int i = 1; i < s.size(); i++) {
@@ -101,7 +110,7 @@ public class TestService implements Runnable{
     public void sendRecord(String codeId){
         PollingMessage pollingMessage=PollingMessage.builder()
                 .messageId(1)
-                .description("pending")
+                .description("Pending...")
                 .recordId(-1)
                 .build();
         redisTemplate.opsForValue().set(codeId,thegson.toJson(pollingMessage));
@@ -148,7 +157,9 @@ public class TestService implements Runnable{
             totalDescription.append(j.getCodeDescription());
             totalDescription.append("\n");
         }
+
         Record record = Record.builder()
+                .id(message.getRecordId())
                 .codeId(c.getId())
                 .userId(userId)
                 .problemId(problem.getId())
@@ -162,7 +173,7 @@ public class TestService implements Runnable{
                 .dialect(c.getDialect()).
                         build();
 
-        recordMapper.saveRecord(record);
+        recordMapper.updateRecord(record);
         /*3.更新grade表*/
         Grade oldGrade = gradeMapper.getOneGrade(userId, problem.getId());
         /*4.更新recordProblemJudgePoints*/
@@ -204,7 +215,7 @@ public class TestService implements Runnable{
         pollingMessage.setRecordId(record.getId());
         pollingMessage.setDescription("Judge Complete");
         pollingMessage.setMessageId(0);
-        redisTemplate.opsForValue().set(String.valueOf(codeId),thegson.toJson(pollingMessage));
+        redisTemplate.opsForValue().set(String.valueOf(message.getRecordId()),thegson.toJson(pollingMessage));
         //System.out.println("判一次题时间:"+(end-start));
     }
 
