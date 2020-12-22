@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.controller;
 
+import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -113,7 +114,6 @@ public class StatController {
 
     @ApiOperation("获取用户得分")
     @RequestMapping(value = "/user/{id}/grade", method = RequestMethod.GET)
-    //TODO:要根据group来分, 这里差
     public ResponseEntity<GlobalResponse<List<UserGrade>>> getUserGrade(
             HttpServletRequest request,
             @PathVariable
@@ -160,8 +160,10 @@ public class StatController {
     public ResponseEntity<GlobalResponse<List<HomeStat>>> getHomeStat(HttpServletRequest request) {
         ResponseMsg res;
         List<HomeStat> homeStats = null;
+        String s;
         try {
-            homeStats = (List<HomeStat>) redisTemplate.opsForValue().get(PreLoadUtil.homeStatistics);
+            s = (String) redisTemplate.opsForValue().get(PreLoadUtil.homeStatistics);
+            homeStats = Arrays.asList(new Gson().fromJson(s, HomeStat[].class).clone());
             res = ResponseMsg.OK;
             log.info("success getting info from " + request.getRemoteAddr());
         } catch (Exception e) {

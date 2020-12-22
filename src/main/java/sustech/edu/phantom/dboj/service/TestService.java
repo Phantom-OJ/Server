@@ -1,15 +1,12 @@
 package sustech.edu.phantom.dboj.service;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import redis.clients.jedis.Jedis;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResult;
 import sustech.edu.phantom.dboj.basicJudge.JudgeResultMessage;
@@ -17,10 +14,7 @@ import sustech.edu.phantom.dboj.basicJudge.PollingMessage;
 import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.mapper.*;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static sustech.edu.phantom.dboj.service.JudgeService.codeToString;
@@ -92,8 +86,8 @@ public class TestService implements Runnable{
                 updateAfterJudge(judgeResultMessage);
                 }
             }catch (Exception e){
-                e.printStackTrace();
-                System.err.println("结果报文:"+s);
+               // e.printStackTrace();
+               // System.err.println("结果报文:"+s);
                 Thread.sleep(1L);
             }
               //  for (int i = 1; i < s.size(); i++) {

@@ -103,4 +103,8 @@ public interface AssignmentMapper {
     boolean modifyAssignment(@Param("aid") int aid, @Param("param2") UploadAssignmentForm param2);
 
     UploadAssignmentForm getAssign(int aid);
+
+    List<Integer> getProblemIdsOneAssignment(int aid);
+
+    List<Integer> getOneUserAssignment(int uid);
 }

@@ -38,6 +38,8 @@ public interface RecordMapper {
      */
     int invalidateRecord(int id);
 
+    int invalidOneAssignmentRecord(@Param("pids") List<Integer> pids);
+
     /**
      * @param pagination
      * @return

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -64,13 +65,13 @@ public class AvatarController {
         try {
             for (MultipartFile multipartFile : avatar) {
                 System.err.println(multipartFile.getContentType());
-                if (!multipartFile.getContentType().matches("^image/\\w+$")) {
+                if (!Objects.requireNonNull(multipartFile.getContentType()).matches("^image/\\w+$")) {
                     throw new Exception("Not images!");
                 }
                 file = multipartFile;
                 if (!file.isEmpty()) {
                     log.info("图片不为空，开始上传");
-                    String extName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+                    String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                     String fileName = user.getUsername().substring(0, user.getUsername().indexOf("@")) + "." + extName;
                     String filePath = resPath + fileName;
                     log.info(filePath);
@@ -78,7 +79,7 @@ public class AvatarController {
                     if (!isImage(bytes)) {
                         throw new Exception("Not images!");
                     }
-                    String originalName = user.getAvatar().substring(user.getAvatar().lastIndexOf(File.separator)+1);
+                    String originalName = user.getAvatar().substring(user.getAvatar().lastIndexOf(File.separator) + 1);
                     if (!originalName.equals(DEFAULT_AVATAR)) {
                         log.info(originalName);
                         File file1 = new File(user.getAvatar());
@@ -106,144 +107,11 @@ public class AvatarController {
             }
 
         } catch (Exception e) {
-            System.out.println("You failed to upload " + " => "
-                    + e.getMessage());
+            System.out.println("You failed to upload " + " => " + e.getMessage());
             res = ResponseMsg.BAD_REQUEST;
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
     }
-//
-//    @ApiOperation("上传判题数据库")
-//    @RequestMapping(value = "/upload/judgedb", method = RequestMethod.POST)
-//    public ResponseEntity<GlobalResponse<String>> uploadJudgeDB(HttpServletRequest request) {
-//
-//        String resPath = getResourcesPath("judge_database", false);
-//        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
-//        List<MultipartFile> files = params.getFiles("file");
-//        String keyword = params.getParameter("keyword");
-//        log.info("keyword is " + keyword);
-//        MultipartFile file;
-//        BufferedOutputStream stream;
-//        String judgeDatabasePath = null;
-//        ResponseMsg res;
-////        if (file.isEmpty()) {
-////            res = ResponseMsg.EMPTY_FILE;
-////        } else {
-////            String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-////            String fileName = UUID.randomUUID().toString() + extName;
-////            String filePath = resPath + fileName;
-////            File toFile = new File(filePath);
-////            if (!toFile.getParentFile().exists()) {
-////                toFile.getParentFile().mkdirs();
-////            }
-////            try {
-////                FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(toFile));
-////            } catch (Exception e) {
-////                log.error(Arrays.toString(e.getStackTrace()));
-////            }
-////        }
-//        try {
-//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (!user.getPermissionList().contains("upload judge database")) {
-//                res = ResponseMsg.FORBIDDEN;
-//            } else {
-//                for (MultipartFile multipartFile : files) {
-//                    file = multipartFile;
-//                    if (!file.isEmpty()) {
-//                        String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-//                        String fileName = UUID.randomUUID().toString() + extName;
-//                        String filePath = resPath + fileName;
-//                        byte[] bytes = file.getBytes();
-//                        stream = new BufferedOutputStream(new FileOutputStream(filePath));
-//                        stream.write(bytes);
-//                        stream.close();
-//                        judgeDatabasePath = filePath;
-//                    } else {
-//                        res = ResponseMsg.EMPTY_FILE;
-//                        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-//                    }
-//                    break;
-//                }
-//                JudgeDatabase judgeDatabase = JudgeDatabase.builder().keyword(keyword).databaseUrl(judgeDatabasePath).build();
-//                if (uploadService.saveJudgeDB(judgeDatabase)) {
-//                    res = ResponseMsg.OK;
-//                } else {
-//                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
-//                }
-//            }
-//        } catch (ClassCastException e) {
-//
-//            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-//            res = ResponseMsg.UNAUTHORIZED;
-//        } catch (Exception e) {
-//            stream = null;
-//            System.out.println("You failed to upload " + " => "
-//                    + e.getMessage());
-//            res = ResponseMsg.BAD_REQUEST;
-//        }
-//        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-//    }
-//
-//    @ApiOperation("上传判题脚本")
-//    @RequestMapping(value = "/upload/judgescript", method = RequestMethod.POST)
-//    public ResponseEntity<GlobalResponse<String>> uploadJudgeScript(HttpServletRequest request) {
-//        String resPath = getResourcesPath("judge_script", false);
-//        MultipartHttpServletRequest params = (MultipartHttpServletRequest) request;
-//        List<MultipartFile> files = params.getFiles("file");
-//        String keyword = params.getParameter("keyword");
-//        log.info("keyword is " + keyword);
-//        MultipartFile file;
-//        BufferedOutputStream stream;
-//        String judgeScriptPath = null;
-//        ResponseMsg res;
-//        try {
-//            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            if (!user.getPermissionList().contains("upload judge script")) {
-//                log.info("you have not such permission.");
-//                res = ResponseMsg.FORBIDDEN;
-//            } else {
-//                for (MultipartFile multipartFile : files) {
-//                    file = multipartFile;
-//                    if (!file.isEmpty()) {
-//                        log.info("文件不为空，开始上传");
-//                        String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-//                        String fileName = UUID.randomUUID().toString() + "." + extName;
-//                        String filePath = resPath + fileName;
-//                        log.info(filePath);
-//
-//                        new File(filePath).createNewFile();
-//
-//                        byte[] bytes = file.getBytes();
-//                        stream = new BufferedOutputStream(new FileOutputStream(filePath));
-//                        stream.write(bytes);
-//                        stream.close();
-//                        judgeScriptPath = filePath;
-//                    } else {
-//                        log.info("文件为空，退出");
-//                        res = ResponseMsg.EMPTY_FILE;
-//                        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-//                    }
-//                    break;
-//                }
-//                JudgeScript judgeScript = JudgeScript.builder().keyword(keyword).script(judgeScriptPath).build();
-//                if (uploadService.saveJudgeScript(judgeScript)) {
-//                    res = ResponseMsg.OK;
-//                } else {
-//                    log.info("Something happens inside the server.");
-//                    res = ResponseMsg.INTERNAL_SERVER_ERROR;
-//                }
-//            }
-//        } catch (ClassCastException e) {
-//
-//            log.error("The visit from " + request.getRemoteAddr() + " is not signed in.");
-//            res = ResponseMsg.UNAUTHORIZED;
-//        } catch (Exception e) {
-//            System.out.println("You failed to upload " + " => "
-//                    + e.getMessage());
-//            res = ResponseMsg.BAD_REQUEST;
-//        }
-//        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
-//    }
 
     /**
      * 获取路径信息
@@ -274,7 +142,7 @@ public class AvatarController {
             assert path != null;
             File filePath = new File(path);
             if (!filePath.exists() && filePath.mkdirs()) {
-                log.info("创建文件夹路径为：" + filePath);
+                log.info("创建文件夹路径为: " + filePath);
             }
         } catch (Exception e) {
             log.error("出错啦!");
@@ -298,7 +166,6 @@ public class AvatarController {
     }
 
     private static boolean isGIF(byte[] buf) {
-
         byte[] markBuf1 = "GIF89a".getBytes(); //GIF识别符
         byte[] markBuf2 = "GIF87a".getBytes();
         return compare(buf, markBuf1) || compare(buf, markBuf2);
@@ -306,7 +173,6 @@ public class AvatarController {
 
 
     private static boolean isPNG(byte[] buf) {
-
         byte[] markBuf = {(byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}; //PNG识别符
         // new String(buf).indexOf("PNG")>0 //也可以使用这种方式
         return compare(buf, markBuf);
@@ -317,8 +183,7 @@ public class AvatarController {
         return compare(buf, markBuf);
     }
 
-    private static boolean isJPEGFooter(byte[] buf)//JPEG结束符
-    {
+    private static boolean isJPEGFooter(byte[] buf) {//JPEG结束符
         byte[] markBuf = {(byte) 0xff, (byte) 0xd9};
         return compare(buf, markBuf);
     }

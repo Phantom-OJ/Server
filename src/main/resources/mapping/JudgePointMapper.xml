@@ -57,6 +57,15 @@
             dialect           = #{param2.dialect}
         where id = #{id};
     </update>
+    <update id="invalidJudgePointOneAssignment">
+        update "judge_point"
+        set valid = false
+        where problem_id in (
+        <foreach collection="pids" index="index" item="p" separator="," close=")">
+            #{p}
+        </foreach>
+        ;
+    </update>
     <select id="getJudgePoints" resultType="sustech.edu.phantom.dboj.form.upload.UploadJudgePointForm">
         select id,
                problem_id,

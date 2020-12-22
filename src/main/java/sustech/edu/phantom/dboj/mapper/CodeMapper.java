@@ -1,6 +1,9 @@
 package sustech.edu.phantom.dboj.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import sustech.edu.phantom.dboj.entity.po.Code;
+
+import java.util.List;
 
 public interface CodeMapper {
     /**
@@ -26,4 +29,6 @@ public interface CodeMapper {
      * @return Code 对象
      */
     String queryRecentCode(int userId, int problemId);
+
+    int invalidCodeOfAssignment(@Param("pids") List<Integer> pids);
 }

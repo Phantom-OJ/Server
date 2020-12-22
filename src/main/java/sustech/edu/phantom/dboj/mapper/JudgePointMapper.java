@@ -22,6 +22,9 @@ public interface JudgePointMapper {
 
     int invalidateJudgePoint(int id);
 
+    int invalidJudgePointOneAssignment(@Param("pids") List<Integer> pids);
+
+
     int modifyJudgePoint(@Param("id") int id, @Param("param2") JudgePoint param2);
 
     List<UploadJudgePointForm> getJudgePoints(int pid);

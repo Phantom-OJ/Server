@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PollingMessage {
-    private Integer messageId;
+    private Integer messageId;//0->成功 1->pending 2-> 报错
     private String description;
     private Integer recordId;
 

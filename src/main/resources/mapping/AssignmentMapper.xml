@@ -143,6 +143,18 @@
     <select id="getAssign" resultType="sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm">
         select id, title, description, start_time, end_time, status, full_score
         from assignment
-        where id = #{aid} and valid;
+        where id = #{aid}
+          and valid;
+    </select>
+    <select id="getProblemIdsOneAssignment" resultType="java.lang.Integer">
+        select distinct id
+        from "problem"
+        where assignment_id = #{aid};
+    </select>
+    <select id="getOneUserAssignment" resultType="java.lang.Integer">
+        select distinct a.id
+        from assignment a
+                 join assignment_group ag on a.id = ag.assignment_id and a.valid and ag.valid
+                 join user_group ug on ag.group_id = ug.group_id and ug.valid and ug.user_id = #{uid};
     </select>
 </mapper>

@@ -31,6 +31,15 @@
         set valid = false
         where id = #{id};
     </update>
+    <update id="invalidOneAssignmentRecord">
+        update "record"
+        set valid = false
+        where problem_id in (
+        <foreach collection="pids" item="p" index="index" separator="," close=")">
+            #{p}
+        </foreach>
+        ;
+    </update>
     <select id="getAllRecords" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,

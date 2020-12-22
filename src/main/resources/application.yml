@@ -5,8 +5,8 @@ spring:
   datasource:
     druid:
       url: jdbc:postgresql://localhost:5432/testsec?useAffectedRows=true
-      username: postgres
-      password: abc123
+      username: checker
+      password: lsl213
       driver-class-name: org.postgresql.Driver
       initial-size: 8
       min-idle: 1
@@ -50,7 +50,7 @@ spring:
     protocol: smtp
   redis:
     timeout: 5000
-    database: 0
+    database: 3
     host: 10.20.87.51
     port: 6379
 

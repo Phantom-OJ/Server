@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
- * 非 rest controller
+ * rest controller
  *
  * @author Shilong Li (Lori)
  * @version 1.0
