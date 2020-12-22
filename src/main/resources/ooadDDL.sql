@@ -129,7 +129,7 @@ create table if not exists "code"
     submit_time bigint   not null default floor(
             extract(epoch from ((current_timestamp - timestamp '1970-01-01 00:00:00') * 1000))),
     valid       bool     not null default true,
-    dialect     char(10) not null default 'pgsql'
+    dialect     varchar(10) not null default 'pgsql'
 );
 create table if not exists "tag"
 (
