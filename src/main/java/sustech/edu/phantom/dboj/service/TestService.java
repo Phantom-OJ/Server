@@ -74,6 +74,7 @@ public class TestService implements Runnable{
             return PollingMessage.createErrorMessage();
         }
         return thegson.fromJson(p,PollingMessage.class);
+
     }
 
 

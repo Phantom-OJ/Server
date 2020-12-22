@@ -211,8 +211,8 @@ public class JudgeService {
     }
 
 
-    public PollingMessage getJudgeStatus(String codeId) {
-        return testService.getRecordStatusbyCodeId(codeId);
+    public PollingMessage getJudgeStatus(String recordId) {
+        return testService.getRecordStatusbyCodeId(recordId);
     }
 }
 
