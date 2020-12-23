@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * @author Shilong Li (Lori)
  * @version 1.0
@@ -79,17 +80,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
                     String state = new String(httpServletRequest.getInputStream().readAllBytes());
                     User u = (User) authentication.getPrincipal();
-                    if (u.getStateSave()){
+                    if (u.getStateSave()) {
                         try {
                             userService.saveState(state, u.getId());
                         } catch (Exception ignored) {
                             ;
                         }
-                        log.info("The state of "+ u.getUsername() +" has been saved into database.");
+                        log.info("The state of " + u.getUsername() + " has been saved into database.");
                     } else {
-                        log.info("The state of "+ u.getUsername() +" has not been saved into database.");
+                        log.info("The state of " + u.getUsername() + " has not been saved into database.");
                     }
-                    log.info(u.getUsername()+" has signed out.");
+                    log.info(u.getUsername() + " has signed out.");
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter out = httpServletResponse.getWriter();
                     Map<String, Object> map = new HashMap<>(2);
@@ -101,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .deleteCookies("JSESSIONID")
                 .permitAll();
-//        http.sessionManagement().maximumSessions(1).sessionRegistry()/
+        http.sessionManagement().maximumSessions(1);
     }
 
     private MyAuthenticationFilter myAuthenticationFilter() throws Exception {
