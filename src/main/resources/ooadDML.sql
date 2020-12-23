@@ -1,12 +1,18 @@
 begin transaction;
 
-insert into "user" (username, password, nickname,role)
-values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qBibXqf4uhbQK.7buetZKN6', 'god1','ROLE_TEACHER'),
-       ('11813207@mail.sustech.edu.cn', '$2a$10$lbvy1xOwq0zHU.nsoxZmWeoYGmsrCI1545oh3Ahvh0VAnkTR/Nk2q', 'god2','ROLE_TEACHER'),
-       ('11812318@mail.sustech.edu.cn', '$2a$10$kP9KNT/Hb.QOrCaEItzMRuKrfhWOOttUt2R/46.XjHdjPX7FGqcjm', 'god3','ROLE_TEACHER'),
-       ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', 'god4','ROLE_TEACHER'),
-       ('leemdragon233@yahoo.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god5','ROLE_STUDENT'),
-       ('leemdragon233@gmail.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god6','ROLE_STUDENT');
+insert into "user" (username, password, nickname, role)
+values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qBibXqf4uhbQK.7buetZKN6', '黎詩龍',
+        'ROLE_TEACHER'),
+       ('11813207@mail.sustech.edu.cn', '$2a$10$lbvy1xOwq0zHU.nsoxZmWeoYGmsrCI1545oh3Ahvh0VAnkTR/Nk2q', '聶秋實',
+        'ROLE_TEACHER'),
+       ('11812318@mail.sustech.edu.cn', '$2a$10$kP9KNT/Hb.QOrCaEItzMRuKrfhWOOttUt2R/46.XjHdjPX7FGqcjm', '張嘉兮',
+        'ROLE_TEACHER'),
+       ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', '毛尊堯',
+        'ROLE_TEACHER'),
+       ('leemdragon233@yahoo.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'Pirate',
+        'ROLE_STUDENT'),
+       ('leemdragon233@gmail.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'Hey',
+        'ROLE_STUDENT');
 insert into "tag" (keyword, description)
 VALUES ('k1', 'd1'),
        ('k2', 'd2'),
@@ -32,8 +38,11 @@ VALUES ('ROLE_STUDENT', 'basic operations'),
        ('ROLE_SA', 'manage the announcement'),
        ('ROLE_SA', 'view all groups'),
        ('ROLE_SA', 'view all assignments'),
-       ('ROLE_SA', 'view all codes'),
-
+       ('ROLE_SA','view all codes'),
+       ('ROLE_SA', 'check grades'),
+       ('ROLE_SA', 'view all tags'),
+       ('ROLE_SA', 'rejudge'),
+       ('ROLE_SA', 'test code'),
 
        ('ROLE_TEACHER', 'view all submissions'),
        ('ROLE_TEACHER', 'provide the solution'),
@@ -41,6 +50,9 @@ VALUES ('ROLE_STUDENT', 'basic operations'),
        ('ROLE_TEACHER', 'view all groups'),
        ('ROLE_TEACHER', 'view all assignments'),
        ('ROLE_TEACHER', 'view all codes'),
+       ('ROLE_TEACHER', 'view all tags'),
+       ('ROLE_TEACHER', 'rejudge'),
+       ('ROLE_TEACHER', 'test code'),
        ('ROLE_TEACHER', 'create groups'),
        ('ROLE_TEACHER', 'create assignment'),
        ('ROLE_TEACHER', 'modify assignment'),
@@ -149,11 +161,15 @@ d_{cs} = \frac{x}{b}+kd+s
 $$',
         20, 55, 33, 7, 2, 2, 'store a markdown', true, 'public', 'select', 1);
 
-insert into problem(assignment_id, title, description, full_score, space_limit, time_limit,  index_in_assignment, solution, type)
-values (2,'exercise 3','Spanish films that contain neither a (in any case) nor o (in any case) in their title',100,256,10000,3,'not given','select');
+insert into problem(assignment_id, title, description, full_score, space_limit, time_limit, index_in_assignment,
+                    solution, type)
+values (2, 'exercise 3', 'Spanish films that contain neither a (in any case) nor o (in any case) in their title', 100,
+        256, 10000, 3, 'not given', 'select');
 
-insert into problem(assignment_id, title, description, full_score, space_limit, time_limit,  index_in_assignment, solution, type)
-values (2,'exercise 3','American films that were released the year you were born',100,256,10000,2,'not given','select');
+insert into problem(assignment_id, title, description, full_score, space_limit, time_limit, index_in_assignment,
+                    solution, type)
+values (2, 'exercise 3', 'American films that were released the year you were born', 100, 256, 10000, 2, 'not given',
+        'select');
 
 insert into problem(assignment_id, title, description, full_score, space_limit, time_limit, number_submit,
                     number_solve, index_in_assignment, solution, status, type, judge_script_id)

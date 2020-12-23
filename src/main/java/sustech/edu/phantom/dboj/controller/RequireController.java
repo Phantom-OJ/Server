@@ -47,7 +47,7 @@ public class RequireController {
         ResponseMsg msg;
         List<Tag> data = null;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user.containPermission(PermissionEnum.VIEW_GROUPS)){
+        if (user.containPermission(PermissionEnum.VIEW_TAGS)){
             try {
                 data = requireService.getTag();
                 msg = ResponseMsg.OK;
