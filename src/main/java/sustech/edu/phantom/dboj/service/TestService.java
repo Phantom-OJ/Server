@@ -134,7 +134,7 @@ public class TestService implements Runnable{
                 acNum += 1;
             }
         }
-        int score = 100 * acNum / totalTestPoint;
+        int score = problem.getFullScore() * acNum / totalTestPoint;
 
         /*1.更新proble表*/
         if (acNum == totalTestPoint) {
