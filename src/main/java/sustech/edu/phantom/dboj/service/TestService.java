@@ -164,6 +164,7 @@ public class TestService implements Runnable{
                 .codeId(c.getId())
                 .userId(userId)
                 .problemId(problem.getId())
+
                 .codeLength(c.getCodeLength())
                 .submitTime(c.getSubmitTime()).
                         score(score).

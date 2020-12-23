@@ -1,12 +1,15 @@
 server:
   port: 8080
+  tomcat:
+    threads:
+      max: 1000
 
 spring:
   datasource:
     druid:
-      url: jdbc:postgresql://localhost:5432/testsec?useAffectedRows=true
-      username: postgres
-      password: abc123
+      url: jdbc:postgresql://10.17.29.111:5432/testsec?useAffectedRows=true
+      username: checker
+      password: lsl213
       driver-class-name: org.postgresql.Driver
       initial-size: 8
       min-idle: 1
@@ -50,7 +53,7 @@ spring:
     protocol: smtp
   redis:
     timeout: 5000
-    database: 4
+    database: 3
     host: 10.20.87.51
     port: 6379
 

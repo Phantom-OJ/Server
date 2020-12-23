@@ -19,6 +19,12 @@ public class WebAspectLog {
     public void Pointcut() {
     }
 
+//    @Before("Pointcut()")
+//    public void before(JoinPoint joinPoint) throws InterruptedException {
+//        System.out.println(joinPoint.getSignature().getName());
+//        Thread.sleep(2000L);
+//    }
+
     @Around("Pointcut()")
     public Object Around(ProceedingJoinPoint pjp) throws Throwable {
         Map<String, Object> data = new HashMap<>();

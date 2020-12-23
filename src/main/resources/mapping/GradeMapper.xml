@@ -11,13 +11,17 @@
     <select id="getUserGrade" resultType="sustech.edu.phantom.dboj.entity.vo.UserGrade">
         select id, title, case when grade is null then 0 else grade end as score, full_score
         from (
-                 select distinct a.id, a.title, sum(g.score) over (partition by a.id) as grade, a.full_score
-                 from assignment a
-                          join problem p on a.id = p.assignment_id and a.valid and p.valid
-                          left join grade g on p.id = g.problem_id and g.user_id = #{uid} and g.valid) as apg;
+        select distinct a.id, a.title, sum(g.score) over (partition by a.id) as grade, a.full_score
+        from assignment a
+        join problem p on a.id = p.assignment_id and a.valid and p.valid and a.id in
+        (<foreach
+            collection="a" index="index" item="it" separator="," close="">
+        #{it}
+    </foreach>)
+        left join grade g on p.id = g.problem_id and g.user_id = #{uid} and g.valid) as apg;
     </select>
     <select id="getOneAssignmentScore" resultType="sustech.edu.phantom.dboj.form.stat.AssignmentScore">
-        select x.id, x.username, case when sum(g.score) is null then 0 else sum(g.score) end as total
+        select x.id, x.username, case when sum(g.score) is null then 0 else sum(g.score) end as score
         from (
                  select distinct u.id, u.username
                  from "user" u
@@ -32,6 +36,15 @@
         set score = #{score}
         where user_id = #{userId}
           and problem_id = #{problemId};
+    </update>
+    <update id="invalidAssignmentGrade">
+        update "grade"
+        set valid = false
+        where problem_id in (
+        <foreach collection="pids" index="index" item="p" separator="," close=")">
+            #{p}
+        </foreach>
+        ;
     </update>
     <insert id="saveOneGrade">
         insert into "grade" (user_id, problem_id, score)

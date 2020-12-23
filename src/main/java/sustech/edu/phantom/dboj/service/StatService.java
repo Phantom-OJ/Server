@@ -8,9 +8,7 @@ import sustech.edu.phantom.dboj.entity.po.AssignmentCount;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.vo.UserGrade;
 import sustech.edu.phantom.dboj.form.stat.*;
-import sustech.edu.phantom.dboj.mapper.GradeMapper;
-import sustech.edu.phantom.dboj.mapper.ProblemMapper;
-import sustech.edu.phantom.dboj.mapper.RecordMapper;
+import sustech.edu.phantom.dboj.mapper.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,12 @@ public class StatService {
 
     @Autowired
     ProblemMapper problemMapper;
+
+    @Autowired
+    GroupMapper groupMapper;
+
+    @Autowired
+    AssignmentMapper assignmentMapper;
 
 
     /**
@@ -81,10 +85,11 @@ public class StatService {
      *
      * @param uid user id
      * @return 用户成绩
-     * //TODO: group没有去掉
      */
     public List<UserGrade> getUserGrade(int uid) {
-        return gradeMapper.getUserGrade(uid);
+        groupMapper.getStudentGroup(uid);
+        List<Integer> a = assignmentMapper.getOneUserAssignment(uid);
+        return gradeMapper.getUserGrade(uid, a);
     }
 
     public List<AssignmentStat> getOneAssignmentStat(int aid) {

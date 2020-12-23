@@ -33,6 +33,13 @@ public interface ProblemMapper {
     int invalidateProblem(int id);
 
     /**
+     * <p>删除一个作业中的所有题目</p>
+     * @param aid 作业id
+     * @return 影响行数
+     */
+    int invalidateOneAssignmentProblems(int aid);
+
+    /**
      * @param id
      * @return
      */

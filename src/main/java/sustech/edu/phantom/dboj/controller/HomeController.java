@@ -70,7 +70,7 @@ public class HomeController {
             user.setState(basicService.getLastState(user.getId()));
             res = ResponseMsg.OK;
         } catch (ClassCastException e) {
-            log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
+//            log.error("The request from " + request.getRemoteAddr() + " client has not been logged in.");
             res = ResponseMsg.UNAUTHORIZED;
         }
         return new ResponseEntity<>(GlobalResponse.<User>builder().msg(res.getMsg()).data(user).build(), res.getStatus());
@@ -196,19 +196,19 @@ public class HomeController {
             boolean isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
             entityVO = assignmentService.assignmentEntityVO(pagination, isAdmin);
             res = ResponseMsg.OK;
-            log.info("Successfully view all the assignment");
+//            log.info("Successfully view all the assignment");
         } catch (ClassCastException e) {
-            log.info("Visiting assignments from the request " + request.getRemoteAddr());
+//            log.info("Visiting assignments from the request " + request.getRemoteAddr());
             try {
                 entityVO = assignmentService.assignmentEntityVO(pagination, false);
                 res = ResponseMsg.OK;
-                log.info("Successfully view all the assignment");
+//                log.info("Successfully view all the assignment");
             } catch (Exception e1) {
-                log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
+//                log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
                 res = ResponseMsg.NOT_FOUND;
             }
         } catch (Exception e) {
-            log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
+//            log.error("There are some errors happening from the visiting " + request.getRemoteAddr());
             res = ResponseMsg.NOT_FOUND;
         }
         return new ResponseEntity<>(GlobalResponse.<EntityVO<Assignment>>builder().msg(res.getMsg()).data(entityVO).build(), res.getStatus());

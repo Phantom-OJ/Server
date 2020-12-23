@@ -70,7 +70,7 @@ create table if not exists "judge_database"
     keyword      text     not null,
     database_url text     not null default '{"host":"localhost","start_port":12000,"end_port":12010,"image_id":12345}',
     valid        bool     not null default true,
-    dialect      char(10) not null default 'pgsql',
+    dialect      varchar(10) not null default 'pgsql',
     unique (keyword)
 );
 create table if not exists "judge_point"
@@ -82,7 +82,7 @@ create table if not exists "judge_point"
     answer            text     not null,
     judge_database_id int      not null,
     valid             bool     not null default true,
-    dialect           char(10) not null default 'pgsql',
+    dialect           varchar(10) not null default 'pgsql',
     judge_script_id   int
 );
 

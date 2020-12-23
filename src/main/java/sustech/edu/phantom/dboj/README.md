@@ -46,19 +46,19 @@
 
 ## TODO
    
-2. 多权限
+2. 多权限[finished]
 
-3. **消息队列**
+3. **消息队列**[finished]
 
-4. 分组显示
+4. 分组显示[finished]
 
-5. 根据user中的权限来控制
+5. 根据user中的权限来控制[finished]
 
-6. 查询record的时候，要控制好代码的显示
+6. 查询record的时候，要控制好代码的显示[todo]
 
 7. 判题机独立出一个服务 -- mzy
 
-8. 轮询
+8. 轮询[finished]
 
 9. 定期刷新数据库 [resolved]
 
@@ -90,11 +90,8 @@
 
 23. assignment 数据 每一个题有多少人ac了，一共要ac多少人，交了没ac，ac了，没交，总数 [算是solved]
 
-24. userGrade 那里，要根据group来筛选 !!!
+24. userGrade 那里，要根据group来筛选 !!![resolved]
 
-judge script: text
-
-judge database: json text
 
 ==database, schema, imageId==
 

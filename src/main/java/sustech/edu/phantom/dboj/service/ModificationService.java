@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @Slf4j
-public class AdvancedInfoModificationService {
+public class ModificationService {
     @Autowired
     UserMapper userMapper;
 
@@ -50,7 +50,16 @@ public class AdvancedInfoModificationService {
     JudgePointMapper judgePointMapper;
 
     @Autowired
+    RecordMapper recordMapper;
+
+    @Autowired
+    GradeMapper gradeMapper;
+
+    @Autowired
     TagMapper tagMapper;
+
+    @Autowired
+    CodeMapper codeMapper;
 
 
     public void grantUser(Map<String, List<Integer>> hm) {
@@ -131,10 +140,49 @@ public class AdvancedInfoModificationService {
         List<Integer> groupList = groupMapper.getAssignmentGroup(aid).stream().map(Group::getId).collect(Collectors.toList());
         form.setGroupList(groupList);
         for (UploadProblemForm f : uploadProblemFormList) {
-            f.setJudgePointList(judgePointMapper.getJudgePoints(f.getId()));
-            f.setTagList(tagMapper.getProblemTags(f.getId()).stream().map(Tag::getId).collect(Collectors.toList()));
+            f.setJudgePointList(
+                    judgePointMapper.
+                            getJudgePoints(f.getId()));
+            f.setTagList(
+                    tagMapper.getProblemTags(f.getId())
+                    .stream()
+                    .map(Tag::getId).collect(Collectors.toList()));
         }
         form.setUploadProblemFormList(uploadProblemFormList);
         return form;
+    }
+
+    public boolean deleteAssignment(int aid) {
+        try {
+            List<Integer> pids = assignmentMapper.getProblemIdsOneAssignment(aid);
+            assignmentMapper.invalidateAssignment(aid);
+            problemMapper.invalidateOneAssignmentProblems(aid);
+            return deleteProblemInfo(pids);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean deleteProblem(int pid) {
+        try {
+            problemMapper.invalidateProblem(pid);
+            List<Integer> pids = new ArrayList<>();
+            pids.add(pid);
+            return deleteProblemInfo(pids);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean deleteProblemInfo(List<Integer> pids) {
+        try {
+            judgePointMapper.invalidJudgePointOneAssignment(pids);
+            recordMapper.invalidOneAssignmentRecord(pids);
+            gradeMapper.invalidAssignmentGrade(pids);
+            codeMapper.invalidCodeOfAssignment(pids);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

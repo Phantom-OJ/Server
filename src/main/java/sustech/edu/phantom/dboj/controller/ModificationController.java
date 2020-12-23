@@ -19,8 +19,8 @@ import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
 import sustech.edu.phantom.dboj.form.upload.UploadAssignmentForm;
 import sustech.edu.phantom.dboj.form.upload.UploadProblemForm;
-import sustech.edu.phantom.dboj.service.AdvancedInfoModificationService;
 import sustech.edu.phantom.dboj.service.GroupService;
+import sustech.edu.phantom.dboj.service.ModificationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,10 +36,10 @@ import java.util.Map;
 @Api(tags = {"<admin>高级修改信息"})
 @RequestMapping(value = "/api/modify/")
 @PreAuthorize("hasRole('ROLE_STUDENT')")
-public class AdvancedModifyInfoController {
+public class ModificationController {
 
     @Autowired
-    AdvancedInfoModificationService advancedInfoModificationService;
+    ModificationService modificationService;
 
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
@@ -57,7 +57,7 @@ public class AdvancedModifyInfoController {
         ResponseMsg res;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.containPermission(PermissionEnum.VIEW_PERMISSIONS)) {
-            if (advancedInfoModificationService.modifyPermission(permission, false, 0) > 0) {
+            if (modificationService.modifyPermission(permission, false, 0) > 0) {
                 res = ResponseMsg.OK;
             } else {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
@@ -78,7 +78,7 @@ public class AdvancedModifyInfoController {
         ResponseMsg res;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.containPermission(PermissionEnum.VIEW_PERMISSIONS)) {
-            if (advancedInfoModificationService.modifyPermission(null, true, id) > 0) {
+            if (modificationService.modifyPermission(null, true, id) > 0) {
                 res = ResponseMsg.OK;
             } else {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
@@ -112,7 +112,7 @@ public class AdvancedModifyInfoController {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-                advancedInfoModificationService.grantUser(hm);
+                modificationService.grantUser(hm);
                 res = ResponseMsg.OK;
             } catch (Exception e) {
                 log.error("There are some errors of the visit from " + request.getRemoteAddr());
@@ -137,7 +137,7 @@ public class AdvancedModifyInfoController {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-                if (advancedInfoModificationService.modifyGroup(description, false, 0) > 0) {
+                if (modificationService.modifyGroup(description, false, 0) > 0) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.BAD_REQUEST;
@@ -164,7 +164,7 @@ public class AdvancedModifyInfoController {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-                if (advancedInfoModificationService.modifyGroup(null, true, id) > 0) {
+                if (modificationService.modifyGroup(null, true, id) > 0) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.BAD_REQUEST;
@@ -189,7 +189,7 @@ public class AdvancedModifyInfoController {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-                if (advancedInfoModificationService.modifyProblem(id, form)) {
+                if (modificationService.modifyProblem(id, form)) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.FAIL_MODIFY;
@@ -213,7 +213,7 @@ public class AdvancedModifyInfoController {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
-                if (advancedInfoModificationService.modifyAssignment(id, form)) {
+                if (modificationService.modifyAssignment(id, form)) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.FAIL_MODIFY;
@@ -221,6 +221,47 @@ public class AdvancedModifyInfoController {
             } catch (Exception e) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
             }
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
+    }
+
+    //删除作业
+    @ApiOperation("删除作业")
+    @RequestMapping(value = "/assignment/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<GlobalResponse<String>> deleteAssignment(
+            @PathVariable Integer id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseMsg res;
+        if (user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
+            try {
+                modificationService.deleteAssignment(id);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                res = ResponseMsg.FAIL_MODIFY;
+            }
+        } else {
+            res = ResponseMsg.FORBIDDEN;
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
+    }
+
+    @ApiOperation("删除问题")
+    @RequestMapping(value = "/problem/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<GlobalResponse<String>> deleteProblem(@PathVariable Integer id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseMsg res;
+        if (user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
+            try {
+                if (modificationService.deleteProblem(id)) {
+                    res = ResponseMsg.OK;
+                } else {
+                    res = ResponseMsg.FAIL_MODIFY;
+                }
+            } catch (Exception e) {
+                res = ResponseMsg.FAIL_MODIFY;
+            }
+        } else {
+            res = ResponseMsg.FORBIDDEN;
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
@@ -234,7 +275,7 @@ public class AdvancedModifyInfoController {
         UploadAssignmentForm a = null;
         if (user.containPermission(PermissionEnum.CREATE_ASSIGNMENT)) {
             try {
-                a = advancedInfoModificationService.getAssignmentForm(id);
+                a = modificationService.getAssignmentForm(id);
                 res = ResponseMsg.OK;
             } catch (Exception e) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
@@ -256,7 +297,7 @@ public class AdvancedModifyInfoController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.containPermission(PermissionEnum.CREATE_ANNOUNCEMENT)) {
             try {
-                if (advancedInfoModificationService.modifyAnnouncement(form, id)) {
+                if (modificationService.modifyAnnouncement(form, id)) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.FAIL_MODIFY;
@@ -280,7 +321,7 @@ public class AdvancedModifyInfoController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.containPermission(PermissionEnum.CREATE_ANNOUNCEMENT)) {
             try {
-                if (advancedInfoModificationService.deleteAnnouncement(id)) {
+                if (modificationService.deleteAnnouncement(id)) {
                     res = ResponseMsg.OK;
                 } else {
                     res = ResponseMsg.FAIL_MODIFY;
@@ -352,7 +393,7 @@ public class AdvancedModifyInfoController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
         if (user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            if (advancedInfoModificationService.saveJudgePoint(judgePoint)) {
+            if (modificationService.saveJudgePoint(judgePoint)) {
                 res = ResponseMsg.OK;
             } else {
                 res = ResponseMsg.FAIL_MODIFY;
@@ -372,7 +413,7 @@ public class AdvancedModifyInfoController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
         if (user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            if (advancedInfoModificationService.deleteJudgePoint(id)) {
+            if (modificationService.deleteJudgePoint(id)) {
                 res = ResponseMsg.OK;
             } else {
                 res = ResponseMsg.FAIL_MODIFY;
@@ -392,7 +433,7 @@ public class AdvancedModifyInfoController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
         if (user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            if (advancedInfoModificationService.modifyJudgePoint(id, judgePoint)) {
+            if (modificationService.modifyJudgePoint(id, judgePoint)) {
                 res = ResponseMsg.OK;
             } else {
                 res = ResponseMsg.FAIL_MODIFY;

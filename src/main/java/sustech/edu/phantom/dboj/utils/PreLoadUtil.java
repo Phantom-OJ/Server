@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.utils;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,7 +36,7 @@ public class PreLoadUtil {
     public void loadHomeStat() {
         try {
             List<HomeStat> homeStats = statService.getHomeStat();
-            redisTemplate.opsForValue().set(homeStatistics, homeStats);
+            redisTemplate.opsForValue().set(homeStatistics, new Gson().toJson(homeStats));
             log.info("Load home statistics into redis");
         } catch (Exception e) {
             log.error(e.getMessage());

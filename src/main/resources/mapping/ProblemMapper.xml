@@ -258,17 +258,25 @@
             type        = #{param2.type}
         where id = #{pid};
     </update>
+    <update id="invalidateOneAssignmentProblems">
+        update "problem"
+        set valid = false
+        where assignment_id = #{aid};
+    </update>
     <select id="getProblem" resultType="sustech.edu.phantom.dboj.form.upload.UploadProblemForm">
-        select index_in_assignment,
+        select id,
+               index_in_assignment,
                title,
                description,
                full_score,
                space_limit,
                time_limit,
                solution,
-               type
+               type,
+               status
         from problem
         where assignment_id = #{aid}
-          and valid;
+          and valid
+        order by index_in_assignment;
     </select>
 </mapper>

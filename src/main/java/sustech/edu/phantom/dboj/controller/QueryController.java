@@ -19,8 +19,8 @@ import sustech.edu.phantom.dboj.entity.po.JudgePoint;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
-import sustech.edu.phantom.dboj.service.AdvancedInfoModificationService;
 import sustech.edu.phantom.dboj.service.AssignmentService;
+import sustech.edu.phantom.dboj.service.ModificationService;
 import sustech.edu.phantom.dboj.service.RecordService;
 import sustech.edu.phantom.dboj.service.UserService;
 
@@ -47,7 +47,7 @@ public class QueryController {
     AssignmentService assignmentService;
 
     @Autowired
-    AdvancedInfoModificationService advancedInfoModificationService;
+    ModificationService modificationService;
 
 
     /**
@@ -63,7 +63,6 @@ public class QueryController {
     public ResponseEntity<GlobalResponse<RecordDetail>> getOneRecord(
             HttpServletRequest request,
             @PathVariable @ApiParam(name = "记录id", required = true, type = "int") Integer id) {
-        //TODO:Record记录这里可能要改，包括查询具体的record，管理员权限没有设置
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("User " + user.getUsername() + " from " + request.getRemoteAddr() + " wants to fetch the code " + id);
         ResponseMsg res;
@@ -190,7 +189,7 @@ public class QueryController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
             try {
-                judgePoints = advancedInfoModificationService.getOneProblemJudgePoint(id);
+                judgePoints = modificationService.getOneProblemJudgePoint(id);
                 res = ResponseMsg.OK;
             } catch (Exception e) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;

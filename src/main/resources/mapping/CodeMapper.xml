@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.CodeMapper">
     <insert id="saveCode" keyProperty="id" useGeneratedKeys="true">
-        insert into "code" (code, code_length, submit_time,dialect)
-        values (#{code}, #{codeLength}, #{submitTime},#{dialect});
+        insert into "code" (code, code_length, submit_time, dialect)
+        values (#{code}, #{codeLength}, #{submitTime}, #{dialect});
     </insert>
     <select id="queryCode" resultType="sustech.edu.phantom.dboj.entity.po.Code">
-        select id, code, code_length, submit_time ,dialect
+        select id, code, code_length, submit_time, dialect
         from "code"
         where valid
           and id = #{id};
@@ -15,6 +15,15 @@
         update "code"
         set valid= false
         where id = #{id};
+    </update>
+    <update id="invalidCodeOfAssignment">
+        update "code"
+        set valid = false
+        where id in (select r.id from record r where r.problem_id in
+        <foreach collection="pids" item="p" index="index" separator="," close=")">
+            #{p}
+        </foreach>
+        ;
     </update>
     <select id="queryRecentCode" resultType="java.lang.String">
         select code
