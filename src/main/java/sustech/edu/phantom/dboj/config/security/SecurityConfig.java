@@ -15,11 +15,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.service.UserService;
 
@@ -103,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .deleteCookies("JSESSIONID")
                 .permitAll();
-        http.sessionManagement().maximumSessions(1);
+        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true).sessionRegistry(sessionRegistry());
     }
 
     private MyAuthenticationFilter myAuthenticationFilter() throws Exception {
@@ -176,7 +177,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 }
