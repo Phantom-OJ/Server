@@ -7,11 +7,6 @@ values ('11811407@mail.sustech.edu.cn', '$2a$10$ZkD4PeLG6unGepOIPHONjO7SnISjQ9qB
        ('11811620@mail.sustech.edu.cn', '$2a$10$Lp2cgwXTnh8jranXt6i/yuTdwb.3t1RkoFpKPByshJ84VgE1Mqg5W', 'god4','ROLE_TEACHER'),
        ('leemdragon233@yahoo.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god5','ROLE_STUDENT'),
        ('leemdragon233@gmail.com', '$2a$10$I/1HP/qBQlpI/A.UGEwwA.2NI04JOZ97Wya1HHT4mHA4SiqYK6h2m', 'god6','ROLE_STUDENT');
-insert into "tag" (keyword, description)
-VALUES ('k1', 'd1'),
-       ('k2', 'd2'),
-       ('k3', 'd3'),
-       ('k4', 'd4');
 insert into "problem_tag" (problem_id, tag_id)
 VALUES (1, 1),
        (1, 2),

@@ -174,7 +174,7 @@ public class StatController {
     }
 
     @ApiOperation("获取一个作业中所有用户得分")
-    @RequestMapping(value = "/assignment/{id}/scores", method = RequestMethod.POST)
+    @RequestMapping(value = "/assignment/{id}/scores", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<List<AssignmentScore>>> getOneAssignmentScores(HttpServletRequest request, @PathVariable Integer id) {
         ResponseMsg res;
