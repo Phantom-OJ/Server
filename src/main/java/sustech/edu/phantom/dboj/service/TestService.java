@@ -217,7 +217,7 @@ public class TestService implements Runnable{
             gradeMapper.updateOneGrade(userId, problem.getId(), score);
         }
         long end=System.currentTimeMillis();
-        PollingMessage pollingMessage=thegson.fromJson((String)redisTemplate.opsForValue().get(String.valueOf(codeId)),PollingMessage.class);
+        PollingMessage pollingMessage=thegson.fromJson((String)redisTemplate.opsForValue().get(String.valueOf(record.getId())),PollingMessage.class);
         pollingMessage.setRecordId(record.getId());
         pollingMessage.setDescription("Judge Complete");
         pollingMessage.setMessageId(0);
