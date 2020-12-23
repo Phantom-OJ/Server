@@ -354,21 +354,21 @@ order by director;
         null);
 
 insert into problem_tag (problem_id, tag_id)
-values (5, 7);
+values (1, 2);
 insert into problem_tag (problem_id, tag_id)
-values (5, 5);
+values (1, 1);
 insert into problem_tag (problem_id, tag_id)
-values (6, 5);
+values (2, 1);
 insert into problem_tag (problem_id, tag_id)
-values (6, 8);
+values (2, 3);
 insert into problem_tag (problem_id, tag_id)
-values (7, 5);
+values (3, 1);
 insert into problem_tag (problem_id, tag_id)
-values (7, 8);
+values (3, 3);
 insert into problem_tag (problem_id, tag_id)
-values (8, 6);
+values (4, 2);
 insert into problem_tag (problem_id, tag_id)
-values (8, 9);
+values (4, 4);
 
 insert into tag (keyword, description) VALUES ('1TQ', 'Single Table Query');
 insert into tag (keyword, description) VALUES ('xTQ', 'Multiple Table Query');
