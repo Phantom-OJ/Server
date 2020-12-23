@@ -44,4 +44,8 @@ public interface GroupMapper {
     int invalidateGroupUser(int gid);
 
     int invalidateGroupAssignment(int gid);
+
+    int insertAssignmentGroup(@Param("aid") Integer aid, @Param("gids") List<Integer> gids);
+
+    int invalidAssignmentGroup(int gid, int aid);
 }

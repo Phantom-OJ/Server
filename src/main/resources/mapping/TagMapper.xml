@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sustech.edu.phantom.dboj.mapper.TagMapper">
+    <delete id="invalidateProblemTag">
+        delete from "problem_tag"
+        where problem_id = #{pid}
+          and tag_id = #{tid};
+    </delete>
     <select id="allTagList" resultType="sustech.edu.phantom.dboj.entity.po.Tag">
         select distinct id, keyword, description
         from "tag"

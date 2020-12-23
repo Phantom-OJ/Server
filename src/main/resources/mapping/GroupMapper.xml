@@ -35,6 +35,12 @@
         insert into "group" (description)
         values (#{description});
     </insert>
+    <insert id="insertAssignmentGroup">
+        insert into "assignment_group" (assignment_id, group_id) VALUES
+        <foreach collection="gids" item="g" index="index" separator="," close=";">
+            (#{aid},#{g})
+        </foreach>
+    </insert>
     <update id="invalidateGroup">
         update "group"
         set valid = false
@@ -50,4 +56,10 @@
         set valid = false
         where group_id = #{gid};
     </update>
+    <delete id="invalidAssignmentGroup">
+        delete
+        from "assignment_group"
+        where assignment_id = #{aid}
+          and group_id = #{gid};
+    </delete>
 </mapper>

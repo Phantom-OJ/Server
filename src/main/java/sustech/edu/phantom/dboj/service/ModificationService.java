@@ -109,11 +109,48 @@ public class ModificationService {
     }
 
     public boolean modifyProblem(int pid, UploadProblemForm form) {
-        return problemMapper.modifyProblem(pid, form) != 0;
+        try {
+            List<Integer> newTagList = form.getTagList();
+            List<Integer> cp = new ArrayList<>(newTagList);
+            List<Integer> tagList = tagMapper.getProblemTags(pid).stream().map(Tag::getId).collect(Collectors.toList());
+            cp.retainAll(tagList);
+            newTagList.removeAll(tagList);
+            tagList.removeAll(cp);
+            tagMapper.saveOneProblemTags(newTagList, pid);
+            for (int c : tagList) {
+                tagMapper.invalidateProblemTag(pid, c);
+            }
+            problemMapper.modifyProblem(pid, form);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
     }
 
     public boolean modifyAssignment(int aid, UploadAssignmentForm form) {
-        return assignmentMapper.modifyAssignment(aid, form);
+        //TODO: 做grouplist的差集
+        // A - B 新增的
+        // A ^ B 不变的
+        // B - A ^ B 删除的
+        try {
+            List<Integer> newGroupList = form.getGroupList();
+            List<Integer> cp = new ArrayList<>(newGroupList);//交集
+            List<Integer> groupList = groupMapper.getAssignmentGroup(aid).stream().map(Group::getId).collect(Collectors.toList());
+            cp.retainAll(groupList);// 交集，不用变的
+            newGroupList.removeAll(groupList);// 差集 多出来的要添加的
+            groupList.removeAll(cp);// 等待删除的
+            groupMapper.insertAssignmentGroup(aid, newGroupList);
+            for (int c : groupList) {
+                groupMapper.invalidAssignmentGroup(aid, c);
+            }
+            assignmentMapper.modifyAssignment(aid, form);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public List<JudgePoint> getOneProblemJudgePoint(int id) {
@@ -140,13 +177,11 @@ public class ModificationService {
         List<Integer> groupList = groupMapper.getAssignmentGroup(aid).stream().map(Group::getId).collect(Collectors.toList());
         form.setGroupList(groupList);
         for (UploadProblemForm f : uploadProblemFormList) {
-            f.setJudgePointList(
-                    judgePointMapper.
-                            getJudgePoints(f.getId()));
+            f.setJudgePointList(judgePointMapper.getJudgePoints(f.getId()));
             f.setTagList(
                     tagMapper.getProblemTags(f.getId())
-                    .stream()
-                    .map(Tag::getId).collect(Collectors.toList()));
+                            .stream()
+                            .map(Tag::getId).collect(Collectors.toList()));
         }
         form.setUploadProblemFormList(uploadProblemFormList);
         return form;

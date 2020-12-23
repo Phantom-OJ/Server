@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     druid:
-      url: jdbc:postgresql://10.17.29.111:5432/testsec?useAffectedRows=true
+      url: jdbc:postgresql://10.21.105.115:5432/testsec?useAffectedRows=true
       username: checker
       password: lsl213
       driver-class-name: org.postgresql.Driver
