@@ -67,6 +67,7 @@ mybatis:
 file-root-path:
   windows: C:\Users\
   linux: /resources/
+  linux-abs: /home/renwen/phantom/backend/resources/
   default-avatar-filename: phantom.svg
 #logging:
 #  config: classpath:log4j2.yml
