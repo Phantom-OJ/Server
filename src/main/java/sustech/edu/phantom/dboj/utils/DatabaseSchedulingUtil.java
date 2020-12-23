@@ -24,10 +24,10 @@ public class DatabaseSchedulingUtil {
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     @PostConstruct
     public void updateAssignmentInfo() {
-        log.info("Updating the assignment and problem table every 30 minutes.");
+        log.info("Updating the assignment and problem table every 5 minutes.");
         schedulingService.updateAssignmentInfo();
     }
 
