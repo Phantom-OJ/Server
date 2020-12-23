@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.home.CodeForm;
+import sustech.edu.phantom.dboj.mapper.ProblemMapper;
 import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,8 @@ public class UserController {
     CodeService codeService;
     @Autowired
     JudgeService judgeService;
+    @Autowired
+    ProblemMapper problemMapper;
 
     @ApiOperation("重新判题")
     @RequestMapping(value = "/rejudge/{id}", method = RequestMethod.POST)
@@ -126,6 +130,12 @@ public class UserController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long endTime = problemService.getSimpleProblem(id);
         boolean flag = user.containPermission(PermissionEnum.VIEW_CODES);
+        List<Integer> tmp = problemMapper.problemGroups(id);
+        List<Integer> tmp2 = user.getGroupList().stream().map(Group::getId).collect(Collectors.toList());
+        tmp2.retainAll(tmp);
+        if (tmp2.size() == 0) {
+            return new ResponseEntity<>(GlobalResponse.<String>builder().msg("Forbidden").build(), HttpStatus.FORBIDDEN);
+        }
         //管理員或在結束之前可以提交
         ResponseMsg res;
         Integer codeId = 0;
