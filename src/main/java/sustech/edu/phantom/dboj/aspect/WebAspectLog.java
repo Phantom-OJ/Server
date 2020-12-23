@@ -19,13 +19,20 @@ public class WebAspectLog {
     public void Pointcut() {
     }
 
+    @Pointcut("execution(public * sustech.edu.phantom.dboj.controller.UserController.polling())")
+    public void PointcutExcept(){
+    }
+    @Pointcut("Pointcut() && !PointcutExcept()")
+    public void PointcutN() {
+    }
+
 //    @Before("Pointcut()")
 //    public void before(JoinPoint joinPoint) throws InterruptedException {
 //        System.out.println(joinPoint.getSignature().getName());
 //        Thread.sleep(2000L);
 //    }
 
-    @Around("Pointcut()")
+    @Around("PointcutN()")
     public Object Around(ProceedingJoinPoint pjp) throws Throwable {
         Map<String, Object> data = new HashMap<>();
         //获取目标类名称
