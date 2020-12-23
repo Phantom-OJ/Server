@@ -9,8 +9,8 @@
         offset #{offset} limit #{limit};
     </select>
     <insert id="insertOneAnnouncement">
-        insert into "announcement" (title, description, create_date)
-        values (#{title}, #{description}, #{createDate});
+        insert into "announcement" (title, description, create_date,last_modified)
+        values (#{title}, #{description}, #{createDate},#{createDate});
     </insert>
     <select id="getCount" resultType="integer">
         select count(*)
