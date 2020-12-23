@@ -221,7 +221,8 @@ public class TestService implements Runnable{
         pollingMessage.setRecordId(record.getId());
         pollingMessage.setDescription("Judge Complete");
         pollingMessage.setMessageId(0);
-        redisTemplate.opsForValue().set(String.valueOf(message.getRecordId()),thegson.toJson(pollingMessage));
+        redisTemplate.opsForValue().set(String.valueOf(message.getRecordId()),thegson.toJson(pollingMessage),60,TimeUnit.SECONDS);
+        log.error("recordId:"+message.getRecordId()+","+"polling message:"+pollingMessage);
         //System.out.println("判一次题时间:"+(end-start));
     }
 
