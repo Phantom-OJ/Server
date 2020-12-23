@@ -264,16 +264,19 @@
         where assignment_id = #{aid};
     </update>
     <select id="getProblem" resultType="sustech.edu.phantom.dboj.form.upload.UploadProblemForm">
-        select id,index_in_assignment,
+        select id,
+               index_in_assignment,
                title,
                description,
                full_score,
                space_limit,
                time_limit,
                solution,
-               type
+               type,
+               status
         from problem
         where assignment_id = #{aid}
-          and valid order by index_in_assignment;
+          and valid
+        order by index_in_assignment;
     </select>
 </mapper>

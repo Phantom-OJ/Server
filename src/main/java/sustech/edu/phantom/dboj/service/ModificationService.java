@@ -143,7 +143,10 @@ public class ModificationService {
             f.setJudgePointList(
                     judgePointMapper.
                             getJudgePoints(f.getId()));
-            f.setTagList(tagMapper.getProblemTags(f.getId()).stream().map(Tag::getId).collect(Collectors.toList()));
+            f.setTagList(
+                    tagMapper.getProblemTags(f.getId())
+                    .stream()
+                    .map(Tag::getId).collect(Collectors.toList()));
         }
         form.setUploadProblemFormList(uploadProblemFormList);
         return form;
