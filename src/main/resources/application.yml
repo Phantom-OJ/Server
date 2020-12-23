@@ -66,7 +66,7 @@ mybatis:
 
 file-root-path:
   windows: C:\Users\
-  linux: /resources/
+  linux: /resources/avatar/
   linux-abs: /home/renwen/phantom/backend/resources/
   default-avatar-filename: phantom.svg
 #logging:
