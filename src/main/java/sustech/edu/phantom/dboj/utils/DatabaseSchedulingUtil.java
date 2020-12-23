@@ -37,7 +37,7 @@ public class DatabaseSchedulingUtil {
         while (true) {
             try {
                 List<HomeStat> homeStats = schedulingService.getHomeStat();
-                log.info("Getting home statistics every day!!!!!");
+//                log.info("Getting home statistics every day!!!!!");
                 redisTemplate.opsForValue().set(PreLoadUtil.homeStatistics, new Gson().toJson(homeStats), 1, TimeUnit.DAYS);
                 break;
             } catch (Exception e) {

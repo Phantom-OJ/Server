@@ -155,7 +155,7 @@ public class UploadService {
                         if (tagMapper.saveOneProblemTags(list, tmp.getId()) == 0) {
                             //:ROLLBACK
                             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                            log.error("158");
+//                            log.error("158");
                             return false;
                         }
                         List<JudgePoint> judgePoints = new ArrayList<>();

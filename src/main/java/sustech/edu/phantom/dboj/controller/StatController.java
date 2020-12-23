@@ -23,12 +23,14 @@ import sustech.edu.phantom.dboj.form.stat.AssignmentScore;
 import sustech.edu.phantom.dboj.form.stat.AssignmentStat;
 import sustech.edu.phantom.dboj.form.stat.HomeStat;
 import sustech.edu.phantom.dboj.form.stat.ProblemStatSet;
+import sustech.edu.phantom.dboj.service.SchedulingService;
 import sustech.edu.phantom.dboj.service.StatService;
 import sustech.edu.phantom.dboj.utils.PreLoadUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Shilong Li (Lori)
@@ -45,6 +47,9 @@ public class StatController {
 
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    SchedulingService schedulingService;
 
     /**
      * 个人信息界面overview
@@ -167,8 +172,11 @@ public class StatController {
             res = ResponseMsg.OK;
             log.info("success getting info from " + request.getRemoteAddr());
         } catch (Exception e) {
-            res = ResponseMsg.INTERNAL_SERVER_ERROR;
-            log.error("Internal server error happens in getting statistics.");
+//            res = ResponseMsg.INTERNAL_SERVER_ERROR;
+//            log.error("Internal server error happens in getting statistics.");
+            homeStats = schedulingService.getHomeStat();
+            redisTemplate.opsForValue().set(PreLoadUtil.homeStatistics, new Gson().toJson(homeStats), 1, TimeUnit.DAYS);
+            res = ResponseMsg.OK;
         }
         return new ResponseEntity<>(GlobalResponse.<List<HomeStat>>builder().msg(res.getMsg()).data(homeStats).build(), res.getStatus());
     }
