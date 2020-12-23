@@ -54,7 +54,7 @@ spring:
   redis:
     timeout: 5000
     database: 3
-    host: 10.20.87.51
+    host: 10.16.7.224
     port: 6379
 
 mybatis:

@@ -45,7 +45,7 @@ public class WebAspectLog {
         //记录对应方法名称
         data.put("methodName", methodName);
         //记录请求参数
-        data.put("params", pjp.getArgs());
+//        data.put("params", pjp.getArgs());
         //开始调用时间
         // 计时并调用目标函数
         long start = System.currentTimeMillis();
