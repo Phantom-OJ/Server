@@ -92,7 +92,7 @@ public class TestService implements Runnable{
                 if(s!=null){
                 System.err.println("报文；"+s);
                 JudgeResultMessage judgeResultMessage = gson.fromJson(s, JudgeResultMessage.class);
-                updateAfterJudge(judgeResultMessage);
+                updateAfterJudge(judgeResultMessage,judgeResultMessage.getJudgeMode());
                 }
             }catch (Exception e){
                log.debug(e.toString());
@@ -115,8 +115,9 @@ public class TestService implements Runnable{
                 .build();
         redisTemplate.opsForValue().set(codeId,thegson.toJson(pollingMessage));
     }
+    //增加rejudge
     @Async
-    public void updateAfterJudge(JudgeResultMessage message){
+    public void updateAfterJudge(JudgeResultMessage message,int judgeMode){
         int totalTestPoint=message.getJudgeResults().size();
         int problemId=message.getProblemId();
         int codeId=message.getCodeId();
@@ -196,6 +197,7 @@ public class TestService implements Runnable{
         }
         recordProblemMapper.saveOneRecordDetails(recordProblemJudgePoints);
 
+        if(judgeMode==0){
         if (oldGrade == null) {
             Grade grade =
                     Grade.builder()
@@ -208,6 +210,10 @@ public class TestService implements Runnable{
             if (score > oldGrade.getScore()) {
                 gradeMapper.updateOneGrade(userId, problem.getId(), score);
             }
+        }
+        }
+        else {
+            gradeMapper.updateOneGrade(userId, problem.getId(), score);
         }
         long end=System.currentTimeMillis();
         PollingMessage pollingMessage=thegson.fromJson((String)redisTemplate.opsForValue().get(String.valueOf(codeId)),PollingMessage.class);

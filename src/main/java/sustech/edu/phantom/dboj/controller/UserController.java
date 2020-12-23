@@ -47,6 +47,18 @@ public class UserController {
     @Autowired
     JudgeService judgeService;
 
+    //TODO:rejudge
+    @ApiOperation("重新判题")
+    @RequestMapping(value = "/rejudge/{id}", method = RequestMethod.POST)
+    public ResponseEntity<GlobalResponse<String>> rejudge(
+            HttpServletRequest request,
+            @PathVariable Integer id) {
+        judgeService.rejudge(id);
+        String responsedata = "Rejudge Success";
+        ResponseMsg res = ResponseMsg.OK;
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(responsedata).build(), res.getStatus());
+    }
+
     /**
      * 根据id查询具体的problem，这里存在权限控制，因为有recentCode
      *

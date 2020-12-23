@@ -136,6 +136,7 @@
         </choose>
     </update>
 
+
     <update id="deleteUserGroup">
         update user_group
         set valid = false

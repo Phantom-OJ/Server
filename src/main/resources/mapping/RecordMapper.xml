@@ -48,6 +48,28 @@
         set valid = false
         where id = #{id};
     </update>
+    <select id="getRejudgeRecords" resultType="sustech.edu.phantom.dboj.entity.po.Record">
+        select r.id,
+               r.code_id,
+               r.user_id,
+               r.problem_id,
+               r.score,
+               r.result,
+               r.space,
+               r.time,
+               r.dialect,
+               r.code_length,
+               r.submit_time,
+               c.code
+        from "record" r
+                 join "problem" p on r.problem_id = p.id and p.valid
+                 join "user" u on r.user_id = u.id and u.valid
+                 join code c on c.id=r.code_id
+                 join (select user_id,max(submit_time) as latest_submit from record where problem_id=1 group by user_id) latest_record_each_user
+                      on r.submit_time=latest_record_each_user.latest_submit and r.user_id=latest_record_each_user.user_id
+        where r.valid
+          and p.id=#{problemId};
+    </select>
     <select id="getAllRecords" resultType="sustech.edu.phantom.dboj.entity.po.Record">
         select r.id,
                r.code_id,

@@ -17,4 +17,5 @@ public class JudgeResultMessage {
     Integer codeId;
     Integer problemId;
     Integer userId;
+    Integer judgeMode;
 }

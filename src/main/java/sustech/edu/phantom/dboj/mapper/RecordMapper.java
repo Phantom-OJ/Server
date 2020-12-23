@@ -61,6 +61,8 @@ public interface RecordMapper {
 
     List<ProblemStat> getUserResultSet(int id);
 
+    List<Record> getRejudgeRecords(int problemId);
+
     /**
      * 查询单个record
      *

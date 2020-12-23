@@ -1,6 +1,7 @@
 package sustech.edu.phantom.dboj.service;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@Slf4j
 public class JudgeService {
 
     Gson gson=new Gson();
@@ -67,7 +69,91 @@ public class JudgeService {
         }
         return answer;
     }
+    public void rejudge(int problemId){
+        List<Record> records =recordMapper.getRejudgeRecords(problemId);
 
+        CodeForm codeForm=new CodeForm();
+        for (int i = 0; i <records.size() ; i++) {
+            Record record=records.get(i);
+            log.info("记录"+i+"th:"+record+"\n");
+            codeForm.setCode(record.getCode());
+            codeForm.setDialect(record.getDialect());
+            codeForm.setSubmitTime(System.currentTimeMillis());
+            rejudgeSingleCode(record.getProblemId(),codeForm,record.getUserId());
+        }
+
+    }
+    public  Integer rejudgeSingleCode(int problemId, CodeForm codeForm, int userId){
+        System.out.println("rejudge开始");
+        Problem problem = problemMapper.queryCurrentProblem(problemId,false);
+        //FastLinux.createDatabase("12002");
+        /*插入code表*/
+        Code code = Code.builder()
+                .code(codeForm.getCode())
+                .codeLength(codeForm.getCode().getBytes(StandardCharsets.UTF_8).length)
+                .submitTime(System.currentTimeMillis())
+                .dialect(codeForm.getDialect())
+                .build();
+        System.out.println(code);
+        codeMapper.saveCode(code);
+
+
+        System.out.println(code.getId());
+        //
+        System.out.println(problemId);
+
+        System.out.println(problem);
+
+        ArrayList<JudgeInput> judgeInputList = new ArrayList<>();
+        HashMap<String,Object> map=new HashMap<>();
+        map.put("type",problem.getType());
+        List<JudgePoint> judgePointList = judgePointMapper.getAllJudgePointsOfProblemWithDialect(problemId,codeForm.getDialect());
+        /*
+         * JudgePoint转化为JudgeInput*/
+        for (JudgePoint j : judgePointList) {
+            String answer = j.getAnswer();
+            JudgeDatabase judgeDatabase=judgeDatabaseMapper.getJudgeDatabaseById(j.getJudgeDatabaseId());
+            String dbPath = judgeDatabase.getDatabaseUrl();
+            JudgeInput currentInput = JudgeInput.builder()
+                    .JudgeDatabase(gson.fromJson(dbPath,HashMap.class))
+                    .beforeInput(j.getBeforeSql())
+                    .userInput(codeForm.getCode())
+                    .afterInput(j.getAfterSql())
+                    .timeLimit(problem.getTimeLimit())
+                    .standardAnswer(answer)
+                    .additionFields(map)
+                    .build();
+            judgeInputList.add(currentInput);
+            System.out.println("测试点报文：" + currentInput);
+        }
+        Record record =Record.builder()
+                .codeId(code.getId())
+                .userId(userId)
+                .problemId(problem.getId())
+                .codeLength(code.getCodeLength())
+                .submitTime(code.getSubmitTime()).
+                        score(0).
+                        result("Pending").
+                        space(100L).
+                        time(0L)
+                .dialect(code.getDialect()).
+                        build();
+        recordMapper.saveRecord(record);
+        testService.sendRecord(String.valueOf(record.getId()));
+
+        JudgeInputMessage message =JudgeInputMessage.builder()
+                .recordId(record.getId())
+                .judgeInputs(judgeInputList)
+                .codeId(code.getId())
+                .problemId(problemId)
+                .userId(userId)
+                .dialect(code.getDialect())
+                .judgeMode(1)
+                .build();
+        String currentInput=gson.toJson(message);
+        System.out.println(redisTemplate.opsForList().leftPush("judgelist",currentInput));
+        return record.getId();
+    }
 //    public Integer judgeCodeOutside(int problemId, CodeForm codeForm, int userId) {
 //
 //    }
@@ -154,6 +240,7 @@ public class JudgeService {
                 .problemId(problemId)
                  .userId(userId)
                  .dialect(code.getDialect())
+                 .judgeMode(0)
                  .build();
         String currentInput=gson.toJson(message);
         System.out.println(redisTemplate.opsForList().leftPush("judgelist",currentInput));

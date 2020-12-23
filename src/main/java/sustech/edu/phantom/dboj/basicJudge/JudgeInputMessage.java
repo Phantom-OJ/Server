@@ -19,4 +19,5 @@ public class JudgeInputMessage {
     Integer problemId;
     Integer userId;
     String dialect;
+    Integer judgeMode;
 }

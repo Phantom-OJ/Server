@@ -22,6 +22,7 @@ import sustech.edu.phantom.dboj.service.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
@@ -161,6 +162,18 @@ public class DbojApplicationTests {
 //                .msg("Success")
 //                .data(announcementService.announcementEntityVO(pagination))
 //                .build(), HttpStatus.OK);
+    }
+    @Test
+    public void testRejudge(){
+        judgeService.rejudge(1);
+    }
+    @Test
+    public void getrej(){
+        List<Record> records=recordMapper.getRejudgeRecords(1);
+        for (Record r:records
+             ) {
+            System.out.println(r);
+        }
     }
     @Test
     public void updateRecord(){
