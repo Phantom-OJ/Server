@@ -13,6 +13,7 @@ import sustech.edu.phantom.dboj.basicJudge.PollingMessage;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.Code;
+import sustech.edu.phantom.dboj.entity.po.Group;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
@@ -20,6 +21,9 @@ import sustech.edu.phantom.dboj.form.home.CodeForm;
 import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Shilong Li (Lori)
@@ -85,11 +89,13 @@ public class UserController {
         try {
             user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
-            p = problemService.getOneProblem(id, user.getId(), isAdmin);
+            p = problemService.getOneProblem(id, user.getId(), isAdmin, user.getGroupList().stream().map(Group::getId).collect(Collectors.toList()));
             res = ResponseMsg.OK;
         } catch (ClassCastException e) {
             try {
-                p = problemService.getOneProblem(id, isAdmin);
+                List<Integer> i = new ArrayList<>();
+                i.add(1);
+                p = problemService.getOneProblem(id, isAdmin, i);
                 res = ResponseMsg.OK;
             } catch (Exception e2) {
                 log.error("No user signed in and occurs internal server error to " + request.getRemoteAddr());

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sustech.edu.phantom.dboj.entity.enumeration.ProblemSolved;
 import sustech.edu.phantom.dboj.entity.po.Assignment;
+import sustech.edu.phantom.dboj.entity.po.Group;
 import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
@@ -15,6 +16,7 @@ import sustech.edu.phantom.dboj.mapper.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Shilong Li (Lori)
@@ -52,44 +54,22 @@ public class AssignmentService {
      * @param userId user id
      * @return 一个 Assignment
      */
-    public Assignment getOneAssignment(int aid, boolean isUser, int userId, boolean isAdmin) {
+    public Assignment getOneAssignment(int aid, boolean isUser, int userId, boolean isAdmin,List<Integer> userGroup) {
         Assignment a = assignmentMapper.getOneAssignment(aid, isAdmin);
-        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid,isAdmin);
+        List<Group>  tmp = groupMapper.getAssignmentGroup(aid);
+        List<Integer> tmp2 = tmp.stream().map(Group::getId).collect(Collectors.toList());
+        tmp2.retainAll(userGroup);
+        if (tmp2.size() == 0 && !isAdmin) {
+            return null;
+        }
+        List<Problem> problemList = problemMapper.oneAssignmentProblems(aid, isAdmin);
         setSolvedAndTags(problemList, isUser, userId, isAdmin);
         a.setProblemList(problemList);
-        a.setGroupList(groupMapper.getAssignmentGroup(aid));
+        a.setGroupList(tmp);
         return a;
     }
 
-//    /**
-//     * @param pagination 分页信息
-//     * @return list of assignments
-//     */
-//    public List<Assignment> getAssignmentList(Pagination pagination, boolean isAdmin) {
-//        pagination.setParameters();
-//
-//        List<Assignment> assignmentList = new ArrayList<>();
-//        HashMap<String, Object> hm = pagination.getFilter();
-//        String idString = (String) hm.get(ID);
-//        String name = (String) hm.get(NAME);
-//        if ("".equals(idString.trim()) && "".equals(name.trim())) {
-//            assignmentList = assignmentMapper.queryAssignmentsWithoutFilter(pagination, isAdmin);
-//        } else {
-//            try {
-//                int id = Integer.parseInt(idString.trim());
-//                // 如果有id直接返回assignmentid=id的作业
-//                assignmentList.add(assignmentMapper.getOneAssignment(id, isAdmin));
-//            } catch (NumberFormatException e) {
-//                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), isAdmin);
-//            }
-//        }
-//        for (Assignment a : assignmentList) {
-//            a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
-//        }
-//        return assignmentList;
-//    }
-
-    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination, boolean isAdmin) {
+    public EntityVO<Assignment> assignmentEntityVO(Pagination pagination, boolean isAdmin, List<Integer> userGroupList) {
         pagination.setParameters();
         List<Assignment> assignmentList = new ArrayList<>();
         HashMap<String, Object> hm = pagination.getFilter();
@@ -109,15 +89,24 @@ public class AssignmentService {
                 }
             } catch (NumberFormatException e) {
                 boolean flag2 = "".equals(name.trim());
-                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(),flag2, isAdmin);
-                count = assignmentMapper.queryAssignmentByNameCounter(name.trim(),flag2, isAdmin);
+                assignmentList = assignmentMapper.queryAssignmentByName(pagination, name.trim(), flag2, isAdmin);
+                count = assignmentMapper.queryAssignmentByNameCounter(name.trim(), flag2, isAdmin);
             }
         }
-        for (Assignment a : assignmentList) {
-            a.setGroupList(groupMapper.getAssignmentGroup(a.getId()));
-            a.setProblemList(problemMapper.oneAssignmentProblems(a.getId(),isAdmin));
+        List<Assignment> after = new ArrayList<>();
+        for (Assignment assignment : assignmentList) {
+            List<Group> tmp = groupMapper.getAssignmentGroup(assignment.getId());
+            List<Integer> tmp2 = tmp.stream().map(Group::getId).collect(Collectors.toList());
+            tmp2.retainAll(userGroupList);
+            if (tmp2.size() != 0 || isAdmin) {
+                assignment.setGroupList(tmp);
+                assignment.setProblemList(problemMapper.oneAssignmentProblems(assignment.getId(), isAdmin));
+                after.add(assignment);
+            } else {
+                --count;
+            }
         }
-        return EntityVO.<Assignment>builder().entities(assignmentList).count(count).build();
+        return EntityVO.<Assignment>builder().entities(after).count(count).build();
     }
 
     private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId, boolean isAdmin) {

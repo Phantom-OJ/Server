@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
-import sustech.edu.phantom.dboj.entity.po.Announcement;
-import sustech.edu.phantom.dboj.entity.po.Assignment;
-import sustech.edu.phantom.dboj.entity.po.Problem;
-import sustech.edu.phantom.dboj.entity.po.User;
+import sustech.edu.phantom.dboj.entity.po.*;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
@@ -24,6 +21,9 @@ import sustech.edu.phantom.dboj.form.home.Pagination;
 import sustech.edu.phantom.dboj.service.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Shilong Li (Lori)
@@ -127,12 +127,14 @@ public class HomeController {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
             isUser = true;
-            entityVO = problemService.problemEntityVO(pagination, isUser, user.getId(), isAdmin);
+            entityVO = problemService.problemEntityVO(pagination, true, user.getId(), isAdmin, user.getGroupList().stream().map(Group::getId).collect(Collectors.toList()));
             res = ResponseMsg.OK;
         } catch (ClassCastException e) {
             try {
                 log.info("Checking problem without logging in from " + request.getRemoteAddr());
-                entityVO = problemService.problemEntityVO(pagination, isUser, 0, isAdmin);
+                List<Integer> i = new ArrayList<>();
+                i.add(1);
+                entityVO = problemService.problemEntityVO(pagination, isUser, 0, isAdmin, i);
                 res = ResponseMsg.OK;
             } catch (Exception exception) {
                 res = ResponseMsg.INTERNAL_SERVER_ERROR;
@@ -194,13 +196,15 @@ public class HomeController {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             boolean isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
-            entityVO = assignmentService.assignmentEntityVO(pagination, isAdmin);
+            entityVO = assignmentService.assignmentEntityVO(pagination, isAdmin, user.getGroupList().stream().map(Group::getId).collect(Collectors.toList()));
             res = ResponseMsg.OK;
 //            log.info("Successfully view all the assignment");
         } catch (ClassCastException e) {
 //            log.info("Visiting assignments from the request " + request.getRemoteAddr());
             try {
-                entityVO = assignmentService.assignmentEntityVO(pagination, false);
+                List<Integer> groupList = new ArrayList<>();
+                groupList.add(1);
+                entityVO = assignmentService.assignmentEntityVO(pagination, false, groupList);
                 res = ResponseMsg.OK;
 //                log.info("Successfully view all the assignment");
             } catch (Exception e1) {

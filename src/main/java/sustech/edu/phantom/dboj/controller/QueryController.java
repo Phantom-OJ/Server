@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.Assignment;
+import sustech.edu.phantom.dboj.entity.po.Group;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.entity.vo.RecordDetail;
@@ -24,6 +25,9 @@ import sustech.edu.phantom.dboj.service.RecordService;
 import sustech.edu.phantom.dboj.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Shilong Li (Lori)
@@ -149,7 +153,7 @@ public class QueryController {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             boolean isAdmin = user.containPermission(PermissionEnum.VIEW_ASSIGNMENTS);
-            Assignment a = assignmentService.getOneAssignment(id, true, user.getId(), isAdmin);
+            Assignment a = assignmentService.getOneAssignment(id, true, user.getId(), isAdmin, user.getGroupList().stream().map(Group::getId).collect(Collectors.toList()));
             if (a == null) {
                 res = ResponseMsg.NOT_FOUND;
             } else {
@@ -158,7 +162,9 @@ public class QueryController {
             }
         } catch (ClassCastException e) {
             try {
-                Assignment a = assignmentService.getOneAssignment(id, false, 0, false);
+                List<Integer> i = new ArrayList<>();
+                i.add(1);
+                Assignment a = assignmentService.getOneAssignment(id, false, 0, false, i);
                 if (a == null) {
                     res = ResponseMsg.NOT_FOUND;
                 } else {

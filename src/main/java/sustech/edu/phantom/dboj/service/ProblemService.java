@@ -8,10 +8,7 @@ import sustech.edu.phantom.dboj.entity.po.Problem;
 import sustech.edu.phantom.dboj.entity.po.ResultCnt;
 import sustech.edu.phantom.dboj.entity.vo.EntityVO;
 import sustech.edu.phantom.dboj.form.home.Pagination;
-import sustech.edu.phantom.dboj.mapper.CodeMapper;
-import sustech.edu.phantom.dboj.mapper.ProblemMapper;
-import sustech.edu.phantom.dboj.mapper.RecordMapper;
-import sustech.edu.phantom.dboj.mapper.TagMapper;
+import sustech.edu.phantom.dboj.mapper.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +40,16 @@ public class ProblemService {
     @Autowired
     RecordMapper recordMapper;
 
-    public Problem getOneProblem(int id, boolean isAdmin) {
+    @Autowired
+    GroupMapper groupMapper;
+
+    public Problem getOneProblem(int id, boolean isAdmin, List<Integer> userGroup) {
         Problem problem = problemMapper.queryCurrentProblem(id, isAdmin);
+        List<Integer> tmp = problemMapper.problemGroups(id);
+        tmp.retainAll(userGroup);
+        if (tmp.size() == 0 && !isAdmin) {
+            return null;
+        }
         // 管理員或者closed了
         if (isAdmin || "closed".equalsIgnoreCase(problem.getStatus().trim())) {
 
@@ -66,8 +71,8 @@ public class ProblemService {
      * @param userId user id
      * @return problem 对象
      */
-    public Problem getOneProblem(int id, int userId, boolean isAdmin) {
-        Problem problem = getOneProblem(id, isAdmin);
+    public Problem getOneProblem(int id, int userId, boolean isAdmin, List<Integer> userGroup) {
+        Problem problem = getOneProblem(id, isAdmin, userGroup);
         problem.setRecentCode(codeMapper.queryRecentCode(userId, id));
         return problem;
     }
@@ -100,7 +105,7 @@ public class ProblemService {
      * @param isUser     是否有用户登录
      * @return 包装类
      */
-    public EntityVO<Problem> problemEntityVO(Pagination pagination, boolean isUser, int userId, boolean isAdmin) {
+    public EntityVO<Problem> problemEntityVO(Pagination pagination, boolean isUser, int userId, boolean isAdmin, List<Integer> userGroup) {
         pagination.setParameters();
         List<Problem> problemList = new ArrayList<>();
         HashMap<String, Object> hm = pagination.getFilter();
@@ -114,7 +119,7 @@ public class ProblemService {
         } else {
             try {
                 int id = Integer.parseInt(idString.trim());
-                // 如果有id直接返回problemid=id的问题
+
                 Problem p = problemMapper.queryCurrentProblem(id, isAdmin);
                 if (p != null) {
                     problemList.add(p);
@@ -122,7 +127,6 @@ public class ProblemService {
                 }
             } catch (NumberFormatException e) {
                 if ("".equals(name.trim()) && "".equals(tagString.trim())) {
-                    //TODO:更正
                     throw new RuntimeException("id format wrong");
                 } else if ("".equals(tagString.trim())) {
                     problemList = problemMapper.queryProblemsByName(pagination, name.trim(), isAdmin);
@@ -135,33 +139,42 @@ public class ProblemService {
                 }
             }
         }
-        setSolvedAndTags(problemList, isUser, userId, isAdmin);
-        return EntityVO.<Problem>builder().entities(problemList).count(count).build();
+        List<Problem> after = setSolvedAndTags(problemList, isUser, userId, isAdmin, userGroup, count);
+        return EntityVO.<Problem>builder().entities(after).count(count).build();
     }
 
-    private void setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId, boolean isAdmin) {
+    private List<Problem> setSolvedAndTags(List<Problem> problemList, boolean isUser, int userId, boolean isAdmin, List<Integer> userGroup, Integer count) {
+        List<Problem> after = new ArrayList<>();
         for (Problem p : problemList) {
-            p.setTagList(tagMapper.getProblemTags(p.getId()));
-            if (!isAdmin) {
-                p.setSolution(null);
-            }
-            if (isUser) {
-                List<ResultCnt> tmp = recordMapper.isSolvedByUser(userId, p.getId());
-                if (tmp.size() == 0) {
-                    p.setSolved(ProblemSolved.NO_SUBMISSION);
-                } else {
-                    for (ResultCnt c : tmp) {
-                        if ("AC".equalsIgnoreCase(c.getResult().trim())) {
-                            p.setSolved(ProblemSolved.AC);
-                            break;
-                        } else {
-                            p.setSolved(ProblemSolved.WA);
+            List<Integer> problemGroup = problemMapper.problemGroups(p.getId());
+            problemGroup.retainAll(userGroup);
+            if (problemGroup.size() != 0 || isAdmin) {
+                p.setTagList(tagMapper.getProblemTags(p.getId()));
+                if (!isAdmin) {
+                    p.setSolution(null);
+                }
+                if (isUser) {
+                    List<ResultCnt> tmp = recordMapper.isSolvedByUser(userId, p.getId());
+                    if (tmp.size() == 0) {
+                        p.setSolved(ProblemSolved.NO_SUBMISSION);
+                    } else {
+                        for (ResultCnt c : tmp) {
+                            if ("AC".equalsIgnoreCase(c.getResult().trim())) {
+                                p.setSolved(ProblemSolved.AC);
+                                break;
+                            } else {
+                                p.setSolved(ProblemSolved.WA);
+                            }
                         }
                     }
+                } else {
+                    p.setSolved(ProblemSolved.NO_SUBMISSION);
                 }
+                after.add(p);
             } else {
-                p.setSolved(ProblemSolved.NO_SUBMISSION);
+                --count;
             }
         }
+        return after;
     }
 }
