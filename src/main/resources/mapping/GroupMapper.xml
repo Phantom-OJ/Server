@@ -36,10 +36,12 @@
         values (#{description});
     </insert>
     <insert id="insertAssignmentGroup">
-        insert into "assignment_group" (assignment_id, group_id) VALUES
-        <foreach collection="gids" item="g" index="index" separator="," close=";">
-            (#{aid},#{g})
-        </foreach>
+        <if test="gids.size()!=0">
+            insert into "assignment_group" (assignment_id, group_id) VALUES
+            <foreach collection="gids" item="g" index="index" separator="," close="">
+                (#{aid},#{g})
+            </foreach>;
+        </if>
     </insert>
     <update id="invalidateGroup">
         update "group"

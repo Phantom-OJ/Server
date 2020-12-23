@@ -45,6 +45,12 @@ public class ProblemService {
 
     public Problem getOneProblem(int id, boolean isAdmin) {
         Problem problem = problemMapper.queryCurrentProblem(id, isAdmin);
+        // 管理員或者closed了
+        if (isAdmin || "closed".equalsIgnoreCase(problem.getStatus().trim())) {
+
+        } else {
+            problem.setSolution(null);
+        }
         problem.setTagList(tagMapper.getProblemTags(id));
         return problem;
     }
@@ -65,41 +71,7 @@ public class ProblemService {
         problem.setRecentCode(codeMapper.queryRecentCode(userId, id));
         return problem;
     }
-//
-//    /**
-//     * @param pagination
-//     * @return
-//     */
-//    public List<Problem> getProblemList(Pagination pagination) {
-//        pagination.setParameters();
-//        List<Problem> problemList = new ArrayList<>();
-//        HashMap<String, Object> hm = pagination.getFilter();
-//        String idString = (String) hm.get(ID);
-//        String name = (String) hm.get(NAME);
-//        String tagString = (String) hm.get(TAG);
-//        if ("".equals(idString.trim()) && "".equals(name.trim()) && "".equals(tagString.trim())){
-//            problemList = problemMapper.queryProblemWithoutFilter(pagination);
-//        } else{
-//            try {
-//                int id = Integer.parseInt(idString.trim());
-//                // 如果有id直接返回problemid=id的问题
-//                problemList.add(problemMapper.queryCurrentProblem(id));
-//            } catch (NumberFormatException e) {
-//                if ("".equals(name.trim()) && "".equals(tagString.trim())){
-//                    return null;
-//                } else if ("".equals(tagString.trim())) {
-//                    problemList = problemMapper.queryProblemsByName(pagination, name.trim());
-//                } else {
-//                    List<Integer> tags = getProblemTagsIdList(pagination);
-//                    problemList = problemMapper.queryProblemsByTagAndName(pagination, tags, name.trim());
-//                }
-//            }
-//        }
-//        for (Problem p : problemList) {
-//            p.setTagList(tagMapper.getProblemTags(p.getId()));
-//        }
-//        return problemList;
-//    }
+
 
     /**
      * @param pagination 分页过滤信息

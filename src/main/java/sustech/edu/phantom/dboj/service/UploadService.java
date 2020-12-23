@@ -210,4 +210,14 @@ public class UploadService {
             return false;
         }
     }
+
+    public boolean saveTag(Tag tag) {
+        try {
+            tagMapper.saveTag(tag);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
 }

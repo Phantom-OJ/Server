@@ -39,8 +39,9 @@
         number_submit,
         number_solve,
         index_in_assignment,
-        solution,
-        type
+            solution,
+        type,
+        status
         from "problem"
         where valid
         <if test="!flag">

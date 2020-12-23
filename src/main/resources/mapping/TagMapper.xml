@@ -29,4 +29,8 @@
             </foreach>;
         </if>
     </insert>
+    <insert id="saveTag">
+        insert into "tag" (keyword, description)
+        VALUES (#{keyword}, #{description});
+    </insert>
 </mapper>

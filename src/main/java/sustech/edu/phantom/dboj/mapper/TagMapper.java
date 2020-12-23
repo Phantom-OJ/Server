@@ -25,4 +25,6 @@ public interface TagMapper {
     Integer saveOneProblemTags(@Param("list") List<Integer> list,@Param("pid") int pid);
 
     int invalidateProblemTag(@Param("pid") int pid, @Param("tid") int tid);
+
+    int saveTag(Tag tag);
 }

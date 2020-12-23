@@ -15,6 +15,7 @@ import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
 import sustech.edu.phantom.dboj.entity.po.JudgeDatabase;
 import sustech.edu.phantom.dboj.entity.po.JudgeScript;
+import sustech.edu.phantom.dboj.entity.po.Tag;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.entity.response.GlobalResponse;
 import sustech.edu.phantom.dboj.form.upload.UploadAnnouncementForm;
@@ -152,5 +153,29 @@ public class UploadController {
             }
         }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(null).build(), res.getStatus());
+    }
+
+    @ApiOperation("創建tags")
+    @RequestMapping(value = "/tag", method = RequestMethod.PUT)
+    public ResponseEntity<GlobalResponse<String>> uploadTag(
+            HttpServletRequest request,
+            @RequestBody Tag tag
+    ) {
+        ResponseMsg res;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!user.containPermission(PermissionEnum.VIEW_TAGS)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                if (uploadService.saveTag(tag)) {
+                    res = ResponseMsg.OK;
+                } else {
+                    res = ResponseMsg.FAIL_MODIFY;
+                }
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            }
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 }
