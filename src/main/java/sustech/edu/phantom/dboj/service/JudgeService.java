@@ -188,7 +188,7 @@ public class JudgeService {
         codeMapper.saveCode(code);
 
         System.out.println("okk");
-        testService.sendRecord(String.valueOf(code.getId()));
+
         System.out.println("ojbk");
 
         System.out.println(code.getId());
@@ -232,6 +232,7 @@ public class JudgeService {
                 .dialect(code.getDialect()).
                         build();
         recordMapper.saveRecord(record);
+        testService.sendRecord(String.valueOf(record.getId()));
 
          JudgeInputMessage message =JudgeInputMessage.builder()
                  .recordId(record.getId())
