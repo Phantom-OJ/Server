@@ -62,7 +62,7 @@ public class UserController {
             @PathVariable Integer id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
-        if (!user.containPermission(PermissionEnum.VIEW_CODES)) {
+        if (!user.containPermission(PermissionEnum.REJUDGE)) {
             res = ResponseMsg.FORBIDDEN;
         } else {
             try {
@@ -76,7 +76,7 @@ public class UserController {
     }
 
     /**
-     * 根据id查询具体的problem，这里存在权限控制，因为有recentCode
+     * 根据id查询具体的problem
      *
      * @param id problem id
      * @return 查询的problem的对象
@@ -99,7 +99,7 @@ public class UserController {
             try {
                 List<Integer> i = new ArrayList<>();
                 i.add(1);
-                p = problemService.getOneProblem(id, isAdmin, i);
+                p = problemService.getOneProblem(id, false,i);
                 res = ResponseMsg.OK;
             } catch (Exception e2) {
                 log.error("No user signed in and occurs internal server error to " + request.getRemoteAddr());
@@ -129,7 +129,7 @@ public class UserController {
         long currentTime = System.currentTimeMillis();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long endTime = problemService.getSimpleProblem(id);
-        boolean flag = user.containPermission(PermissionEnum.VIEW_CODES);
+        boolean flag = user.containPermission(PermissionEnum.TEST_CODE);
         List<Integer> tmp = problemMapper.problemGroups(id);
         List<Integer> tmp2 = user.getGroupList().stream().map(Group::getId).collect(Collectors.toList());
         tmp2.retainAll(tmp);
