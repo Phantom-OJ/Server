@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import sustech.edu.phantom.dboj.entity.po.User;
 import sustech.edu.phantom.dboj.service.UserService;
 
@@ -172,5 +173,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         String hierarchy = "ROLE_TEACHER > ROLE_SA \n ROLE_SA > ROLE_STUDENT";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }
