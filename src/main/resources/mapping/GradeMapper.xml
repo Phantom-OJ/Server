@@ -21,7 +21,7 @@
         left join grade g on p.id = g.problem_id and g.user_id = #{uid} and g.valid) as apg;
     </select>
     <select id="getOneAssignmentScore" resultType="sustech.edu.phantom.dboj.form.stat.AssignmentScore">
-        select x.id, x.username, case when sum(g.score) is null then 0 else sum(g.score) end as total
+        select x.id, x.username, case when sum(g.score) is null then 0 else sum(g.score) end as score
         from (
                  select distinct u.id, u.username
                  from "user" u

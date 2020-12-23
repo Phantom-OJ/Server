@@ -140,7 +140,9 @@ public class ModificationService {
         List<Integer> groupList = groupMapper.getAssignmentGroup(aid).stream().map(Group::getId).collect(Collectors.toList());
         form.setGroupList(groupList);
         for (UploadProblemForm f : uploadProblemFormList) {
-            f.setJudgePointList(judgePointMapper.getJudgePoints(f.getId()));
+            f.setJudgePointList(
+                    judgePointMapper.
+                            getJudgePoints(f.getId()));
             f.setTagList(tagMapper.getProblemTags(f.getId()).stream().map(Tag::getId).collect(Collectors.toList()));
         }
         form.setUploadProblemFormList(uploadProblemFormList);
