@@ -5,12 +5,13 @@
             resultType="sustech.edu.phantom.dboj.entity.po.Announcement">
         select id, title, description, create_date, last_modified
         from "announcement"
+        where valid
         order by last_modified desc
         offset #{offset} limit #{limit};
     </select>
     <insert id="insertOneAnnouncement">
-        insert into "announcement" (title, description, create_date,last_modified)
-        values (#{title}, #{description}, #{createDate},#{createDate});
+        insert into "announcement" (title, description, create_date, last_modified)
+        values (#{title}, #{description}, #{createDate}, #{createDate});
     </insert>
     <select id="getCount" resultType="integer">
         select count(*)
