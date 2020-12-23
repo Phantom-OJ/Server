@@ -41,8 +41,11 @@ public class AvatarController {
     @Value("${file-root-path.windows}")
     private String UPLOAD_FOLDER_WINDOWS;
 
-    @Value("${file-root-path.linux}")
+    @Value("${file-root-path.linux-abs}")
     private String UPLOAD_FOLDER_LINUX;
+
+    @Value("${file-root-path.linux}")
+    private String DEFAULT;
 
     @Value("${file-root-path.default-avatar-filename}")
     private String DEFAULT_AVATAR;
@@ -60,6 +63,7 @@ public class AvatarController {
         MultipartFile file;
         BufferedOutputStream stream;
         String picturePath = null;
+        String dbfilepath = null;
         ResponseMsg res;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
@@ -74,6 +78,7 @@ public class AvatarController {
                     String extName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                     String fileName = user.getUsername().substring(0, user.getUsername().indexOf("@")) + "." + extName;
                     String filePath = resPath + fileName;
+                    dbfilepath = DEFAULT + fileName;
                     log.info(filePath);
                     byte[] bytes = file.getBytes();
                     if (!isImage(bytes)) {
@@ -99,7 +104,7 @@ public class AvatarController {
                 }
                 break;
             }
-            if (uploadService.uploadAvatar(picturePath, user.getId())) {
+            if (uploadService.uploadAvatar(dbfilepath, user.getId())) {
                 res = ResponseMsg.OK;
             } else {
                 log.info("Something happens inside the server.");
