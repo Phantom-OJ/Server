@@ -10,7 +10,7 @@ create table if not exists "user"
     password   varchar(100) not null,
     nickname   varchar(45),
     role       varchar      not null default 'ROLE_STUDENT',
-    avatar     text         not null default '/resource/avatar/phantom.svg',
+    avatar     text         not null default '/resources/avatar/phantom.svg',
     state_save bool         not null default true,
     state      text,
     lang       varchar(5)   not null default 'zh-CN',

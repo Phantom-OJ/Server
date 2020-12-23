@@ -353,23 +353,6 @@ order by director;
         'select',
         null);
 
-insert into problem_tag (problem_id, tag_id)
-values (1, 2);
-insert into problem_tag (problem_id, tag_id)
-values (1, 1);
-insert into problem_tag (problem_id, tag_id)
-values (2, 1);
-insert into problem_tag (problem_id, tag_id)
-values (2, 3);
-insert into problem_tag (problem_id, tag_id)
-values (3, 1);
-insert into problem_tag (problem_id, tag_id)
-values (3, 3);
-insert into problem_tag (problem_id, tag_id)
-values (4, 2);
-insert into problem_tag (problem_id, tag_id)
-values (4, 4);
-
 insert into tag (keyword, description) VALUES ('1TQ', 'Single Table Query');
 insert into tag (keyword, description) VALUES ('xTQ', 'Multiple Table Query');
 insert into tag (keyword, description) VALUES ('easy', 'Simple things should also be taken seriously.');
