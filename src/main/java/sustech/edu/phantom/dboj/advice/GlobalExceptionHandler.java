@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
         sustech.edu.phantom.dboj.controller.AvatarController.class,
         sustech.edu.phantom.dboj.controller.BeaconController.class,
         sustech.edu.phantom.dboj.controller.HomeController.class,
-        sustech.edu.phantom.dboj.controller.JudgeController.class,
+//        sustech.edu.phantom.dboj.controller.JudgeController.class,
         sustech.edu.phantom.dboj.controller.QueryController.class,
         sustech.edu.phantom.dboj.controller.RequireController.class,
         sustech.edu.phantom.dboj.controller.StatController.class,

@@ -105,12 +105,12 @@ public class RecordService {
      */
     public RecordDetail getOneRecord(int id, int userId, boolean isAdmin) {
         RecordDetail r = recordMapper.getOneRecord(id);
-        if (!isAdmin || !r.getUserId().equals(userId)) {
-            r = null;
-            throw new RuntimeException();
-        } else {
+        if (isAdmin || r.getUserId().equals(userId)) {
             r.setDescription(recordProblemMapper.getOneRecordDetails(id, r.getProblemId()));
             return r;
+        } else {
+            r = null;
+            throw new RuntimeException();
         }
     }
 

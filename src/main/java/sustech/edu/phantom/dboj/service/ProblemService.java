@@ -49,6 +49,10 @@ public class ProblemService {
         return problem;
     }
 
+    public Long getSimpleProblem(int id) {
+        return problemMapper.queryTime(id);
+    }
+
     /**
      * 这里相对于上面的方法是多了一个用户的代码
      *

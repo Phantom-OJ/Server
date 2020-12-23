@@ -1,5 +1,6 @@
 package sustech.edu.phantom.dboj.utils;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -37,7 +38,7 @@ public class DatabaseSchedulingUtil {
             try {
                 List<HomeStat> homeStats = schedulingService.getHomeStat();
                 log.info("Getting home statistics every day!!!!!");
-                redisTemplate.opsForValue().set(PreLoadUtil.homeStatistics, homeStats, 1, TimeUnit.DAYS);
+                redisTemplate.opsForValue().set(PreLoadUtil.homeStatistics, new Gson().toJson(homeStats), 1, TimeUnit.DAYS);
                 break;
             } catch (Exception e) {
                 log.error(e.getMessage());

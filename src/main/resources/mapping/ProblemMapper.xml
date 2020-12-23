@@ -279,4 +279,10 @@
           and valid
         order by index_in_assignment;
     </select>
+    <select id="queryTime" resultType="java.lang.Long">
+        select a.end_time
+        from testsec.public.problem p
+                 join assignment a on p.assignment_id = a.id
+        where p.id = #{pid};
+    </select>
 </mapper>

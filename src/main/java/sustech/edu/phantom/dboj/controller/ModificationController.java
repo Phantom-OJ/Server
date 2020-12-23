@@ -385,15 +385,16 @@ public class ModificationController {
     }
 
     @ApiOperation("添加判题点")
-    @RequestMapping(value = "/judgepoint", method = RequestMethod.PUT)
+    @RequestMapping(value = "/judgepoint/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> putJudgePoint(
             HttpServletRequest request,
+            @PathVariable Integer id,
             @RequestBody @ApiParam(name = "判题点对象", required = true, type = "JudgePoint") JudgePoint judgePoint) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMsg res;
         if (user.containPermission(PermissionEnum.VIEW_JUDGE_DETAILS)) {
-            if (modificationService.saveJudgePoint(judgePoint)) {
+            if (modificationService.saveJudgePoint(judgePoint,id)) {
                 res = ResponseMsg.OK;
             } else {
                 res = ResponseMsg.FAIL_MODIFY;

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sustech.edu.phantom.dboj.basicJudge.JudgeResultMessage;
 import sustech.edu.phantom.dboj.basicJudge.PollingMessage;
 import sustech.edu.phantom.dboj.entity.enumeration.PermissionEnum;
 import sustech.edu.phantom.dboj.entity.enumeration.ResponseMsg;
@@ -47,16 +46,25 @@ public class UserController {
     @Autowired
     JudgeService judgeService;
 
-    //TODO:rejudge
     @ApiOperation("重新判题")
     @RequestMapping(value = "/rejudge/{id}", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ResponseEntity<GlobalResponse<String>> rejudge(
             HttpServletRequest request,
             @PathVariable Integer id) {
-        judgeService.rejudge(id);
-        String responsedata = "Rejudge Success";
-        ResponseMsg res = ResponseMsg.OK;
-        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(responsedata).build(), res.getStatus());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ResponseMsg res;
+        if (!user.containPermission(PermissionEnum.VIEW_CODES)) {
+            res = ResponseMsg.FORBIDDEN;
+        } else {
+            try {
+                judgeService.rejudge(id);
+                res = ResponseMsg.OK;
+            } catch (Exception e) {
+                res = ResponseMsg.INTERNAL_SERVER_ERROR;
+            }
+        }
+        return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).build(), res.getStatus());
     }
 
     /**
@@ -108,20 +116,21 @@ public class UserController {
     public ResponseEntity<GlobalResponse<String>> submitCode(
             @PathVariable @ApiParam(name = "问题id", required = true, type = "int") Integer id,
             @RequestBody @ApiParam(name = "代码表单", required = true, type = "CodeForm对象") CodeForm codeForm) throws Exception {
-//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (user.isInGroup())
-//
-        ResponseMsg res = ResponseMsg.OK;
-        //这个方法要用到消息队列
-
-//        try {
+        long currentTime = System.currentTimeMillis();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer codeId = judgeService.judgeCode(id, codeForm, user.getId());
+        Long endTime = problemService.getSimpleProblem(id);
+        boolean flag = user.containPermission(PermissionEnum.VIEW_CODES);
+        //管理員或在結束之前可以提交
+        ResponseMsg res;
+        Integer codeId = 0;
+        if (flag || currentTime < endTime) {
+            codeId = judgeService.judgeCode(id, codeForm, user.getId());
+            res = ResponseMsg.OK;
+        } else {
+            res = ResponseMsg.FORBIDDEN;
+        }
         return new ResponseEntity<>(GlobalResponse.<String>builder().msg(res.getMsg()).data(String.valueOf(codeId)).build(), res.getStatus());
-//        } catch (Exception e) {
-//            return false;
-////            throw new Exception("You have not signed in.");
-//        }
+
     }
 
 

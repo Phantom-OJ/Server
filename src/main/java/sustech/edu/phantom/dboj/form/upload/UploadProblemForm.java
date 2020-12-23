@@ -36,6 +36,8 @@ public class UploadProblemForm {
     private Long timeLimit;
     @ApiModelProperty(value = "problem solution")
     private String solution;
+    @ApiModelProperty(value = "problem status")
+    private String status;
     @ApiModelProperty(value = "problem tags")
     private List<Integer> tagList;
     @ApiModelProperty(value = "problem types", example = "select/trigger")

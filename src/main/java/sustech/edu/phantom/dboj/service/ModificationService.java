@@ -157,7 +157,8 @@ public class ModificationService {
         return judgePointMapper.getAllJudgePointsOfProblem(id);
     }
 
-    public boolean saveJudgePoint(JudgePoint judgePoint) {
+    public boolean saveJudgePoint(JudgePoint judgePoint,Integer id) {
+        judgePoint.setProblemId(id);
         List<JudgePoint> judgePoints = new ArrayList<>();
         judgePoints.add(judgePoint);
         return judgePointMapper.saveOneProblemJudgePoints(judgePoints) != 0;

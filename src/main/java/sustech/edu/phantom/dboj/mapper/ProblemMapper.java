@@ -124,4 +124,6 @@ public interface ProblemMapper {
     int modifyProblem(@Param("pid") int pid, @Param("param2") UploadProblemForm param2);
 
     List<UploadProblemForm> getProblem(int aid);
+
+    Long queryTime(int pid);
 }
