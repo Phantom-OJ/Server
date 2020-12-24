@@ -20,7 +20,7 @@
         insert into "user_group" (user_id, group_id)
         VALUES (#{id}, 1);
     </insert>
-    <insert id="register" parameterType="sustech.edu.phantom.dboj.entity.po.User" useGeneratedKeys="true">
+    <insert id="register" parameterType="sustech.edu.phantom.dboj.entity.po.User" useGeneratedKeys="true" keyProperty="id">
         insert into "user" (username, password, nickname)
         values (#{username,jdbcType=VARCHAR},
                 #{password,jdbcType=VARCHAR},

@@ -103,9 +103,9 @@ public class QueryController {
             idx = Integer.parseInt(id);
             log.debug("请求的user id是" + id);
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            log.debug("user的id是" + id);
+            log.debug("user的id是" + user.getId());
             if (idx == user.getId() || user.containPermission(PermissionEnum.GRANT)) {
-                data = user;
+                data = userService.find(idx, true);
                 res = ResponseMsg.OK;
             } else {
                 log.info("Here shows the basic information of the user " + id + " from the visiting of " + request.getRemoteAddr());

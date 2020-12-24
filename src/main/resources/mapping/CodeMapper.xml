@@ -19,7 +19,7 @@
     <update id="invalidCodeOfAssignment">
         update "code"
         set valid = false
-        where id in (select r.id from record r where r.problem_id in
+        where id in (select r.id from record r where r.problem_id in (
         <foreach collection="pids" item="p" index="index" separator="," close=")">
             #{p}
         </foreach>

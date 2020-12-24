@@ -19,14 +19,14 @@ public interface UserMapper {
      * @param id 用户id
      * @return 是否插入成功
      */
-    boolean initUserGroup(int id);
+    int initUserGroup(int id);
 
     /**
      * 注册用户
      * @param user 待注册对象
      * @return 是否成功
      */
-    boolean register(User user);
+    int register(User user);
 
     /**
      * 通过用户名找用户

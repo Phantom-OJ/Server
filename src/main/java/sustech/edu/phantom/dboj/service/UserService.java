@@ -43,12 +43,14 @@ public class UserService implements UserDetailsService {
         if (flag != null) {
             throw new RuntimeException("The username has been registered.");
         } else {
-            if (!userMapper.register(user) || !userMapper.initUserGroup(user.getId())) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                throw new RuntimeException("Your registration has been declined.");
-            } else {
-                log.info("Registration successfully");
-            }
+            userMapper.register(user);
+            userMapper.initUserGroup(user.getId());
+//            if (!userMapper.register(user) || !userMapper.initUserGroup(user.getId())) {
+//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//                throw new RuntimeException("Your registration has been declined.");
+//            } else {
+//                log.info("Registration successfully");
+//            }
         }
     }
 

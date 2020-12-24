@@ -193,7 +193,8 @@ public class ModificationService {
             List<Integer> pids = assignmentMapper.getProblemIdsOneAssignment(aid);
             assignmentMapper.invalidateAssignment(aid);
             problemMapper.invalidateOneAssignmentProblems(aid);
-            return deleteProblemInfo(pids);
+            deleteProblemInfo(pids);
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -215,7 +216,7 @@ public class ModificationService {
             judgePointMapper.invalidJudgePointOneAssignment(pids);
             recordMapper.invalidOneAssignmentRecord(pids);
             gradeMapper.invalidAssignmentGrade(pids);
-            codeMapper.invalidCodeOfAssignment(pids);
+//            codeMapper.invalidCodeOfAssignment(pids);
             return true;
         } catch (Exception e) {
             return false;
